@@ -1,0 +1,55 @@
+# ------------------------------------
+# POSITIONS / DIMENSIONS
+# ------------------------------------
+#COCKPIT
+x_cockpit = 2.5
+
+# WHEELS
+x_NW = 3.0
+x_MG = 21.5
+
+# WING DIMENSION
+c_rw = 4.5
+b_w = 26.18
+S_w = 77.4
+TAPER_RATIOw = 0.3
+SWEEP_ANGLEw = 30 # Degrees, leading edge sweep
+x_LEMACw = 19
+
+
+# HORIZONTAL STABALISER DIMENSIONS
+c_rh = 2.2
+b_h = 8 # remember b for vertical stabaliser is simply its length
+S_h = 15.91
+TAPER_RATIOh = 0.35
+SWEEP_ANGLEh = 30
+x_LEMACh = 32
+
+# VERTICAL STABALISER DIMENSIONS
+c_rv = 4.2# Fixed duplicate c_rv
+b_v = 4 # remember b for horizontal stabaliser is like wing
+S_v = 11.32
+TAPER_RATIOv = 0.7
+SWEEP_ANGLEv = 35
+x_LEMACv = 32
+z_startvertical = 1.35
+
+# Fuselage and Engine
+length_fus = 39.13
+x_cgfusratio = 0.45
+
+x_startnacelle = 30.0
+length_nac = 3.25
+
+# ------------------------------------
+# COMPONENT WEIGHT FRACTIONS (% EOW)
+# ------------------------------------
+EOW = 23188
+WEIGHT_WINGp                = 19.7
+WEIGHT_HORIZONTAL_TAILp     = 2.5
+WEIGHT_VERTICAL_TAILp       = 1.8
+WEIGHT_FUSELAGEp            = 35.0   # including cabin and furnishing systems
+WEIGHT_MAIN_LANDING_GEARp   = 5.8
+WEIGHT_NOSE_LANDING_GEARp   = 0.8
+WEIGHT_PROPULSION_SYSTEMp   = 13.3   # including nacelles
+WEIGHT_COCKPIT_SYSTEMSp     = 2.3    # avionics, furnishing, etc.

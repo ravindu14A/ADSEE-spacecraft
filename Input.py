@@ -1,4 +1,9 @@
 # ------------------------------------
+# FLIGHT CHARACTERISTICS
+# ------------------------------------
+V = 250
+altitude = 9000
+# ------------------------------------
 # POSITIONS / DIMENSIONS
 # ------------------------------------
 z_cg = 4
@@ -40,6 +45,7 @@ z_startvertical = 1.35
 
 # Fuselage
 l_fus = 39.13
+d_fus = 4
 x_cgfusratio = 0.45
 
 # Engine

@@ -1,118 +1,121 @@
 import numpy as np
 import Input as it
 
+# =====================================================================
+# CONSTANTS & PRE-CALCULATIONS (Independent of x_LEMACw)
+# =====================================================================
+
+# ------------------------------------
+# BASIC INPUTS
+# ------------------------------------
+x_cockpit = it.x_cockpit
+x_NW = it.x_NW
+x_MG = it.x_MG
+EOW = it.EOW
+
+c_rw = it.c_rw
+b_w = it.b_w
+TAPER_RATIOw = it.TAPER_RATIOw
+SWEEP_ANGLEw = it.SWEEP_ANGLEw
+
+c_rh = it.c_rh
+b_h = it.b_h
+TAPER_RATIOh = it.TAPER_RATIOh
+SWEEP_ANGLEh = it.SWEEP_ANGLEh
+x_LEMACh = it.x_LEMACh
+
+c_rv = it.c_rv
+b_v = it.b_v
+TAPER_RATIOv = it.TAPER_RATIOv
+SWEEP_ANGLEv = it.SWEEP_ANGLEv
+x_LEMACv = it.x_LEMACv
+z_startvertical = it.z_startvertical
+
+l_fus = it.l_fus
+x_cgfusratio = it.x_cgfusratio
+x_startnacelle = it.x_startnacelle
+l_nac = it.l_nac
+
+# ------------------------------------
+# COMPONENT WEIGHTS
+# ------------------------------------
+WEIGHT_WING = it.WEIGHT_WINGp / 100 * EOW
+WEIGHT_HORIZONTAL_TAIL = it.WEIGHT_HORIZONTAL_TAILp / 100 * EOW
+WEIGHT_VERTICAL_TAIL = it.WEIGHT_VERTICAL_TAILp / 100 * EOW
+WEIGHT_FUSELAGE = it.WEIGHT_FUSELAGEp / 100 * EOW
+WEIGHT_MAIN_LANDING_GEAR = it.WEIGHT_MAIN_LANDING_GEARp / 100 * EOW
+WEIGHT_NOSE_LANDING_GEAR = it.WEIGHT_NOSE_LANDING_GEARp / 100 * EOW
+WEIGHT_PROPULSION_SYSTEM = it.WEIGHT_PROPULSION_SYSTEMp / 100 * EOW
+WEIGHT_COCKPIT_SYSTEMS = it.WEIGHT_COCKPIT_SYSTEMSp / 100 * EOW
+
+# Group Weights that remain constant
+WEIGHT_fg = WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR
+WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
+
+# ------------------------------------
+# CALCULATED DIMENSIONS
+# ------------------------------------
+c_macw = (2 / 3) * c_rw * (1 + TAPER_RATIOw + TAPER_RATIOw ** 2) / (1 + TAPER_RATIOw)
+c_mach = (2 / 3) * c_rh * (1 + TAPER_RATIOh + TAPER_RATIOh ** 2) / (1 + TAPER_RATIOh)
+c_macv = (2 / 3) * c_rv * (1 + TAPER_RATIOv + TAPER_RATIOv ** 2) / (1 + TAPER_RATIOv)
+
+y_macw = (b_w / 6) * ((1 + 2 * TAPER_RATIOw) / (1 + TAPER_RATIOw))
+y_mach = (b_h / 6) * ((1 + 2 * TAPER_RATIOh) / (1 + TAPER_RATIOh))
+z_macv = (b_v / 3) * ((1 + 2 * TAPER_RATIOv) / (1 + TAPER_RATIOv))
+
+# ------------------------------------
+# FIXED CG (RELATIVE TO START OF OBJECT)
+# ------------------------------------
+y_cgw = 0.35 * b_w / 2
+c_s = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
+distance_LEMAC_to_cs = (y_cgw - y_macw) * np.tan(np.radians(SWEEP_ANGLEw))
+x_cgw_relative = 0.7 * c_s + distance_LEMAC_to_cs
+
+x_cgh_relative = 0.42 * c_mach
+y_cgh = 0.38 * b_h / 2
+
+x_cgv_relative = 0.42 * c_macv
+z_cgv_relative = 0.38 * b_v
+
+x_cgn_relative = 0.4 * l_nac
+
+# ------------------------------------
+# CG OF STATIC COMPONENTS (FROM NOSE)
+# ------------------------------------
+x_cgh = x_LEMACh + x_cgh_relative
+x_cgv = x_LEMACv + x_cgv_relative
+x_cgfus = x_cgfusratio * l_fus
+x_cgn = x_startnacelle + x_cgn_relative
+
+# ------------------------------------
+# FUSELAGE GROUP CG (FROM NOSE)
+# ------------------------------------
+x_cgfg = (x_cgfus * WEIGHT_FUSELAGE +
+          x_cockpit * WEIGHT_COCKPIT_SYSTEMS +
+          x_cgn * WEIGHT_PROPULSION_SYSTEM +
+          x_cgh * WEIGHT_HORIZONTAL_TAIL +
+          x_cgv * WEIGHT_VERTICAL_TAIL +
+          x_NW * WEIGHT_NOSE_LANDING_GEAR) / WEIGHT_fg
+
+
+# =====================================================================
+# DYNAMIC FUNCTION (Dependent on x_LEMACw)
+# =====================================================================
 
 def calculate_aircraft_cgs(x_LEMACw):
+    """
+    Calculates aircraft center of gravities based on wing placement.
+    Requires global variables from the static pre-calculation block.
+    """
     # ------------------------------------
-    # INPUT
-    # ------------------------------------
-    # COCKPIT
-    x_cockpit = it.x_cockpit
-
-    # WHEELS
-    x_NW = it.x_NW
-    x_MG = it.x_MG
-
-    # WEIGHTS
-    EOW = it.EOW
-
-    # WING DIMENSION (x_LEMACw is now passed as an argument)
-    c_rw = it.c_rw
-    b_w = it.b_w
-    TAPER_RATIOw = it.TAPER_RATIOw
-    SWEEP_ANGLEw = it.SWEEP_ANGLEw  # Assume degrees, leading edge sweep
-
-    # HORIZONTAL STABALISER DIMENSIONS
-    c_rh = it.c_rh
-    b_h = it.b_h  # remember b for vertical stabaliser is simply its length
-    TAPER_RATIOh = it.TAPER_RATIOh
-    SWEEP_ANGLEh = it.SWEEP_ANGLEh
-    x_LEMACh = it.x_LEMACh
-
-    # VERTICAL STABALISER DIMENSIONS
-    c_rv = it.c_rv
-    b_v = it.b_v  # remember b for horizontal stabaliser is like wing
-    TAPER_RATIOv = it.TAPER_RATIOv
-    SWEEP_ANGLEv = it.SWEEP_ANGLEv
-    x_LEMACv = it.x_LEMACv
-    z_startvertical = it.z_startvertical
-
-    # Fuselage and Engine
-    l_fus = it.l_fus
-    x_cgfusratio = it.x_cgfusratio
-
-    x_startnacelle = it.x_startnacelle
-    l_nac = it.l_nac
-
-    # ------------------------------------
-    # COMPONENT WEIGHT
-    # ------------------------------------
-    WEIGHT_WING = it.WEIGHT_WINGp / 100 * EOW
-    WEIGHT_HORIZONTAL_TAIL = it.WEIGHT_HORIZONTAL_TAILp / 100 * EOW
-    WEIGHT_VERTICAL_TAIL = it.WEIGHT_VERTICAL_TAILp / 100 * EOW
-    WEIGHT_FUSELAGE = it.WEIGHT_FUSELAGEp / 100 * EOW
-    WEIGHT_MAIN_LANDING_GEAR = it.WEIGHT_MAIN_LANDING_GEARp / 100 * EOW
-    WEIGHT_NOSE_LANDING_GEAR = it.WEIGHT_NOSE_LANDING_GEARp / 100 * EOW
-    WEIGHT_PROPULSION_SYSTEM = it.WEIGHT_PROPULSION_SYSTEMp / 100 * EOW
-    WEIGHT_COCKPIT_SYSTEMS = it.WEIGHT_COCKPIT_SYSTEMSp / 100 * EOW
-
-    # ------------------------------------
-    # CALCULATED DIMENSIONS
-    # ------------------------------------
-    c_macw = (2 / 3) * c_rw * (1 + TAPER_RATIOw + TAPER_RATIOw ** 2) / (1 + TAPER_RATIOw)
-    c_mach = (2 / 3) * c_rh * (1 + TAPER_RATIOh + TAPER_RATIOh ** 2) / (1 + TAPER_RATIOh)
-    c_macv = (2 / 3) * c_rv * (1 + TAPER_RATIOv + TAPER_RATIOv ** 2) / (1 + TAPER_RATIOv)
-
-    y_macw = (b_w / 6) * ((1 + 2 * TAPER_RATIOw) / (1 + TAPER_RATIOw))
-    y_mach = (b_h / 6) * ((1 + 2 * TAPER_RATIOh) / (1 + TAPER_RATIOh))
-    z_macv = (b_v / 3) * ((1 + 2 * TAPER_RATIOv) / (1 + TAPER_RATIOv))
-
-    # ------------------------------------
-    # FIXED CG (FROM START OF OBJECT - LEMAC FOR LIFT CREATING SURFACES)
-    # ------------------------------------
-    # WING
-    y_cgw = 0.35 * b_w / 2
-
-    c_s = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
-    distance_LEMAC_to_cs = (y_cgw - y_macw) * np.tan(np.radians(SWEEP_ANGLEw))
-    x_cgw_relative = 0.7 * c_s + distance_LEMAC_to_cs
-
-    # HORIZONTAL STABALISER
-    x_cgh_relative = 0.42 * c_mach
-    y_cgh = 0.38 * b_h / 2
-
-    # VERTICAL STABALISER
-    x_cgv_relative = 0.42 * c_macv
-    z_cgv_relative = 0.38 * b_v
-
-    # ENGINES
-    x_cgn_relative = 0.4 * l_nac
-
-    # ------------------------------------
-    # CG OF COMPONENTS (FROM NOSE)
+    # DYNAMIC CG COMPUTATIONS (FROM NOSE)
     # ------------------------------------
     x_cgw = x_LEMACw + x_cgw_relative
-    x_cgh = x_LEMACh + x_cgh_relative
-    x_cgv = x_LEMACv + x_cgv_relative
-    x_cgfus = x_cgfusratio * l_fus
-    x_cgn = x_startnacelle + x_cgn_relative
 
-    # ------------------------------------
-    # FUSELAGE GROUP CG (FROM NOSE)
-    # ------------------------------------
-    WEIGHT_fg = WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR
-    x_cgfg = (
-                         x_cgfus * WEIGHT_FUSELAGE + x_cockpit * WEIGHT_COCKPIT_SYSTEMS + x_cgn * WEIGHT_PROPULSION_SYSTEM + x_cgh * WEIGHT_HORIZONTAL_TAIL + x_cgv * WEIGHT_VERTICAL_TAIL + x_NW * WEIGHT_NOSE_LANDING_GEAR) / WEIGHT_fg
-
-    # ------------------------------------
-    # WING GROUP CG (FROM NOSE)
-    # ------------------------------------
-    WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
+    # Wing Group CG
     x_cgwg = (x_cgw * WEIGHT_WING + x_MG * WEIGHT_MAIN_LANDING_GEAR) / WEIGHT_wg
 
-    # ------------------------------------
-    # AIRCRAFT CG (FROM NOSE)
-    # ------------------------------------
+    # Aircraft Total CG
     x_cg = (x_cgfg * WEIGHT_fg + x_cgwg * WEIGHT_wg) / (WEIGHT_fg + WEIGHT_wg)
 
     # ------------------------------------
@@ -124,23 +127,12 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfus_LEMAC = x_cgfus - x_LEMACw
     x_cgn_LEMAC = x_cgn - x_LEMACw
 
-    # ------------------------------------
-    # FUSELAGE GROUP CG (FROM LEMAC)
-    # ------------------------------------
     x_cgfg_LEMAC = x_cgfg - x_LEMACw
-
-    # ------------------------------------
-    # WING GROUP CG (FROM LEMAC)
-    # ------------------------------------
     x_cgwg_LEMAC = x_cgwg - x_LEMACw
-
-    # ------------------------------------
-    # AIRCRAFT CG (FROM LEMAC)
-    # ------------------------------------
     x_cg_LEMAC = x_cg - x_LEMACw
 
     # ------------------------------------
-    # CG OF COMPONENTS (FROM LEMAC NORMALISED BY MAC)
+    # CG OF COMPONENTS (NORMALISED BY WING MAC)
     # ------------------------------------
     x_cgw_LEMACNORM = x_cgw_LEMAC / c_macw
     x_cgh_LEMACNORM = x_cgh_LEMAC / c_macw
@@ -148,19 +140,8 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfus_LEMACNORM = x_cgfus_LEMAC / c_macw
     x_cgn_LEMACNORM = x_cgn_LEMAC / c_macw
 
-    # ------------------------------------
-    # FUSELAGE GROUP CG (FROM LEMAC NORMALISED BY MAC)
-    # ------------------------------------
     x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
-
-    # ------------------------------------
-    # WING GROUP CG (FROM LEMAC NORMALISED BY MAC)
-    # ------------------------------------
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
-
-    # ------------------------------------
-    # AIRCRAFT CG (FROM LEMAC NORMALISED BY MAC)
-    # ------------------------------------
     x_cg_LEMACNORM = x_cg_LEMAC / c_macw
 
     # ------------------------------------
@@ -212,9 +193,9 @@ def calculate_aircraft_cgs(x_LEMACw):
     }
 
 
-# ------------------------------------
+# =====================================================================
 # EXECUTION / OUTPUTS
-# ------------------------------------
+# =====================================================================
 if __name__ == '__main__':
     # Fetch x_LEMACw from the inputs file as the variable to pass into our function
     x_LEMACw_input = it.x_LEMACw

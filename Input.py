@@ -3,6 +3,24 @@
 # ------------------------------------
 V = 250
 altitude = 9000
+
+# Operational limits
+MTOW = 41640
+MAX_FUEL = 8822
+X_FUEL = 20.92
+actual_MZFW = 33654
+
+# Payload definitions
+MASS_PAX = 87
+MASS_FRONT_CARGO = 472
+X_FRONT_CARGO = 7.77
+MASS_AFT_CARGO = 1294
+X_AFT_CARGO = 19.71
+
+# Cabin rows (25 rows for 100 pax, 2+2 abreast)
+NUM_ROWS = 25
+X_ROW_1 = 6.0
+ROW_PITCH = 0.7874
 # ------------------------------------
 # POSITIONS / DIMENSIONS
 # ------------------------------------
@@ -57,7 +75,7 @@ d_nac = None
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% MTOW)
 # ------------------------------------
-MTOW =0
+MTOW = 45000
 
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% EOW)

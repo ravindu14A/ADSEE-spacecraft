@@ -91,7 +91,6 @@ z_cgv_relative = 0.38 * b_v
 x_cgn_relative = 0.4 * length_nac
 
 
-
 # ------------------------------------
 # CG OF COMPONENTS (FROM NOSE)
 # ------------------------------------
@@ -129,7 +128,7 @@ x_cg = (x_cgfg * WEIGHT_fg + x_cgwg * WEIGHT_wg) / (WEIGHT_fg + WEIGHT_wg)
 
 
 # ------------------------------------
-# CG OF COMPONENTS (FROM LEMAC NORMALISED)
+# CG OF COMPONENTS (FROM LEMAC)
 # ------------------------------------
 # WING
 x_cgw_LEMAC = x_cgw - x_LEMACw
@@ -147,23 +146,23 @@ x_cgfus_LEMAC = x_cgfus - x_LEMACw
 x_cgn_LEMAC = x_cgn - x_LEMACw
 
 # ------------------------------------
-# FUSELAGE GROUP CG (FROM LEMAC NORMALISED)
+# FUSELAGE GROUP CG (FROM LEMAC)
 # ------------------------------------
 x_cgfg_LEMAC = x_cgfg - x_LEMACw
 
 # ------------------------------------
-# WING GROUP CG (FROM LEMAC NORMALISED)
+# WING GROUP CG (FROM LEMAC)
 # ------------------------------------
 x_cgwg_LEMAC = x_cgwg - x_LEMACw
 
 # ------------------------------------
-# AIRCRAFT CG (FROM LEMAC NORMALISED)
+# AIRCRAFT CG (FROM LEMAC)
 # ------------------------------------
 x_cg_LEMAC = x_cg - x_LEMACw
 
 
 # ------------------------------------
-# CG OF COMPONENTS (FROM LEMAC NORMALISED)
+# CG OF COMPONENTS (FROM LEMAC NORMALISED BY MAC)
 # ------------------------------------
 # WING
 x_cgw_LEMACNORM = x_cgw_LEMAC / c_macw
@@ -181,20 +180,34 @@ x_cgfus_LEMACNORM = x_cgfus_LEMAC / c_macw
 x_cgn_LEMACNORM = x_cgn_LEMAC / c_macw
 
 # ------------------------------------
-# FUSELAGE GROUP CG (FROM LEMAC NORMALISED)
+# FUSELAGE GROUP CG (FROM LEMAC NORMALISED BY MAC)
 # ------------------------------------
 x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
 
 # ------------------------------------
-# WING GROUP CG (FROM LEMAC)
+# WING GROUP CG (FROM LEMAC NORMALISED BY MAC)
 # ------------------------------------
 x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
 
 # ------------------------------------
-# AIRCRAFT CG (FROM LEMAC)
+# AIRCRAFT CG (FROM LEMAC NORMALISED BY MAC)
 # ------------------------------------
 x_cg_LEMACNORM = x_cg_LEMAC / c_macw
 
-print(f'Center of Gravity position of Wing Group: {x_cgwg}')
-print(f'Center of Gravity position of Fuselage Group: {x_cgfg}')
-print(f'Center of Gravity position of EOW Aircraft: {x_cg}')
+# ------------------------------------
+# OUTPUTS
+# ------------------------------------
+print("--- CG FROM NOSE ---")
+print(f'Wing Group: {x_cgwg}')
+print(f'Fuselage Group: {x_cgfg}')
+print(f'Total EOW Aircraft: {x_cg}\n')
+
+print("--- CG FROM LEMAC ---")
+print(f'Wing Group: {x_cgwg_LEMAC}')
+print(f'Fuselage Group: {x_cgfg_LEMAC}')
+print(f'Total EOW Aircraft: {x_cg_LEMAC}\n')
+
+print("--- CG AS % MAC ---")
+print(f'Wing Group: {x_cgwg_LEMACNORM:.4f} ({x_cgwg_LEMACNORM * 100:.2f}%)')
+print(f'Fuselage Group: {x_cgfg_LEMACNORM:.4f} ({x_cgfg_LEMACNORM * 100:.2f}%)')
+print(f'Total EOW Aircraft: {x_cg_LEMACNORM:.4f} ({x_cg_LEMACNORM * 100:.2f}%)')

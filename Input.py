@@ -1,12 +1,16 @@
 # ------------------------------------
 # POSITIONS / DIMENSIONS
 # ------------------------------------
+z_cg = 4
 #COCKPIT
 x_cockpit = 2.5
 
 # WHEELS
 x_NW = 3.0
-x_MG = 21.5
+x_MG = 22.6
+y_MG = 4
+number_MG = 2
+theta = 12
 
 # WING DIMENSION
 c_rw = 4.5
@@ -15,7 +19,7 @@ S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 30 # Degrees, leading edge sweep
 x_LEMACw = 19
-
+dihedral = None
 
 # HORIZONTAL STABALISER DIMENSIONS
 c_rh = 2.2
@@ -34,12 +38,20 @@ SWEEP_ANGLEv = 35
 x_LEMACv = 32
 z_startvertical = 1.35
 
-# Fuselage and Engine
-length_fus = 39.13
+# Fuselage
+l_fus = 39.13
 x_cgfusratio = 0.45
 
+# Engine
 x_startnacelle = 30.0
-length_nac = 3.25
+y_centrenacelle = None
+l_nac = 3.25
+d_nac = None
+
+# ------------------------------------
+# COMPONENT WEIGHT FRACTIONS (% MTOW)
+# ------------------------------------
+MTOW =0
 
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% EOW)

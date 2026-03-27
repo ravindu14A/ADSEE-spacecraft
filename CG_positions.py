@@ -91,8 +91,9 @@ z_cgv_relative = 0.38 * b_v
 x_cgn_relative = 0.4 * length_nac
 
 
+
 # ------------------------------------
-# FIXED CG (FROM NOSE)
+# CG OF COMPONENTS (FROM NOSE)
 # ------------------------------------
 # WING
 x_cgw = x_LEMACw + x_cgw_relative
@@ -110,18 +111,89 @@ x_cgfus = x_cgfusratio * length_fus
 x_cgn = x_startnacelle + x_cgn_relative
 
 # ------------------------------------
-# FUSELAGE GROUP CG
+# FUSELAGE GROUP CG (FROM NOSE)
 # ------------------------------------
 WEIGHT_fg = WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR
 x_cgfg = (x_cgfus * WEIGHT_FUSELAGE + x_cockpit * WEIGHT_COCKPIT_SYSTEMS + x_cgn * WEIGHT_PROPULSION_SYSTEM + x_cgh * WEIGHT_HORIZONTAL_TAIL + x_cgv * WEIGHT_VERTICAL_TAIL + x_NW * WEIGHT_NOSE_LANDING_GEAR) / WEIGHT_fg
 
 # ------------------------------------
-# WING GROUP CG
+# WING GROUP CG (FROM NOSE)
 # ------------------------------------
 WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
 x_cgwg = (x_cgw * WEIGHT_WING + x_MG * WEIGHT_MAIN_LANDING_GEAR) / WEIGHT_wg
 
+# ------------------------------------
+# AIRCRAFT CG (FROM NOSE)
+# ------------------------------------
 x_cg = (x_cgfg * WEIGHT_fg + x_cgwg * WEIGHT_wg) / (WEIGHT_fg + WEIGHT_wg)
+
+
+# ------------------------------------
+# CG OF COMPONENTS (FROM LEMAC NORMALISED)
+# ------------------------------------
+# WING
+x_cgw_LEMAC = x_cgw - x_LEMACw
+
+# HORIZONTAL STABALISER
+x_cgh_LEMAC = x_cgh - x_LEMACw
+
+# VERTICAL STABALISER
+x_cgv_LEMAC = x_cgv - x_LEMACw
+
+# FUSELAGE
+x_cgfus_LEMAC = x_cgfus - x_LEMACw
+
+# ENGINE
+x_cgn_LEMAC = x_cgn - x_LEMACw
+
+# ------------------------------------
+# FUSELAGE GROUP CG (FROM LEMAC NORMALISED)
+# ------------------------------------
+x_cgfg_LEMAC = x_cgfg - x_LEMACw
+
+# ------------------------------------
+# WING GROUP CG (FROM LEMAC NORMALISED)
+# ------------------------------------
+x_cgwg_LEMAC = x_cgwg - x_LEMACw
+
+# ------------------------------------
+# AIRCRAFT CG (FROM LEMAC NORMALISED)
+# ------------------------------------
+x_cg_LEMAC = x_cg - x_LEMACw
+
+
+# ------------------------------------
+# CG OF COMPONENTS (FROM LEMAC NORMALISED)
+# ------------------------------------
+# WING
+x_cgw_LEMACNORM = x_cgw_LEMAC / c_macw
+
+# HORIZONTAL STABALISER
+x_cgh_LEMACNORM = x_cgh_LEMAC / c_macw
+
+# VERTICAL STABALISER
+x_cgv_LEMACNORM = x_cgv_LEMAC / c_macw
+
+# FUSELAGE
+x_cgfus_LEMACNORM = x_cgfus_LEMAC / c_macw
+
+# ENGINE
+x_cgn_LEMACNORM = x_cgn_LEMAC / c_macw
+
+# ------------------------------------
+# FUSELAGE GROUP CG (FROM LEMAC NORMALISED)
+# ------------------------------------
+x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
+
+# ------------------------------------
+# WING GROUP CG (FROM LEMAC)
+# ------------------------------------
+x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
+
+# ------------------------------------
+# AIRCRAFT CG (FROM LEMAC)
+# ------------------------------------
+x_cg_LEMACNORM = x_cg_LEMAC / c_macw
 
 print(f'Center of Gravity position of Wing Group: {x_cgwg}')
 print(f'Center of Gravity position of Fuselage Group: {x_cgfg}')

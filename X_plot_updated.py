@@ -1,5 +1,5 @@
 import Input as ip
-import CG_positions as CG
+import CG_positions_updated as CG
 import numpy as np
 import speed_of_sound
 import matplotlib.pyplot as plt

@@ -1,8 +1,11 @@
 # ------------------------------------
 # FLIGHT CHARACTERISTICS
 # ------------------------------------
-V = 250
+M = 0.85
 altitude = 9000
+V_landing = 70
+C_m0 = 0.01
+CL_0 = 0.1
 
 # Operational limits
 MTOW = 41640
@@ -68,19 +71,39 @@ x_cgfusratio = 0.45
 
 # Engine
 x_startnacelle = 30.0
-y_centrenacelle = None
+y_centrenacelle = 3
 l_nac = 3.25
-d_nac = None
+d_nac = 1
+n_nacelles = 2
+
+
+# ------------------------------------
+# COMPONENT WEIGHTS (Absolute Values in kg)
+# ------------------------------------
+
+# Operational Empty Weight (OEW)
+EOW = 23188
+W_pax_luggage = 10200
+W_front_cargo = 472
+W_aft_cargo = 1294
+W_max_payload = W_pax_luggage + W_front_cargo + W_aft_cargo
+W_fuel = 6486
+MTOW = EOW + W_max_payload + W_fuel
 
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% MTOW)
 # ------------------------------------
-MTOW = 41640
+# Calculated as decimals (multiply by 100 for percentages)
+frac_EOW = EOW / MTOW
+frac_max_payload = W_max_payload / MTOW
+frac_pax_luggage = W_pax_luggage / MTOW
+frac_front_cargo = W_front_cargo / MTOW
+frac_aft_cargo = W_aft_cargo / MTOW
+frac_fuel = W_fuel / MTOW
 
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% EOW)
 # ------------------------------------
-EOW = 23188
 WEIGHT_WINGp                = 19.7
 WEIGHT_HORIZONTAL_TAILp     = 2.5
 WEIGHT_VERTICAL_TAILp       = 1.8

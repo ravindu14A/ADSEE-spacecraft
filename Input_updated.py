@@ -1,7 +1,7 @@
 # =====================================================================
 # CRJ-EXX UPDATED INPUT FILE (Task 3.3a)
 # =====================================================================
-
+import Input as ip
 # ------------------------------------
 # FLIGHT CHARACTERISTICS
 # ------------------------------------
@@ -37,7 +37,7 @@ dihedral = None
 
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = 2.2
-b_h = 8 
+b_h = 8
 S_h = 15.91
 TAPER_RATIOh = 0.35
 SWEEP_ANGLEh = 30
@@ -45,7 +45,7 @@ x_LEMACh = 32
 
 # VERTICAL STABILISER DIMENSIONS
 c_rv = 4.2
-b_v = 4 
+b_v = 4
 S_v = 11.32
 TAPER_RATIOv = 0.7
 SWEEP_ANGLEv = 35
@@ -66,12 +66,10 @@ z_cg = 4.0 + 0.3  # Now 4.3 m
 # Engine / Nacelle (Length increased by 20%, but CG is unchanged)
 x_startnacelle = 30.0
 y_centrenacelle = None
-l_nac_original = 3.25
-l_nac = l_nac_original * 1.20  # Now 3.90 m
-d_nac = None
-
-# IMPORTANT: Hardcoded original Engine CG so it doesn't move due to the length increase!
-x_cgn_fixed = x_startnacelle + (0.4 * l_nac_original) # 31.30 m
+l_nac_original = ip.l_nac
+d_nac_original = ip.d_nac
+l_nac = ip.l_nac * 1.20  # Now 3.90 m
+d_nac = ip.d_nac * 1.20
 
 # ------------------------------------
 # EMPTY WEIGHT (EOW) REDUCTIONS
@@ -90,7 +88,8 @@ total_weight_savings = delta_wing + delta_fuselage
 
 # New baseline EOW (without batteries)
 EOW = EOW_orig - total_weight_savings
-
+x_BATaft = 20
+x_BATfwd = 20
 # ------------------------------------
 # ABSOLUTE COMPONENT WEIGHTS (CRJ-EXX)
 # ------------------------------------
@@ -138,7 +137,7 @@ TOTAL_CARGO_MASS = 472 + 1294 # 1766 kg
 
 V_front_new = 5.18 - V_batt_front # 3.88 m^3
 V_aft_new = 14.22 - V_batt_aft    # 12.62 m^3
-V_total_new = V_front_new + V_aft_new 
+V_total_new = V_front_new + V_aft_new
 
 MASS_FRONT_CARGO = TOTAL_CARGO_MASS * (V_front_new / V_total_new) # 415.8 kg
 MASS_AFT_CARGO = TOTAL_CARGO_MASS * (V_aft_new / V_total_new)     # 1350.2 kg
@@ -157,4 +156,4 @@ EOW_BATT = EOW + TOTAL_BATT_MASS
 actual_MZFW = EOW_BATT + TOTAL_PAX_WEIGHT + TOTAL_CARGO_MASS
 
 # Max Allowable Fuel Drop (To respect fixed MTOW)
-MAX_ALLOWABLE_FUEL = MTOW - actual_MZFW
+MAX_FUEL = MTOW - actual_MZFW

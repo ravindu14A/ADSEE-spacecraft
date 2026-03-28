@@ -75,7 +75,7 @@ d_nac = None
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% MTOW)
 # ------------------------------------
-MTOW = 45000
+MTOW = 41640
 
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% EOW)

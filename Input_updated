@@ -1,0 +1,119 @@
+import Input as ip
+
+# =====================================================================
+# 1. EMPTY WEIGHT (EOW) REDUCTIONS
+# =====================================================================
+EOW_orig = ip.EOW
+W_wing_orig = (ip.WEIGHT_WINGp / 100) * EOW_orig
+W_fuselage_orig = (ip.WEIGHT_FUSELAGEp / 100) * EOW_orig
+
+# Updated wing and fuselage weight values from the numbers they gave us
+W_wing_EXX = W_wing_orig * (1 - 0.09)
+W_fuselage_EXX = W_fuselage_orig * (1 - 0.07)
+
+#Calculate weight savings
+delta_wing = W_wing_orig - W_wing_EXX
+delta_fuselage = W_fuselage_orig - W_fuselage_EXX
+total_weight_savings = delta_wing + delta_fuselage
+
+# New Operating Empty Weight (before batteries)
+EOW_EXX = EOW_orig - total_weight_savings
+
+# =====================================================================
+# 2. CARGO VOLUME & LENGTH MATH (Determines Battery & Cargo bounds)
+# =====================================================================
+TOTAL_CARGO_MASS = ip.MASS_FRONT_CARGO + ip.MASS_AFT_CARGO #Unchanged from the og 
+V_total_orig = 19.4 
+
+V_front_orig = V_total_orig * (ip.MASS_FRONT_CARGO / TOTAL_CARGO_MASS) # 5.18 m^3
+V_aft_orig = V_total_orig * (ip.MASS_AFT_CARGO / TOTAL_CARGO_MASS)     # 14.22 m^3
+
+V_batt_front = 1.3 # m^3
+V_batt_aft = 1.6   # m^3
+
+# Original Hold Lengths
+L_front_hold = 9.55 - 6.00  # 3.55 m
+L_aft_hold = 21.74 - 18.90  # 2.84 m
+
+# Length occupied by batteries (assuming uniform cross-section)
+L_batt_front = L_front_hold * (V_batt_front / V_front_orig) # 0.89 m
+L_batt_aft = L_aft_hold * (V_batt_aft / V_aft_orig)         # 0.32 m
+
+# =====================================================================
+# 3. BATTERY WEIGHTS & EXACT CG LOCATIONS
+# =====================================================================
+MASS_BATT_FRONT = 2025 # kg
+MASS_BATT_AFT = 2475   # kg
+TOTAL_BATT_MASS = MASS_BATT_FRONT + MASS_BATT_AFT
+
+# New EOW with batteries
+EOW_BATT_EXX = EOW_EXX + TOTAL_BATT_MASS
+
+# Batteries sit at the extremities of their respective holds (these are cgs of the batteries)
+X_BATT_FRONT = 6.00 + (L_batt_front / 2)       # 6.445 m
+X_BATT_AFT = 21.74 - (L_batt_aft / 2)          # 21.58 m
+
+# =====================================================================
+# 4. CARGO REDISTRIBUTION & EXACT CG LOCATIONS
+# =====================================================================
+V_front_new = V_front_orig - V_batt_front
+V_aft_new = V_aft_orig - V_batt_aft
+V_total_new = V_front_new + V_aft_new 
+
+MASS_FRONT_CARGO_EXX = TOTAL_CARGO_MASS * (V_front_new / V_total_new)
+MASS_AFT_CARGO_EXX = TOTAL_CARGO_MASS * (V_aft_new / V_total_new)
+
+# Remaining cargo space bounds
+X_front_cargo_start = 6.00 + L_batt_front
+X_front_cargo_end = 9.55
+X_FRONT_CARGO_EXX = (X_front_cargo_start + X_front_cargo_end) / 2 # 8.22 m
+
+X_aft_cargo_start = 18.90
+X_aft_cargo_end = 21.74 - L_batt_aft
+X_AFT_CARGO_EXX = (X_aft_cargo_start + X_aft_cargo_end) / 2       # 20.16 m
+
+# =====================================================================
+# 5. PASSENGER WEIGHTS & LOCATIONS
+# =====================================================================
+NUM_ROWS_EXX = 22
+TOTAL_PAX_EXX = NUM_ROWS_EXX * 4
+MASS_PAX = ip.MASS_PAX  # 87 kg
+TOTAL_PAX_WEIGHT_EXX = TOTAL_PAX_EXX * MASS_PAX
+
+# =====================================================================
+# 6. NEW MZFW & ALLOWABLE FUEL
+# =====================================================================
+MTOW = ip.MTOW  # 41640 kg
+
+MZFW_EXX = EOW_BATT_EXX + TOTAL_PAX_WEIGHT_EXX + TOTAL_CARGO_MASS
+MAX_ALLOWABLE_FUEL_EXX = MTOW - MZFW_EXX
+
+# =====================================================================
+# CONSOLE OUTPUT 
+# =====================================================================
+if __name__ == '__main__':
+    print("="*50)
+    print("CRJ-EXX WEIGHT & BALANCE INPUTS (TASK 3.3a)")
+    print("="*50)
+    print(f"1. EOW REDUCTIONS:")
+    print(f"   Original EOW:           {EOW_orig:.1f} kg")
+    print(f"   New EOW (No Batteries): {EOW_EXX:.1f} kg\n")
+    
+    print(f"2. EXACT BATTERY CGs (4500 kg Total):")
+    print(f"   Front Battery:          {MASS_BATT_FRONT:.1f} kg @ X = {X_BATT_FRONT:.3f} m")
+    print(f"   Aft Battery:            {MASS_BATT_AFT:.1f} kg @ X = {X_BATT_AFT:.3f} m")
+    print(f"   New EOW + BATTERIES:    {EOW_BATT_EXX:.1f} kg\n")
+    
+    print(f"3. PASSENGERS:")
+    print(f"   Total Pax:              {TOTAL_PAX_EXX} (88 pax, 22 rows)")
+    print(f"   Total Pax Weight:       {TOTAL_PAX_WEIGHT_EXX:.1f} kg\n")
+    
+    print(f"4. EXACT CARGO CGs (Total: {TOTAL_CARGO_MASS} kg):")
+    print(f"   New Front Cargo Mass:   {MASS_FRONT_CARGO_EXX:.1f} kg @ X = {X_FRONT_CARGO_EXX:.3f} m")
+    print(f"   New Aft Cargo Mass:     {MASS_AFT_CARGO_EXX:.1f} kg @ X = {X_AFT_CARGO_EXX:.3f} m\n")
+    
+    print(f"5. MTOW & FUEL COMPENSATION:")
+    print(f"   Calculated MZFW:        {MZFW_EXX:.1f} kg")
+    print(f"   MTOW (Unchanged):       {MTOW:.1f} kg")
+    print(f"   Max Allowable Fuel:     {MAX_ALLOWABLE_FUEL_EXX:.1f} kg")
+    print("="*50)

@@ -3,11 +3,11 @@ import Input as ip
 # ------------------------------------
 # FLIGHT CHARACTERISTICS
 # ------------------------------------
-M = 0.85
-altitude = 9000
-V_landing = 70
-C_m0 = 0.01
-CL_0 = 0.1
+M = ip.M
+altitude = ip.altitude
+V_landing = ip.V_landing
+C_m0 = ip.C_m0
+CL_0 = ip.CL_0
 
 # ------------------------------------
 # PAYLOAD DEFINITIONS & CABIN
@@ -31,54 +31,56 @@ ROW_PITCH = 0.7874
 # ------------------------------------
 # POSITIONS / DIMENSIONS
 # ------------------------------------
-z_cg = 4
-x_cockpit = 2.5
+# Point XI: Landing gear height increased by 30cm (0.3m)
+z_cg = ip.z_cg + 0.3
+x_cockpit = ip.x_cockpit
 
 # WHEELS
-x_NW = 3.0
-x_MG = 22.6
-y_MG = 4
-number_MG = 2
-theta = 12
-X_FUEL = 20.92
+x_NW = ip.x_NW
+x_MG = ip.x_MG
+y_MG = ip.y_MG
+number_MG = ip.number_MG
+theta = ip.theta
+X_FUEL = ip.X_FUEL
 
 # WING DIMENSION
-c_rw = 4.5
-b_w = 26.18
-S_w = 77.4
-TAPER_RATIOw = 0.3
-SWEEP_ANGLEw = 30
-x_LEMACw = 19
-dihedral = None
+c_rw = ip.c_rw
+b_w = ip.b_w
+S_w = ip.S_w
+TAPER_RATIOw = ip.TAPER_RATIOw
+SWEEP_ANGLEw = ip.SWEEP_ANGLEw
+x_LEMACw = ip.x_LEMACw
+dihedral = ip.dihedral
 
 # HORIZONTAL STABILISER DIMENSIONS
-c_rh = 2.2
-b_h = 8
-S_h = 15.91
-TAPER_RATIOh = 0.35
-SWEEP_ANGLEh = 30
-x_LEMACh = 32
+c_rh = ip.c_rh
+b_h = ip.b_h
+S_h = ip.S_h
+TAPER_RATIOh = ip.TAPER_RATIOh
+SWEEP_ANGLEh = ip.SWEEP_ANGLEh
+x_LEMACh = ip.x_LEMACh
 
 # VERTICAL STABILISER DIMENSIONS
-c_rv = 4.2
-b_v = 4
-S_v = 11.32
-TAPER_RATIOv = 0.7
-SWEEP_ANGLEv = 35
-x_LEMACv = 32
-z_startvertical = 1.35
+c_rv = ip.c_rv
+b_v = ip.b_v
+S_v = ip.S_v
+TAPER_RATIOv = ip.TAPER_RATIOv
+SWEEP_ANGLEv = ip.SWEEP_ANGLEv
+x_LEMACv = ip.x_LEMACv
+z_startvertical = ip.z_startvertical
 
 # Fuselage
-l_fus = 39.13
-d_fus = 4
-x_cgfusratio = 0.45
+l_fus = ip.l_fus
+d_fus = ip.d_fus
+x_cgfusratio = ip.x_cgfusratio
 
 # Engine (Point I: +20% length and diameter)
-x_startnacelle = 30.0
-y_centrenacelle = 3
+# (Location x_startnacelle pulls from original to ensure CG stays locked)
+x_startnacelle = ip.x_startnacelle
+y_centrenacelle = ip.y_centrenacelle
 l_nac = ip.l_nac * 1.2
 d_nac = ip.d_nac * 1.2
-n_nacelle = 2
+n_nacelle = ip.n_nacelle
 
 # ------------------------------------
 # VOLUME AND LENGTH MATH (Point IV & VII)
@@ -100,6 +102,7 @@ L_aft_hold = X_END_AFT_CARGOold - X_START_AFT_CARGOold
 L_batt_front = L_front_hold * (V_batt_front / V_front_orig)
 L_batt_aft = L_aft_hold * (V_batt_aft / V_aft_orig)
 
+# Battery Weights (Left as individual stated values)
 MASS_BATT_FRONT = 2025
 MASS_BATT_AFT = 2475
 TOTAL_BATT_MASS = MASS_BATT_FRONT + MASS_BATT_AFT
@@ -143,7 +146,6 @@ WEIGHT_COCKPIT_SYSTEMS     = (2.3/100) * ip.EOW
 WEIGHT_UNACCOUNTED         = (18.8/100) * ip.EOW
 
 # Point V: Batteries are not removable, EOW includes them.
-# Total aircraft mass now equals exactly 100% of components + Batteries
 EOW = (WEIGHT_WING + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL +
        WEIGHT_FUSELAGE + WEIGHT_MAIN_LANDING_GEAR + WEIGHT_NOSE_LANDING_GEAR +
        WEIGHT_PROPULSION_SYSTEM + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_UNACCOUNTED + TOTAL_BATT_MASS)
@@ -151,7 +153,7 @@ EOW = (WEIGHT_WING + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL +
 # ------------------------------------
 # AIRCRAFT MTOW & FUEL (Point VIII)
 # ------------------------------------
-MTOW = 41640 # Remains identical to CRJ-1000 per prompt
+MTOW = 41640 # Remains identical to CRJ-1000
 
 W_pax_luggage = NUM_ROWS * 4 * MASS_PAX
 W_front_cargo = MASS_FRONT_CARGO
@@ -165,17 +167,8 @@ W_fuel = MTOW - W_max_payload - EOW
 MZFW_EXX = EOW + W_max_payload
 MAX_ALLOWABLE_FUEL_EXX = MTOW - MZFW_EXX
 
-# ------------------------------------
-# COMPONENT WEIGHT FRACTIONS (% MTOW)
-# ------------------------------------
-frac_EOW = EOW / MTOW
-frac_max_payload = W_max_payload / MTOW
-frac_pax_luggage = W_pax_luggage / MTOW
-frac_front_cargo = W_front_cargo / MTOW
-frac_aft_cargo = W_aft_cargo / MTOW
-frac_fuel = W_fuel / MTOW
-
 if __name__ == '__main__':
     print(f"Calculated MZFW: {MZFW_EXX:.2f} kg")
     print(f"Calculated Fuel: {W_fuel:.2f} kg")
-    print(EOW)
+    print(f"New EOW (Including Batteries): {EOW:.2f} kg")
+    print(f"Updated Z-CG: {z_cg:.2f} m")

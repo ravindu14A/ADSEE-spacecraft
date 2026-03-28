@@ -69,7 +69,7 @@ d_fus = 4
 x_cgfusratio = 0.45
 
 # Engine
-x_startnacelle = 30.0
+x_startnacelle = 30
 y_centrenacelle = 3
 l_nac = 3.25
 d_nac = 1
@@ -111,5 +111,3 @@ WEIGHT_MAIN_LANDING_GEARp   = 5.8
 WEIGHT_NOSE_LANDING_GEARp   = 0.8
 WEIGHT_PROPULSION_SYSTEMp   = 13.3   # including nacelles
 WEIGHT_COCKPIT_SYSTEMSp     = 2.3    # avionics, furnishing, etc.
-
-print(EOW)

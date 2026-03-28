@@ -1,8 +1,9 @@
 import numpy as np
 import Input_updated as it
+import CG_positions as base
 
 # =====================================================================
-# CONSTANTS & PRE-CALCULATIONS (Independent of x_LEMACw)
+# CONSTANTS & PRE-CALCULATIONS (Inherited to maintain namespace)
 # =====================================================================
 
 x_cockpit = it.x_cockpit
@@ -36,7 +37,7 @@ x_startnacelle = it.x_startnacelle
 l_nac = it.l_nac
 
 # ------------------------------------
-# COMPONENT WEIGHTS
+# COMPONENT WEIGHTS (Updated from EXX Input)
 # ------------------------------------
 WEIGHT_WING = it.WEIGHT_WING
 WEIGHT_HORIZONTAL_TAIL = it.WEIGHT_HORIZONTAL_TAIL
@@ -47,13 +48,11 @@ WEIGHT_NOSE_LANDING_GEAR = it.WEIGHT_NOSE_LANDING_GEAR
 WEIGHT_PROPULSION_SYSTEM = it.WEIGHT_PROPULSION_SYSTEM
 WEIGHT_COCKPIT_SYSTEMS = it.WEIGHT_COCKPIT_SYSTEMS
 
-# Import the 18.8% unaccounted mass from the updated input file
 WEIGHT_UNACCOUNTED = it.WEIGHT_UNACCOUNTED
-
 WEIGHT_BATT_FRONT = it.MASS_BATT_FRONT
 WEIGHT_BATT_AFT = it.MASS_BATT_AFT
 
-# Baseline Group Weights (Pre-Battery, Pre-Unaccounted)
+# Baseline Group Weights for EXX (Pre-Battery, Pre-Unaccounted)
 WEIGHT_fg_base = (WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM +
                   WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR)
 WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
@@ -62,38 +61,41 @@ WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
 WEIGHT_fg_exx = WEIGHT_fg_base + WEIGHT_UNACCOUNTED + WEIGHT_BATT_FRONT + WEIGHT_BATT_AFT
 
 # ------------------------------------
-# CALCULATED DIMENSIONS
+# CALCULATED DIMENSIONS (Linked directly to base file to preserve namespace)
 # ------------------------------------
-c_macw = (2 / 3) * c_rw * (1 + TAPER_RATIOw + TAPER_RATIOw ** 2) / (1 + TAPER_RATIOw)
-c_mach = (2 / 3) * c_rh * (1 + TAPER_RATIOh + TAPER_RATIOh ** 2) / (1 + TAPER_RATIOh)
-c_macv = (2 / 3) * c_rv * (1 + TAPER_RATIOv + TAPER_RATIOv ** 2) / (1 + TAPER_RATIOv)
+c_macw = base.c_macw
+c_mach = base.c_mach
+c_macv = base.c_macv
 
-y_macw = (b_w / 6) * ((1 + 2 * TAPER_RATIOw) / (1 + TAPER_RATIOw))
-y_mach = (b_h / 6) * ((1 + 2 * TAPER_RATIOh) / (1 + TAPER_RATIOh))
-z_macv = (b_v / 3) * ((1 + 2 * TAPER_RATIOv) / (1 + TAPER_RATIOv))
+y_macw = base.y_macw
+y_mach = base.y_mach
+z_macv = base.z_macv
 
-y_cgw = 0.35 * b_w / 2
-c_s = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
-distance_LEMAC_to_cs = (y_cgw - y_macw) * np.tan(np.radians(SWEEP_ANGLEw))
-x_cgw_relative = 0.7 * c_s + distance_LEMAC_to_cs
+y_cgw = base.y_cgw
+c_s = base.c_s
+distance_LEMAC_to_cs = base.distance_LEMAC_to_cs
+x_cgw_relative = base.x_cgw_relative
 
-x_cgh_relative = 0.42 * c_mach
-y_cgh = 0.38 * b_h / 2
+x_cgh_relative = base.x_cgh_relative
+y_cgh = base.y_cgh
 
-x_cgv_relative = 0.42 * c_macv
-z_cgv_relative = 0.38 * b_v
+x_cgv_relative = base.x_cgv_relative
+z_cgv_relative = base.z_cgv_relative
 
-x_cgn_relative = 0.4 * l_nac
+x_cgn_relative = base.x_cgn_relative
 
-x_cgh = x_LEMACh + x_cgh_relative
-x_cgv = x_LEMACv + x_cgv_relative
-x_cgfus = x_cgfusratio * l_fus
-x_cgn = x_startnacelle + x_cgn_relative
+x_cgh = base.x_cgh
+x_cgv = base.x_cgv
+x_cgfus = base.x_cgfus
 
-x_cgbat_front = x_BATT_FRONT
-x_cgbat_aft = x_BATT_AFT
+# Anchored to base per Point II (Engine CG does not change)
+x_cgn = base.x_cgn
 
-# Baseline Fuselage CG
+# New EXX specific battery locations
+x_cgbat_front = it.X_BATT_FRONT
+x_cgbat_aft = it.X_BATT_AFT
+
+# Baseline Fuselage CG (Using base weights without battery or unaccounted mass)
 x_cgfg_base = (x_cgfus * WEIGHT_FUSELAGE +
                x_cockpit * WEIGHT_COCKPIT_SYSTEMS +
                x_cgn * WEIGHT_PROPULSION_SYSTEM +
@@ -106,16 +108,17 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgw = x_LEMACw + x_cgw_relative
     x_cgwg = (x_cgw * WEIGHT_WING + x_MG * WEIGHT_MAIN_LANDING_GEAR) / WEIGHT_wg
 
-    # 1. Calculate the true original CG (The mathematical anchor point)
-    x_cg_baseline = (x_cgfg_base * WEIGHT_fg_base + x_cgwg * WEIGHT_wg) / (WEIGHT_fg_base + WEIGHT_wg)
+    # Fetch the original aircraft's absolute CG to serve as the anchor for the missing mass
+    original_cgs = base.calculate_aircraft_cgs(x_LEMACw)
+    x_cg_unaccounted = original_cgs['from_nose']['aircraft']
 
-    # 2. Add the Unaccounted Mass at the baseline CG, plus the new batteries
+    # Integrate batteries and unaccounted mass directly into the Fuselage Group
     x_cgfg_exx = (x_cgfg_base * WEIGHT_fg_base +
-                  x_cg_baseline * WEIGHT_UNACCOUNTED +
+                  x_cg_unaccounted * WEIGHT_UNACCOUNTED +
                   x_cgbat_front * WEIGHT_BATT_FRONT +
                   x_cgbat_aft * WEIGHT_BATT_AFT) / WEIGHT_fg_exx
 
-    # 3. Calculate Final EXX Total CG
+    # Final EXX Total CG
     x_cg_exx = (x_cgfg_exx * WEIGHT_fg_exx + x_cgwg * WEIGHT_wg) / (WEIGHT_fg_exx + WEIGHT_wg)
 
     x_cgw_LEMAC = x_cgw - x_LEMACw
@@ -144,31 +147,63 @@ def calculate_aircraft_cgs(x_LEMACw):
 
     return {
         "from_nose": {
-            "components": {"wing": x_cgw, "horizontal_stab": x_cgh, "vertical_stab": x_cgv, "fuselage": x_cgfus,
-                           "engine": x_cgn, "battery_front": x_cgbat_front, "battery_aft": x_cgbat_aft},
-            "groups": {"wing_group": x_cgwg, "fuselage_group": x_cgfg_exx},
+            "components": {"Wing": x_cgw, "Horizontal Tail": x_cgh, "Vertical Tail": x_cgv,
+                           "Fuselage": x_cgfus, "Propulsion Sys": x_cgn,
+                           "Battery Front": x_cgbat_front, "Battery Aft": x_cgbat_aft},
+            "groups": {"Wing Group": x_cgwg, "Fuselage Group": x_cgfg_exx},
             "aircraft": x_cg_exx
         },
         "from_lemac": {
-            "components": {"wing": x_cgw_LEMAC, "horizontal_stab": x_cgh_LEMAC, "vertical_stab": x_cgv_LEMAC,
-                           "fuselage": x_cgfus_LEMAC, "engine": x_cgn_LEMAC, "battery_front": x_cgbat_front_LEMAC,
-                           "battery_aft": x_cgbat_aft_LEMAC},
-            "groups": {"wing_group": x_cgwg_LEMAC, "fuselage_group": x_cgfg_LEMAC},
+            "components": {"Wing": x_cgw_LEMAC, "Horizontal Tail": x_cgh_LEMAC, "Vertical Tail": x_cgv_LEMAC,
+                           "Fuselage": x_cgfus_LEMAC, "Propulsion Sys": x_cgn_LEMAC,
+                           "Battery Front": x_cgbat_front_LEMAC, "Battery Aft": x_cgbat_aft_LEMAC},
+            "groups": {"Wing Group": x_cgwg_LEMAC, "Fuselage Group": x_cgfg_LEMAC},
             "aircraft": x_cg_LEMAC
         },
         "percent_mac": {
-            "components": {"wing": x_cgw_LEMACNORM, "horizontal_stab": x_cgh_LEMACNORM,
-                           "vertical_stab": x_cgv_LEMACNORM, "fuselage": x_cgfus_LEMACNORM, "engine": x_cgn_LEMACNORM,
-                           "battery_front": x_cgbat_front_LEMACNORM, "battery_aft": x_cgbat_aft_LEMACNORM},
-            "groups": {"wing_group": x_cgwg_LEMACNORM, "fuselage_group": x_cgfg_LEMACNORM},
+            "components": {"Wing": x_cgw_LEMACNORM, "Horizontal Tail": x_cgh_LEMACNORM,
+                           "Vertical Tail": x_cgv_LEMACNORM, "Fuselage": x_cgfus_LEMACNORM,
+                           "Propulsion Sys": x_cgn_LEMACNORM, "Battery Front": x_cgbat_front_LEMACNORM,
+                           "Battery Aft": x_cgbat_aft_LEMACNORM},
+            "groups": {"Wing Group": x_cgwg_LEMACNORM, "Fuselage Group": x_cgfg_LEMACNORM},
             "aircraft": x_cg_LEMACNORM
         }
     }
 
 
+def print_cg_table(results):
+    print("\n" + "=" * 80)
+    print(" " * 25 + "EXX VARIANT CG REPORT")
+    print("=" * 80)
+    print(f"{'COMPONENT / GROUP':<25} | {'CG from Nose (m)':<15} | {'CG from LEMAC (m)':<15} | {'CG as % MAC':<15}")
+    print("-" * 80)
+
+    print("COMPONENTS:")
+    for comp in results['from_nose']['components']:
+        nose = results['from_nose']['components'][comp]
+        lemac = results['from_lemac']['components'][comp]
+        mac = results['percent_mac']['components'][comp] * 100
+        print(f"  {comp:<23} | {nose:<15.4f} | {lemac:<15.4f} | {mac:<14.2f}%")
+
+    print("-" * 80)
+
+    print("ASSEMBLY GROUPS:")
+    for grp in results['from_nose']['groups']:
+        nose = results['from_nose']['groups'][grp]
+        lemac = results['from_lemac']['groups'][grp]
+        mac = results['percent_mac']['groups'][grp] * 100
+        print(f"  {grp:<23} | {nose:<15.4f} | {lemac:<15.4f} | {mac:<14.2f}%")
+
+    print("=" * 80)
+
+    nose_total = results['from_nose']['aircraft']
+    lemac_total = results['from_lemac']['aircraft']
+    mac_total = results['percent_mac']['aircraft'] * 100
+    print(f"{'TOTAL AIRCRAFT (EOW+BATT)':<25} | {nose_total:<15.4f} | {lemac_total:<15.4f} | {mac_total:<14.2f}%")
+    print("=" * 80)
+
+
 if __name__ == '__main__':
     x_LEMACw_input = it.x_LEMACw
     results = calculate_aircraft_cgs(x_LEMACw_input)
-    print("--- UPDATED EXX CG AS % MAC ---")
-    ac_mac = results['percent_mac']['aircraft']
-    print(f"Total EOW Aircraft: {ac_mac:.4f} ({ac_mac * 100:.2f}%)")
+    print_cg_table(results)

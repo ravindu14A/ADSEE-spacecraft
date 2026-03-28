@@ -111,6 +111,8 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
     x_cg_LEMACNORM = x_cg_LEMAC / c_macw
+    print(f"fuselage: {x_cgfg_LEMACNORM:.4f}")
+    print(f"Wing: {x_cgwg_LEMACNORM:.4f}")
 
     return {
         "from_nose": {
@@ -138,5 +140,7 @@ if __name__ == '__main__':
     x_LEMACw_input = it.x_LEMACw
     results = calculate_aircraft_cgs(x_LEMACw_input)
     print("--- BASELINE CRJ-1000 CG AS % MAC ---")
+
+
     ac_mac = results['percent_mac']['aircraft']
     print(f"Total EOW Aircraft: {ac_mac:.4f} ({ac_mac * 100:.2f}%)")

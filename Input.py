@@ -111,3 +111,5 @@ WEIGHT_MAIN_LANDING_GEARp   = 5.8
 WEIGHT_NOSE_LANDING_GEARp   = 0.8
 WEIGHT_PROPULSION_SYSTEMp   = 13.3   # including nacelles
 WEIGHT_COCKPIT_SYSTEMSp     = 2.3    # avionics, furnishing, etc.
+
+print(EOW)

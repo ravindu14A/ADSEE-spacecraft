@@ -8,8 +8,7 @@ C_m0 = 0.01
 CL_0 = 0.1
 
 # Operational limits
-MTOW = 41640
-MAX_FUEL = 8822
+
 X_FUEL = 20.92
 actual_MZFW = 33654
 
@@ -74,7 +73,7 @@ x_startnacelle = 30.0
 y_centrenacelle = 3
 l_nac = 3.25
 d_nac = 1
-n_nacelles = 2
+n_nacelle = 2
 
 
 # ------------------------------------
@@ -83,12 +82,12 @@ n_nacelles = 2
 
 # Operational Empty Weight (OEW)
 EOW = 23188
-W_pax_luggage = 10200
+W_pax_luggage = 8700
 W_front_cargo = 472
 W_aft_cargo = 1294
 W_max_payload = W_pax_luggage + W_front_cargo + W_aft_cargo
-W_fuel = 6486
-MTOW = EOW + W_max_payload + W_fuel
+MTOW = 41640
+W_fuel = MTOW - W_max_payload - EOW
 
 # ------------------------------------
 # COMPONENT WEIGHT FRACTIONS (% MTOW)

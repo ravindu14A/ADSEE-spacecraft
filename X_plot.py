@@ -4,6 +4,7 @@ import numpy as np
 import speed_of_sound
 import matplotlib.pyplot as plt
 
+MLW = 36968
 # -------- INITIALIZATION & AERO CONSTANTS -----
 a = speed_of_sound.get_atmosphere_properties(ip.altitude)[0]
 rho_sealevel = 1.225
@@ -113,13 +114,17 @@ CL_h_fixed = -0.35 * (A_h ** (1 / 3))
 # Dynamic Pressures
 q_landing = 0.5 * rho_sealevel * V_landing ** 2
 q_h_landing = 0.5 * rho_sealevel * (Vh_V * V_landing) ** 2
-W_landing = (ip.MTOW - ip.W_fuel) * 9.81
+W_landing = (MLW) * 9.81
 
 # Array representing the tail area for each point on the y-axis
 S_h_dynamic = Sh_S_array * ip.S_w
 
 # Dynamic array for the wing-body lift required at each tail size
 CL_A_h_array = (W_landing - q_h_landing * S_h_dynamic * CL_h_fixed) / (q_landing * ip.S_w)
+
+# --- NEW: Specific CL_A_h at selected Input S_h ---
+CL_A_h = (W_landing - q_h_landing * ip.S_h * CL_h_fixed) / (q_landing * ip.S_w)
+print(f"CL_A_h at selected input values (S_h = {ip.S_h}): {CL_A_h:.4f}")
 
 K_cont = (CL_h_fixed / CL_A_h_array) * (Vh_V ** 2) * Sh_S_array
 C_term = x_ac_LEMACNORM - (C_m_ac / CL_A_h_array)
@@ -130,8 +135,8 @@ current_Sh_S = ip.S_h / ip.S_w
 K_curr_stab = (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * (Vh_V ** 2) * current_Sh_S
 x_np_curr = (x_ac_LEMACNORM + K_curr_stab * x_h_LEMACNORM) / (1 + K_curr_stab)
 
-# Current point scalar calculation using the actual ip.S_h
-CL_A_h_curr = (W_landing - q_h_landing * ip.S_h * CL_h_fixed) / (q_landing * ip.S_w)
+# Current point scalar calculation using the actual ip.S_h (Reusing the new variable)
+CL_A_h_curr = CL_A_h
 K_curr_cont = (CL_h_fixed / CL_A_h_curr) * (Vh_V ** 2) * current_Sh_S
 x_fwd_curr = (C_term[0] * 0 + x_ac_LEMACNORM - (C_m_ac / CL_A_h_curr) + K_curr_cont * x_h_LEMACNORM) / (1 + K_curr_cont)
 

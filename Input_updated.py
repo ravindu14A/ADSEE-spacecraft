@@ -1,22 +1,36 @@
-# =====================================================================
-# CRJ-EXX UPDATED INPUT FILE (Task 3.3a)
-# =====================================================================
 import Input as ip
 # ------------------------------------
 # FLIGHT CHARACTERISTICS
 # ------------------------------------
-V = 250
+M = 0.85
 altitude = 9000
+V_landing = 70
+C_m0 = 0.01
+CL_0 = 0.1
 
 # Operational limits
-MTOW = 41640
-MAX_FUEL_CAPACITY = 8822  # Structural tank capacity (kg)
-X_FUEL = 20.92
 
+X_FUEL = 20.92
+actual_MZFW = 33654
+
+# Payload definitions
+MASS_PAX = 87
+MASS_FRONT_CARGO = 472
+X_START_FRONT_CARGOold = 6
+X_END_FRONT_CARGOold = 9.55
+MASS_AFT_CARGO = 1294
+X_START_AFT_CARGOold = 18.90
+X_END_AFT_CARGOold = 21.74
+
+# Cabin rows (25 rows for 100 pax, 2+2 abreast)
+NUM_ROWS = 22
+X_ROW_1 = 6.0
+ROW_PITCH = 0.7874
 # ------------------------------------
-# POSITIONS / DIMENSIONS (UNMODIFIED)
+# POSITIONS / DIMENSIONS
 # ------------------------------------
-# COCKPIT
+z_cg = 4
+#COCKPIT
 x_cockpit = 2.5
 
 # WHEELS
@@ -35,123 +49,127 @@ SWEEP_ANGLEw = 30 # Degrees, leading edge sweep
 x_LEMACw = 19
 dihedral = None
 
-# HORIZONTAL STABILISER DIMENSIONS
+# HORIZONTAL STABALISER DIMENSIONS
 c_rh = 2.2
-b_h = 8
+b_h = 8 # remember b for vertical stabaliser is simply its length
 S_h = 15.91
 TAPER_RATIOh = 0.35
 SWEEP_ANGLEh = 30
 x_LEMACh = 32
 
-# VERTICAL STABILISER DIMENSIONS
-c_rv = 4.2
-b_v = 4
+# VERTICAL STABALISER DIMENSIONS
+c_rv = 4.2# Fixed duplicate c_rv
+b_v = 4 # remember b for horizontal stabaliser is like wing
 S_v = 11.32
 TAPER_RATIOv = 0.7
 SWEEP_ANGLEv = 35
 x_LEMACv = 32
 z_startvertical = 1.35
 
-# FUSELAGE
+# Fuselage
 l_fus = 39.13
 d_fus = 4
 x_cgfusratio = 0.45
 
-# ------------------------------------
-# MODIFIED GEOMETRY (CRJ-EXX Updates)
-# ------------------------------------
-# Landing gear height increased by 30cm (+0.3m)
-z_cg = 4.0 + 0.3  # Now 4.3 m
-
-# Engine / Nacelle (Length increased by 20%, but CG is unchanged)
+# Engine
 x_startnacelle = 30.0
-y_centrenacelle = None
-l_nac_original = ip.l_nac
-d_nac_original = ip.d_nac
-l_nac = ip.l_nac * 1.20  # Now 3.90 m
-d_nac = ip.d_nac * 1.20
+y_centrenacelle = 3
+l_nac = ip.l_nac *1.2
+d_nac = ip.d_nac *1.2
+n_nacelle = 2
 
 # ------------------------------------
-# EMPTY WEIGHT (EOW) REDUCTIONS
+# COMPONENT WEIGHTS (Absolute Values in kg)
 # ------------------------------------
-EOW_orig = 23188
-W_wing_orig = (19.7 / 100) * EOW_orig
-W_fuselage_orig = (35.0 / 100) * EOW_orig
 
-# Reduced by 9% (Wing) and 7% (Fuselage)
-W_wing_EXX = W_wing_orig * (1 - 0.09)
-W_fuselage_EXX = W_fuselage_orig * (1 - 0.07)
+# Operational Empty Weight (OEW)
 
-delta_wing = W_wing_orig - W_wing_EXX
-delta_fuselage = W_fuselage_orig - W_fuselage_EXX
-total_weight_savings = delta_wing + delta_fuselage
-
-# New baseline EOW (without batteries)
-EOW = EOW_orig - total_weight_savings
-# ------------------------------------
-# ABSOLUTE COMPONENT WEIGHTS (CRJ-EXX)
-# ------------------------------------
-# We use absolute weights (kg) instead of percentages now to prevent math drift
-WEIGHT_WING                = W_wing_EXX
-WEIGHT_HORIZONTAL_TAIL     = (2.5 / 100) * EOW_orig
-WEIGHT_VERTICAL_TAIL       = (1.8 / 100) * EOW_orig
-WEIGHT_FUSELAGE            = W_fuselage_EXX
-WEIGHT_MAIN_LANDING_GEAR   = (5.8 / 100) * EOW_orig
-WEIGHT_NOSE_LANDING_GEAR   = (0.8 / 100) * EOW_orig
-WEIGHT_PROPULSION_SYSTEM   = (13.3 / 100) * EOW_orig
-WEIGHT_COCKPIT_SYSTEMS     = (2.3 / 100) * EOW_orig
+W_pax_luggage = 8700
+W_front_cargo = 472
+W_aft_cargo = 1294
+W_max_payload = W_pax_luggage + W_front_cargo + W_aft_cargo
+MTOW = 41640
 
 # ------------------------------------
-# BATTERIES (4500 kg Total Assumption)
+# COMPONENT WEIGHT FRACTIONS (ABS)
 # ------------------------------------
+WEIGHT_WING                = 19.7 * ip.EOW *0.91
+WEIGHT_HORIZONTAL_TAIL     = 2.5 * ip.EOW
+WEIGHT_VERTICAL_TAIL       = 1.8* ip.EOW
+WEIGHT_FUSELAGE            = 35.0* ip.EOW *0.93 # including cabin and furnishing systems
+WEIGHT_MAIN_LANDING_GEAR   = 5.8* ip.EOW
+WEIGHT_NOSE_LANDING_GEAR   = 0.8* ip.EOW
+WEIGHT_PROPULSION_SYSTEM   = 13.3* ip.EOW   # including nacelles
+WEIGHT_COCKPIT_SYSTEMS     = 2.3 * ip.EOW   # avionics, furnishing, etc.
+
+WEIGHT_BATTERY_FWD = 2025
+WEIGHT_BATTERY_AFT = 2475
+
+VOLUME_BATTERY_FWD = 1300
+VILUME_BATTERY_AFT = 1600
+
+# ------------------------------------
+# VOLUME AND LENGTH MATH
+# ------------------------------------
+
+TOTAL_CARGO_MASS = ip.MASS_FRONT_CARGO + ip.MASS_AFT_CARGO
+V_total_orig = 19.4
+
+V_front_orig = V_total_orig * (ip.MASS_FRONT_CARGO / TOTAL_CARGO_MASS) # ~5.18 m^3
+V_aft_orig = V_total_orig * (ip.MASS_AFT_CARGO / TOTAL_CARGO_MASS)     # ~14.22 m^3
+
+V_batt_front = 1.3 # m^3
+V_batt_aft = 1.6   # m^3
+
+# Original Hold Lengths
+L_front_hold = X_END_FRONT_CARGOold - X_START_FRONT_CARGOold  # 3.55 m
+L_aft_hold = X_END_AFT_CARGOold - X_START_AFT_CARGOold # 2.84 m
+
+# Length occupied by batteries (assuming uniform cross-section)
+L_batt_front = L_front_hold * (V_batt_front / V_front_orig) # ~0.89 m
+L_batt_aft = L_aft_hold * (V_batt_aft / V_aft_orig)         # ~0.32 m
+
 MASS_BATT_FRONT = 2025 # kg
 MASS_BATT_AFT = 2475   # kg
 TOTAL_BATT_MASS = MASS_BATT_FRONT + MASS_BATT_AFT
 
-# Battery Volumes & Lengths (Based on actual cargo boundaries)
-V_batt_front = 1.3 # m^3
-V_batt_aft = 1.6   # m^3
-L_front_hold = 9.55 - 6.00  # 3.55 m
-L_aft_hold = 21.74 - 18.90  # 2.84 m
+EOW =  WEIGHT_WING  + WEIGHT_HORIZONTAL_TAIL  +WEIGHT_VERTICAL_TAIL +WEIGHT_FUSELAGE  +WEIGHT_MAIN_LANDING_GEAR  +WEIGHT_NOSE_LANDING_GEAR   +WEIGHT_PROPULSION_SYSTEM  +WEIGHT_COCKPIT_SYSTEMS  +WEIGHT_BATTERY_FWD + WEIGHT_BATTERY_AFT+ TOTAL_BATT_MASS
+EOW_BATT = EOW + TOTAL_BATT_MASS
+W_fuel = MTOW - W_max_payload - EOW
 
-# Battery exact CGs (Occupying the extreme forward and aft spaces)
-L_batt_front = L_front_hold * (V_batt_front / 5.18) # ~0.89 m
-L_batt_aft = L_aft_hold * (V_batt_aft / 14.22)      # ~0.32 m
+# Batteries sit at the extremities of their respective holds
+X_BATT_FRONT = X_START_FRONT_CARGOold+ (L_batt_front / 2)       # 6.445 m
+X_BATT_AFT = X_END_AFT_CARGOold - (L_batt_aft / 2)          # 21.58 m
 
-X_BATT_FRONT = 6.00 + (L_batt_front / 2)       # 6.445 m
-X_BATT_AFT = 21.74 - (L_batt_aft / 2)          # 21.580 m
 
-# ------------------------------------
-# PAYLOAD: PASSENGERS & CARGO (CRJ-EXX)
-# ------------------------------------
-# Passengers (Last 3 rows removed: 25 -> 22)
-NUM_ROWS = 22
-MASS_PAX = 87
-X_ROW_1 = 6.0
-ROW_PITCH = 0.7874
-
-# Cargo (Redistributed based on remaining volume)
-TOTAL_CARGO_MASS = 472 + 1294 # 1766 kg
-
-V_front_new = 5.18 - V_batt_front # 3.88 m^3
-V_aft_new = 14.22 - V_batt_aft    # 12.62 m^3
+# 4. CARGO REDISTRIBUTION & EXACT CG LOCATIONS
+# =====================================================================
+V_front_new = V_front_orig - V_batt_front
+V_aft_new = V_aft_orig - V_batt_aft
 V_total_new = V_front_new + V_aft_new
 
-MASS_FRONT_CARGO = TOTAL_CARGO_MASS * (V_front_new / V_total_new) # 415.8 kg
-MASS_AFT_CARGO = TOTAL_CARGO_MASS * (V_aft_new / V_total_new)     # 1350.2 kg
+MASS_FRONT_CARGO_EXX = TOTAL_CARGO_MASS * (V_front_new / V_total_new)
+MASS_AFT_CARGO_EXX = TOTAL_CARGO_MASS * (V_aft_new / V_total_new)
 
-# New Cargo CGs (Shifted due to battery displacement)
-X_FRONT_CARGO = ((6.00 + L_batt_front) + 9.55) / 2 # 8.22 m
-X_AFT_CARGO = (18.90 + (21.74 - L_batt_aft)) / 2   # 20.16 m
+# Remaining cargo space bounds
+X_front_cargo_start = X_START_FRONT_CARGOold + L_batt_front
+X_FRONT_CARGO = (X_front_cargo_start + X_END_FRONT_CARGOold) / 2 # 8.22 m
+
+X_aft_cargo_end = X_END_AFT_CARGOold - L_batt_aft
+X_AFT_CARGO = (X_START_AFT_CARGOold + X_aft_cargo_end) / 2       # 20.16 m
 
 # ------------------------------------
-# WEIGHT ENVELOPE (CRJ-EXX)
+# COMPONENT WEIGHT FRACTIONS (% MTOW)
 # ------------------------------------
-TOTAL_PAX_WEIGHT = NUM_ROWS * 4 * MASS_PAX
-EOW_BATT = EOW + TOTAL_BATT_MASS
+# Calculated as decimals (multiply by 100 for percentages)
+frac_EOW = EOW / MTOW
+frac_max_payload = W_max_payload / MTOW
+frac_pax_luggage = W_pax_luggage / MTOW
+frac_front_cargo = W_front_cargo / MTOW
+frac_aft_cargo = W_aft_cargo / MTOW
+frac_fuel = W_fuel / MTOW
 
-# Recalculated MZFW
-actual_MZFW = EOW_BATT + TOTAL_PAX_WEIGHT + TOTAL_CARGO_MASS
+TOTAL_PAX_WEIGHT = NUM_ROWS * 4 * 87
 
-# Max Allowable Fuel Drop (To respect fixed MTOW)
-MAX_FUEL = MTOW - actual_MZFW
+MZFW_EXX = EOW_BATT + TOTAL_PAX_WEIGHT + TOTAL_CARGO_MASS
+MAX_ALLOWABLE_FUEL_EXX = MTOW - MZFW_EXX

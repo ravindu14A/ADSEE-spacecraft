@@ -88,8 +88,6 @@ total_weight_savings = delta_wing + delta_fuselage
 
 # New baseline EOW (without batteries)
 EOW = EOW_orig - total_weight_savings
-x_BATaft = 20
-x_BATfwd = 20
 # ------------------------------------
 # ABSOLUTE COMPONENT WEIGHTS (CRJ-EXX)
 # ------------------------------------

@@ -11,7 +11,11 @@ import Input_updated as it
 x_cockpit = it.x_cockpit
 x_NW = it.x_NW
 x_MG = it.x_MG
-x_BAT = it.x_BAT
+
+# Updated to separate front and aft battery positions
+x_BATT_FRONT = it.X_BATT_FRONT
+x_BATT_AFT = it.X_BATT_AFT
+
 EOW = it.EOW
 
 c_rw = it.c_rw
@@ -48,10 +52,13 @@ WEIGHT_MAIN_LANDING_GEAR = it.WEIGHT_MAIN_LANDING_GEAR
 WEIGHT_NOSE_LANDING_GEAR = it.WEIGHT_NOSE_LANDING_GEAR
 WEIGHT_PROPULSION_SYSTEM = it.WEIGHT_PROPULSION_SYSTEM
 WEIGHT_COCKPIT_SYSTEMS = it.WEIGHT_COCKPIT_SYSTEMS
-WEIGHT_BATTERY = it.TOTAL_BATT_MASS
 
-# Group Weights that remain constant
-WEIGHT_fg = WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR + WEIGHT_BATTERY
+# Updated to separate front and aft battery weights
+WEIGHT_BATT_FRONT = it.MASS_BATT_FRONT
+WEIGHT_BATT_AFT = it.MASS_BATT_AFT
+
+# Group Weights that remain constant (Summing both battery weights)
+WEIGHT_fg = WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR + WEIGHT_BATT_FRONT + WEIGHT_BATT_AFT
 WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
 
 # ------------------------------------
@@ -88,18 +95,22 @@ x_cgh = x_LEMACh + x_cgh_relative
 x_cgv = x_LEMACv + x_cgv_relative
 x_cgfus = x_cgfusratio * l_fus
 x_cgn = x_startnacelle + x_cgn_relative
-x_cgbat = x_BAT
+
+x_cgbat_front = x_BATT_FRONT
+x_cgbat_aft = x_BATT_AFT
 
 # ------------------------------------
 # FUSELAGE GROUP CG (FROM NOSE)
 # ------------------------------------
+# Added moment arms for both batteries to accurately shift the fuselage CG
 x_cgfg = (x_cgfus * WEIGHT_FUSELAGE +
           x_cockpit * WEIGHT_COCKPIT_SYSTEMS +
           x_cgn * WEIGHT_PROPULSION_SYSTEM +
           x_cgh * WEIGHT_HORIZONTAL_TAIL +
           x_cgv * WEIGHT_VERTICAL_TAIL +
           x_NW * WEIGHT_NOSE_LANDING_GEAR +
-          x_cgbat * WEIGHT_BATTERY) / WEIGHT_fg
+          x_cgbat_front * WEIGHT_BATT_FRONT +
+          x_cgbat_aft * WEIGHT_BATT_AFT) / WEIGHT_fg
 
 
 # =====================================================================
@@ -130,7 +141,9 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgv_LEMAC = x_cgv - x_LEMACw
     x_cgfus_LEMAC = x_cgfus - x_LEMACw
     x_cgn_LEMAC = x_cgn - x_LEMACw
-    x_cgbat_LEMAC = x_cgbat - x_LEMACw
+
+    x_cgbat_front_LEMAC = x_cgbat_front - x_LEMACw
+    x_cgbat_aft_LEMAC = x_cgbat_aft - x_LEMACw
 
     x_cgfg_LEMAC = x_cgfg - x_LEMACw
     x_cgwg_LEMAC = x_cgwg - x_LEMACw
@@ -144,7 +157,9 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgv_LEMACNORM = x_cgv_LEMAC / c_macw
     x_cgfus_LEMACNORM = x_cgfus_LEMAC / c_macw
     x_cgn_LEMACNORM = x_cgn_LEMAC / c_macw
-    x_cgbat_LEMACNORM = x_cgbat_LEMAC / c_macw
+
+    x_cgbat_front_LEMACNORM = x_cgbat_front_LEMAC / c_macw
+    x_cgbat_aft_LEMACNORM = x_cgbat_aft_LEMAC / c_macw
 
     x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
@@ -161,7 +176,8 @@ def calculate_aircraft_cgs(x_LEMACw):
                 "vertical_stab": x_cgv,
                 "fuselage": x_cgfus,
                 "engine": x_cgn,
-                "battery": x_cgbat
+                "battery_front": x_cgbat_front,
+                "battery_aft": x_cgbat_aft
             },
             "groups": {
                 "wing_group": x_cgwg,
@@ -176,7 +192,8 @@ def calculate_aircraft_cgs(x_LEMACw):
                 "vertical_stab": x_cgv_LEMAC,
                 "fuselage": x_cgfus_LEMAC,
                 "engine": x_cgn_LEMAC,
-                "battery": x_cgbat_LEMAC
+                "battery_front": x_cgbat_front_LEMAC,
+                "battery_aft": x_cgbat_aft_LEMAC
             },
             "groups": {
                 "wing_group": x_cgwg_LEMAC,
@@ -191,7 +208,8 @@ def calculate_aircraft_cgs(x_LEMACw):
                 "vertical_stab": x_cgv_LEMACNORM,
                 "fuselage": x_cgfus_LEMACNORM,
                 "engine": x_cgn_LEMACNORM,
-                "battery": x_cgbat_LEMACNORM
+                "battery_front": x_cgbat_front_LEMACNORM,
+                "battery_aft": x_cgbat_aft_LEMACNORM
             },
             "groups": {
                 "wing_group": x_cgwg_LEMACNORM,

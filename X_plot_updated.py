@@ -1,4 +1,4 @@
-import Input as ip
+import Input_updated as ip
 import CG_positions_updated as CG
 import numpy as np
 import speed_of_sound

@@ -3,6 +3,7 @@ import CG_positions_updated as CG
 import numpy as np
 import speed_of_sound
 import matplotlib.pyplot as plt
+import X_plot
 
 # -------- INITIALIZATION & AERO CONSTANTS -----
 a = speed_of_sound.get_atmosphere_properties(ip.altitude)[0]
@@ -35,7 +36,7 @@ Cl_ALPHAh = numerator / denominator
 # --- Cl_ALPHAw Calculation ---
 M_w = ip.M
 beta_w = np.sqrt(1 - M_w ** 2)
-A_w = ip.b_w ** 2 / ip.S_w
+A_w = (ip.b_w ** 2 / ip.S_w) * 1.25
 SWEEP_ANGLEw = np.radians(ip.SWEEP_ANGLEw)
 TAPER_RATIOw = ip.TAPER_RATIOw
 taper_factor_w = (1 - TAPER_RATIOw) / (1 + TAPER_RATIOw)

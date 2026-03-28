@@ -29,7 +29,7 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
 
     # Operational limits
     MTOW = ip.MTOW
-    MAX_FUEL = ip.MAX_FUEL
+    MAX_FUEL = ip.W_fuel
     X_FUEL = ip.X_FUEL
 
     # Payload definitions

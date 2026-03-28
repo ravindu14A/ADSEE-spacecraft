@@ -61,7 +61,7 @@ WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
 WEIGHT_fg_exx = WEIGHT_fg_base + WEIGHT_UNACCOUNTED + WEIGHT_BATT_FRONT + WEIGHT_BATT_AFT
 
 # ------------------------------------
-# CALCULATED DIMENSIONS (Linked directly to base file to preserve namespace)
+# CALCULATED DIMENSIONS
 # ------------------------------------
 c_macw = base.c_macw
 c_mach = base.c_mach
@@ -71,10 +71,28 @@ y_macw = base.y_macw
 y_mach = base.y_mach
 z_macv = base.z_macv
 
-y_cgw = base.y_cgw
-c_s = base.c_s
-distance_LEMAC_to_cs = base.distance_LEMAC_to_cs
-x_cgw_relative = base.x_cgw_relative
+# ---- EXPLICIT WING CG CORRECTION OVERRIDE ----
+y_cgw = 0.35 * b_w / 2
+
+# 1. Calculate the full aerodynamic local chord at y_cgw
+c_local = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
+
+# 2. Define the structural wing box boundaries (typical transport fractions)
+front_spar_fraction = it.front_spar_fraction
+rear_spar_fraction = it.rear_spar_fraction
+
+x_front_spar = front_spar_fraction * c_local
+x_rear_spar = rear_spar_fraction * c_local
+
+# 3. Calculate structural chord (c_s) as defined in the Torenbeek diagram
+c_s_structural = x_rear_spar - x_front_spar
+
+# 4. Calculate absolute distances
+distance_LEMAC_to_local_LE = (y_cgw - y_macw) * np.tan(np.radians(SWEEP_ANGLEw))
+
+# 5. Apply the 0.7 multiplier exclusively to the structural chord, starting from the front spar
+x_cgw_relative = distance_LEMAC_to_local_LE + x_front_spar + (0.7 * c_s_structural)
+# ----------------------------------------------
 
 x_cgh_relative = base.x_cgh_relative
 y_cgh = base.y_cgh

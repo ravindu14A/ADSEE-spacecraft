@@ -51,6 +51,8 @@ TAPER_RATIOw = ip.TAPER_RATIOw
 SWEEP_ANGLEw = ip.SWEEP_ANGLEw
 x_LEMACw = ip.x_LEMACw
 dihedral = ip.dihedral
+front_spar_fraction = 0.2
+rear_spar_fraction = 0.6
 
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = ip.c_rh

@@ -45,6 +45,8 @@ TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 30 # Degrees, leading edge sweep
 x_LEMACw = 19
 dihedral = None
+front_spar_fraction = 0.2
+rear_spar_fraction = 0.6
 
 # HORIZONTAL STABALISER DIMENSIONS
 c_rh = 2.2

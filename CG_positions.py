@@ -59,10 +59,28 @@ y_macw = (b_w / 6) * ((1 + 2 * TAPER_RATIOw) / (1 + TAPER_RATIOw))
 y_mach = (b_h / 6) * ((1 + 2 * TAPER_RATIOh) / (1 + TAPER_RATIOh))
 z_macv = (b_v / 3) * ((1 + 2 * TAPER_RATIOv) / (1 + TAPER_RATIOv))
 
+# ---- WING CG CORRECTION ----
 y_cgw = 0.35 * b_w / 2
-c_s = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
-distance_LEMAC_to_cs = (y_cgw - y_macw) * np.tan(np.radians(SWEEP_ANGLEw))
-x_cgw_relative = 0.7 * c_s + distance_LEMAC_to_cs
+
+# 1. Calculate the full aerodynamic local chord at y_cgw
+c_local = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
+
+# 2. Define the structural wing box boundaries (typical transport fractions)
+front_spar_fraction = it.front_spar_fraction
+rear_spar_fraction = it.rear_spar_fraction
+
+x_front_spar = front_spar_fraction * c_local
+x_rear_spar = rear_spar_fraction * c_local
+
+# 3. Calculate structural chord (c_s) as defined in the Torenbeek diagram
+c_s_structural = x_rear_spar - x_front_spar
+
+# 4. Calculate absolute distances
+distance_LEMAC_to_local_LE = (y_cgw - y_macw) * np.tan(np.radians(SWEEP_ANGLEw))
+
+# 5. Apply the 0.7 multiplier exclusively to the structural chord, starting from the front spar
+x_cgw_relative = distance_LEMAC_to_local_LE + x_front_spar + (0.7 * c_s_structural)
+# ----------------------------
 
 x_cgh_relative = 0.42 * c_mach
 y_cgh = 0.38 * b_h / 2
@@ -111,8 +129,9 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
     x_cg_LEMACNORM = x_cg_LEMAC / c_macw
-    print(f"fuselage: {x_cgfg_LEMACNORM:.4f}")
-    print(f"Wing: {x_cgwg_LEMACNORM:.4f}")
+
+    print(f"Fuselage Group: {x_cgfg_LEMACNORM:.4f} MAC")
+    print(f"Wing Group:     {x_cgwg_LEMACNORM:.4f} MAC")
 
     return {
         "from_nose": {
@@ -140,7 +159,6 @@ if __name__ == '__main__':
     x_LEMACw_input = it.x_LEMACw
     results = calculate_aircraft_cgs(x_LEMACw_input)
     print("--- BASELINE CRJ-1000 CG AS % MAC ---")
-
 
     ac_mac = results['percent_mac']['aircraft']
     print(f"Total EOW Aircraft: {ac_mac:.4f} ({ac_mac * 100:.2f}%)")

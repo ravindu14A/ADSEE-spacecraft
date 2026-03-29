@@ -1,12 +1,26 @@
 import CG_positions as CG
 import Input as ip
 import numpy as np
+import potato_bandi as pb
 
 # ------------------------------------
-# CG LIMITS
+# DYNAMIC CG LIMITS (From Potato Diagram)
 # ------------------------------------
-x_cg_aft = 21
-x_cg_fwd = 20
+# 1. Get the current Empty Operating Weight (OEW) CG from the nose
+cg_results = CG.calculate_aircraft_cgs(ip.x_LEMACw)
+x_oew = cg_results["from_nose"]["aircraft"]
+
+# 2. Run the payload sweep to get limits in % MAC
+# Returns: most_fwd_cg, most_aft_cg, fwd_limit_with_margin, aft_limit_with_margin
+_, _, fwd_mac_margin, aft_mac_margin = pb.calculate_cg_limits(x_oew, ip.x_LEMACw, plot=False)
+
+# 3. Convert % MAC back into absolute physical X-coordinates (meters from the nose)
+x_cg_fwd = ip.x_LEMACw + (fwd_mac_margin * CG.c_macw)
+x_cg_aft = ip.x_LEMACw + (aft_mac_margin * CG.c_macw)
+
+print("--- AIRCRAFT CG BOUNDARIES ---")
+print(f"FWD Limit (Absolute): {x_cg_fwd:.3f} m")
+print(f"AFT Limit (Absolute): {x_cg_aft:.3f} m\n")
 
 # ------------------------------------
 # THETA CLEARANCE
@@ -43,7 +57,7 @@ pct_aft = (F_NW_aft / W_total) * 100
 # ------------------------------------
 # Static stability
 y_MG = ip.y_MG
-alpha = np.arctan(y_MG / (x_MG - x_NW))  #technically we should use this but tbh we dont need it since we dont have CG in Y direction
+alpha = np.arctan(y_MG / (x_MG - x_NW))  # Technically we should use this but tbh we dont need it since we dont have CG in Y direction
 c = (x_cg_aft - x_NW) * np.sin(alpha)
 
 # ------------------------------------
@@ -52,13 +66,10 @@ c = (x_cg_aft - x_NW) * np.sin(alpha)
 # Dynamic stability
 lamb = np.rad2deg(np.arctan(z_cg / c))
 
-# ------------------------------------
-# TIP BACK REQUIREMENT
-# ------------------------------------
+
 # ------------------------------------
 # REQUIREMENT CHECKS & OUTPUT
 # ------------------------------------
-
 print("--- STABILITY & CONTROL CHECKS ---")
 
 # 1. Theta Clearance Check
@@ -85,19 +96,8 @@ if x_cg_aft < x_MG:
 else:
     print(f'[FAIL] Static tip over | delta = {x_MG - x_cg_aft:.2f} m')
 
-# 4. Dynamyc Tip Over Check
+# 5. Dynamic Tip Over Check
 if lamb < 55:
     print(f'[PASS] Dynamic tip over | lamb = {lamb:.2f} deg')
 else:
-    print(f'[FAIL] Dynamic tip over | delta = {lamb:.2f} deg')
-
-
-
-
-
-
-
-
-
-
-
+    print(f'[FAIL] Dynamic tip over | lamb = {lamb:.2f} deg')

@@ -32,10 +32,10 @@ x_cockpit = 2.5
 
 # WHEELS
 x_NW = 3.0
-x_MG = 22.6
+x_MG = 22
 y_MG = 4
 number_MG = 2
-theta = 12
+theta = 15
 
 # WING DIMENSION
 c_rw = 4.5
@@ -46,7 +46,7 @@ SWEEP_ANGLEw = 30 # Degrees, leading edge sweep
 x_LEMACw = 20
 dihedral = None
 front_spar_fraction = 0.2
-rear_spar_fraction = 0.6
+rear_spar_fraction = 0.8
 
 # HORIZONTAL STABALISER DIMENSIONS
 c_rh = 2.2
@@ -54,7 +54,7 @@ b_h = 8 # remember b for vertical stabaliser is simply its length
 S_h = 15.91
 TAPER_RATIOh = 0.35
 SWEEP_ANGLEh = 30
-x_LEMACh = 32
+x_LEMACh = 35
 
 # VERTICAL STABALISER DIMENSIONS
 c_rv = 4.2# Fixed duplicate c_rv
@@ -62,7 +62,7 @@ b_v = 4 # remember b for horizontal stabaliser is like wing
 S_v = 11.32
 TAPER_RATIOv = 0.7
 SWEEP_ANGLEv = 35
-x_LEMACv = 32
+x_LEMACv = 35
 z_startvertical = 1.35
 
 # Fuselage

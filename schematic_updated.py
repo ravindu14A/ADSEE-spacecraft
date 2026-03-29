@@ -2,9 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Rectangle
 
-# Import your variables and CG calculator
-import Input as ip
-import CG_positions as cg
+# Import your updated variables and EXX CG calculator
+import Input_updated as ip_up
+import CG_positions_updated as cg_exx
 
 
 # ------------------------------------
@@ -38,7 +38,6 @@ def get_spar_lines(x_lemac, b, c_r, taper, sweep_deg, spar_fraction):
     c_t = c_r * taper
     x_tip_le = x_root_le + (b / 2) * np.tan(sweep_rad)
 
-    # Calculate spar points based on local chord fraction
     root_spar_x = x_root_le + (spar_fraction * c_r)
     tip_spar_x = x_tip_le + (spar_fraction * c_t)
 
@@ -54,27 +53,29 @@ if __name__ == '__main__':
     fig, ax = plt.subplots(figsize=(14, 9))
 
     # --- 1. CALCULATE CGS ---
-    cg_data = cg.calculate_aircraft_cgs(ip.x_LEMACw)
+    cg_data = cg_exx.calculate_aircraft_cgs(ip_up.x_LEMACw)
     cg_components = cg_data['from_nose']['components']
 
     # --- 2. DRAW SHAPES & SPARS ---
     # Fuselage
-    fuselage = Rectangle((0, -ip.d_fus / 2), ip.l_fus, ip.d_fus,
+    fuselage = Rectangle((0, -ip_up.d_fus / 2), ip_up.l_fus, ip_up.d_fus,
                          edgecolor='black', facecolor='lightgray', zorder=2, label='Fuselage Outline')
     ax.add_patch(fuselage)
 
     # Main Wings
-    right_wing, left_wing = get_lifting_surface_coords(ip.x_LEMACw, ip.b_w, ip.c_rw, ip.TAPER_RATIOw, ip.SWEEP_ANGLEw)
+    right_wing, left_wing = get_lifting_surface_coords(ip_up.x_LEMACw, ip_up.b_w, ip_up.c_rw, ip_up.TAPER_RATIOw,
+                                                       ip_up.SWEEP_ANGLEw)
     ax.add_patch(Polygon(right_wing, edgecolor='blue', facecolor='lightblue', alpha=0.5, zorder=1, label='Main Wing'))
     ax.add_patch(Polygon(left_wing, edgecolor='blue', facecolor='lightblue', alpha=0.5, zorder=1))
 
     # Wing Spars (Using fractions from input file)
-    # Using getattr as a safeguard in case the fractions are missing from the file
-    front_frac = getattr(ip, 'front_spar_fraction', 0.20)
-    rear_frac = getattr(ip, 'rear_spar_fraction', 0.60)
+    front_frac = getattr(ip_up, 'front_spar_fraction', 0.25)
+    rear_frac = getattr(ip_up, 'rear_spar_fraction', 0.60)
 
-    rf_spar, lf_spar = get_spar_lines(ip.x_LEMACw, ip.b_w, ip.c_rw, ip.TAPER_RATIOw, ip.SWEEP_ANGLEw, front_frac)
-    rr_spar, lr_spar = get_spar_lines(ip.x_LEMACw, ip.b_w, ip.c_rw, ip.TAPER_RATIOw, ip.SWEEP_ANGLEw, rear_frac)
+    rf_spar, lf_spar = get_spar_lines(ip_up.x_LEMACw, ip_up.b_w, ip_up.c_rw, ip_up.TAPER_RATIOw, ip_up.SWEEP_ANGLEw,
+                                      front_frac)
+    rr_spar, lr_spar = get_spar_lines(ip_up.x_LEMACw, ip_up.b_w, ip_up.c_rw, ip_up.TAPER_RATIOw, ip_up.SWEEP_ANGLEw,
+                                      rear_frac)
 
     ax.plot(rf_spar[0], rf_spar[1], color='black', linestyle='--', linewidth=1.5, zorder=2, label='Wing Spars')
     ax.plot(lf_spar[0], lf_spar[1], color='black', linestyle='--', linewidth=1.5, zorder=2)
@@ -82,61 +83,70 @@ if __name__ == '__main__':
     ax.plot(lr_spar[0], lr_spar[1], color='black', linestyle='--', linewidth=1.5, zorder=2)
 
     # Horizontal Stabilizer
-    right_htail, left_htail = get_lifting_surface_coords(ip.x_LEMACh, ip.b_h, ip.c_rh, ip.TAPER_RATIOh, ip.SWEEP_ANGLEh)
+    right_htail, left_htail = get_lifting_surface_coords(ip_up.x_LEMACh, ip_up.b_h, ip_up.c_rh, ip_up.TAPER_RATIOh,
+                                                         ip_up.SWEEP_ANGLEh)
     ax.add_patch(Polygon(right_htail, edgecolor='green', facecolor='lightgreen', alpha=0.5, zorder=1, label='H-Stab'))
     ax.add_patch(Polygon(left_htail, edgecolor='green', facecolor='lightgreen', alpha=0.5, zorder=1))
 
     # Nacelles
-    if ip.y_centrenacelle is None:
-        y_nac_right = ip.d_fus / 2
-        y_nac_left = -ip.d_fus / 2 - ip.d_nac
+    if ip_up.y_centrenacelle is None:
+        y_nac_right = ip_up.d_fus / 2
+        y_nac_left = -ip_up.d_fus / 2 - ip_up.d_nac
     else:
-        y_nac_right = ip.y_centrenacelle - ip.d_nac / 2
-        y_nac_left = -ip.y_centrenacelle - ip.d_nac / 2
+        y_nac_right = ip_up.y_centrenacelle - ip_up.d_nac / 2
+        y_nac_left = -ip_up.y_centrenacelle - ip_up.d_nac / 2
 
-    ax.add_patch(Rectangle((ip.x_startnacelle, y_nac_right), ip.l_nac, ip.d_nac,
-                           edgecolor='red', facecolor='salmon', zorder=3, label='Nacelles'))
-    ax.add_patch(Rectangle((ip.x_startnacelle, y_nac_left), ip.l_nac, ip.d_nac,
+    ax.add_patch(Rectangle((ip_up.x_startnacelle, y_nac_right), ip_up.l_nac, ip_up.d_nac,
+                           edgecolor='red', facecolor='salmon', zorder=3, label='Nacelles (EXX)'))
+    ax.add_patch(Rectangle((ip_up.x_startnacelle, y_nac_left), ip_up.l_nac, ip_up.d_nac,
                            edgecolor='red', facecolor='salmon', zorder=3))
 
     # --- 3. DRAW CG MARKERS & DOTS ---
     # Wheels
-    ax.scatter(ip.x_NW, 0, color='black', marker='o', s=80, zorder=5, label='Nose Gear')
-    ax.scatter(ip.x_MG, ip.y_MG, color='black', marker='s', s=80, zorder=5, label='Main Gear')
-    ax.scatter(ip.x_MG, -ip.y_MG, color='black', marker='s', s=80, zorder=5)
+    ax.scatter(ip_up.x_NW, 0, color='black', marker='o', s=80, zorder=5, label='Nose Gear')
+    ax.scatter(ip_up.x_MG, ip_up.y_MG, color='black', marker='s', s=80, zorder=5, label='Main Gear')
+    ax.scatter(ip_up.x_MG, -ip_up.y_MG, color='black', marker='s', s=80, zorder=5)
 
-    # Component CGs
-    ax.scatter(cg_components['fuselage'], 0, color='cyan', marker='X', edgecolor='black', s=120, zorder=6,
-               label='Fuselage CG')
-    ax.scatter(cg_components['wing'], 0, color='blue', marker='X', edgecolor='white', s=120, zorder=6, label='Wing CG')
-    ax.scatter(cg_components['horizontal_stab'], 0, color='green', marker='X', edgecolor='white', s=120, zorder=6,
-               label='H-Stab CG')
+    # Component CGs (Dynamic fetch)
+    fus_cg = cg_components.get('Fuselage', cg_components.get('fuselage'))
+    wing_cg = cg_components.get('Wing', cg_components.get('wing'))
+    htail_cg = cg_components.get('Horizontal Tail', cg_components.get('horizontal_stab'))
 
-    # Total Aircraft Empty Weight CG
+    ax.scatter(fus_cg, 0, color='cyan', marker='X', edgecolor='black', s=120, zorder=6, label='Fuselage CG')
+    ax.scatter(wing_cg, 0, color='blue', marker='X', edgecolor='white', s=120, zorder=6, label='Wing CG')
+    ax.scatter(htail_cg, 0, color='green', marker='X', edgecolor='white', s=120, zorder=6, label='H-Stab CG')
+
+    # Total Aircraft EXX Empty Weight CG
     ax.scatter(cg_data['from_nose']['aircraft'], 0, color='white', marker='*', edgecolor='black', s=300, zorder=7,
-               label='Total EOW CG')
+               label='Total EXX EOW CG')
+
+    # Batteries (Front and Aft)
+    ax.scatter(ip_up.X_BATT_FRONT, 0, color='yellow', marker='*', edgecolor='black', s=200, zorder=6,
+               label='Front Battery CG')
+    ax.scatter(ip_up.X_BATT_AFT, 0, color='yellow', marker='*', edgecolor='black', s=200, zorder=6,
+               label='Aft Battery CG')
 
     # Cargo CGs
-    ax.scatter([ip.X_FRONT_CARGO, ip.X_AFT_CARGO], [0, 0], color='orange', marker='D', edgecolor='black', s=80,
+    ax.scatter([ip_up.X_FRONT_CARGO, ip_up.X_AFT_CARGO], [0, 0], color='orange', marker='D', edgecolor='black', s=80,
                zorder=6, label='Cargo CGs')
 
     # Passengers
     y_seat_offsets = [-1.05, -0.55, 0.55, 1.05]
     people_x, people_y = [], []
-    for row in range(ip.NUM_ROWS):
-        x = ip.X_ROW_1 + row * ip.ROW_PITCH
-        if x > ip.l_fus: break
+    for row in range(ip_up.NUM_ROWS):
+        x = ip_up.X_ROW_1 + row * ip_up.ROW_PITCH
+        if x > ip_up.l_fus: break
         for y_offset in y_seat_offsets:
             people_x.append(x)
             people_y.append(y_offset)
-    ax.scatter(people_x, people_y, color='purple', marker='o', s=15, zorder=4, label='Passengers')
+    ax.scatter(people_x, people_y, color='purple', marker='o', s=15, zorder=4, label='Passengers (EXX)')
 
     # --- 4. FORMATTING ---
     ax.set_aspect('equal')
-    ax.set_xlim(-2, ip.l_fus + 5)
-    ax.set_ylim(-ip.b_w / 2 - 2, ip.b_w / 2 + 2)
+    ax.set_xlim(-2, ip_up.l_fus + 5)
+    ax.set_ylim(-ip_up.b_w / 2 - 2, ip_up.b_w / 2 + 2)
 
-    ax.set_title("Baseline Aircraft Top-Down 2D Schematic", fontsize=16, fontweight='bold', pad=15)
+    ax.set_title("EXX Variant Top-Down 2D Schematic", fontsize=16, fontweight='bold', pad=15)
     ax.set_xlabel("X Position from Nose (m)", fontsize=12)
     ax.set_ylabel("Y Position from Centerline (m)", fontsize=12)
     ax.grid(True, linestyle='--', alpha=0.5)

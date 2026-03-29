@@ -128,61 +128,102 @@ def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
         print(f"AFT Limit with Margin:        {aft_limit_with_margin:.4f} MAC")
         print(f"-------------------------\n")
 
-        # Set default safe style and force white background
-        plt.style.use('default')
-        fig, ax = plt.subplots(figsize=(12, 8))
+        # ── Professional Plot Style ──
+        import matplotlib as mpl
+        mpl.rcParams.update({
+            'font.family': 'serif',
+            'font.size': 11,
+            'axes.labelsize': 13,
+            'axes.titlesize': 15,
+            'xtick.labelsize': 10,
+            'ytick.labelsize': 10,
+            'legend.fontsize': 9,
+            'figure.dpi': 120,
+        })
+
+        fig, ax = plt.subplots(figsize=(11, 7.5))
         fig.patch.set_facecolor('white')
-        ax.set_facecolor('white')
+        ax.set_facecolor('#FAFAFA')
         ax.xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
 
-        # Standard Professional Color Palette
-        c_cargo, c_win, c_ais, c_fuel = 'dimgrey', 'royalblue', 'seagreen', 'mediumturquoise'
-        # Marker settings: solid red circles for key envelope points
-        marker_pax = dict(marker='o', markersize=5, markerfacecolor='red', markeredgecolor='none')
+        # ── Colour palette (academic / TU Delft inspired) ──
+        COL_CARGO = '#1B9E77'   # teal
+        COL_WIN   = '#D95F02'   # burnt orange
+        COL_AISLE = '#7570B3'   # muted purple
+        COL_FUEL  = '#2171B5'   # blue
+        COL_LIMIT = '#E41A1C'   # red
 
-        # Plot Path A (Front-to-Back Loading)
-        ax.plot(pa_mac[:3], pa_W[:3], color=c_cargo, marker='o', markersize=4, label='Cargo (A)')
-        ax.plot(pa_mac[2:28], pa_W[2:28], color=c_win, label='Window Pax (A)', **marker_pax)
-        ax.plot(pa_mac[27:], pa_W[27:], color=c_ais, label='Aisle Pax (A)', **marker_pax)
+        # Index helpers
+        n_c = 3
+        n_w = n_c + NUM_ROWS
+        n_a = n_w + NUM_ROWS
 
-        # Plot Path B (Back-to-Front Loading)
-        ax.plot(pb_mac[:3], pb_W[:3], color=c_cargo, marker='o', markersize=4, linestyle='--')
-        ax.plot(pb_mac[2:28], pb_W[2:28], color=c_win, linestyle='--', **marker_pax)
-        ax.plot(pb_mac[27:], pb_W[27:], color=c_ais, linestyle='--', **marker_pax)
+        # ── Path A (solid — front-to-back) ──
+        ax.plot(pa_mac[:n_c], pa_W[:n_c],
+                color=COL_CARGO, marker='s', ms=5, lw=1.8,
+                label='Cargo (fwd → aft)', zorder=3)
+        ax.plot(pa_mac[n_c-1:n_w], pa_W[n_c-1:n_w],
+                color=COL_WIN, marker='o', ms=3.5, lw=1.4,
+                label='Window pax (fwd → aft)', zorder=3)
+        ax.plot(pa_mac[n_w-1:n_a], pa_W[n_w-1:n_a],
+                color=COL_AISLE, marker='o', ms=3.5, lw=1.4,
+                label='Aisle pax (fwd → aft)', zorder=3)
 
-        # Plot Fuel Loading
-        ax.plot(f_mac, f_W, color=c_fuel, linewidth=3, label='Fuel Loading')
+        # ── Path B (dashed — back-to-front) ──
+        ax.plot(pb_mac[:n_c], pb_W[:n_c],
+                color=COL_CARGO, marker='s', ms=5, lw=1.8, ls='--', zorder=3)
+        ax.plot(pb_mac[n_c-1:n_w], pb_W[n_c-1:n_w],
+                color=COL_WIN, marker='o', ms=3.5, lw=1.4, ls='--', zorder=3)
+        ax.plot(pb_mac[n_w-1:n_a], pb_W[n_w-1:n_a],
+                color=COL_AISLE, marker='o', ms=3.5, lw=1.4, ls='--', zorder=3)
 
-        # Mark the OEW Point - Large prominent solid red circle
-        ax.scatter([pa_mac[0]], [OEW], color='red', s=150, zorder=5, label='OEW CG Point')
+        # ── Fuel loading ──
+        ax.plot(f_mac, f_W, color=COL_FUEL, lw=3, solid_capstyle='round',
+                label='Fuel loading', zorder=4)
 
-        # Plot the calculated limits & margins - Using standard line styles
-        ax.axvline(x=most_fwd_cg, color='dimgrey', linestyle='--', alpha=0.6, label=f'Most FWD ({most_fwd_cg:.3f})')
-        ax.axvline(x=most_aft_cg, color='dimgrey', linestyle='--', alpha=0.6, label=f'Most AFT ({most_aft_cg:.3f})')
+        # ── OEW marker ──
+        ax.scatter([pa_mac[0]], [OEW], color='black', s=100, zorder=6,
+                   edgecolors='white', linewidths=1.2)
+        ax.axvline(x=fwd_limit_with_margin, color=COL_LIMIT, ls='-', lw=1.5, alpha=0.7,
+                   label=f'CG limits ± {CG_MARGIN:.0%} MAC')
+        ax.axvline(x=aft_limit_with_margin, color=COL_LIMIT, ls='-', lw=1.5, alpha=0.7)
 
-        ax.axvline(x=fwd_limit_with_margin, color='red', linestyle='-', alpha=0.8, label='FWD Limit w/ Margin')
-        ax.axvline(x=aft_limit_with_margin, color='red', linestyle='-', alpha=0.8, label='AFT Limit w/ Margin')
+        # Calculated CG extremes (thin dashed)
+        ax.axvline(x=most_fwd_cg, color='grey', ls='--', lw=0.8, alpha=0.5)
+        ax.axvline(x=most_aft_cg, color='grey', ls='--', lw=0.8, alpha=0.5)
 
-        # Format axes limits
+        # ── MTOW line ──
+        ax.axhline(y=MTOW, color=COL_LIMIT, ls='--', lw=1.5, alpha=0.6)
+        ax.text(ax.get_xlim()[0] + 0.005 if ax.get_xlim()[0] != 0 else most_fwd_cg,
+                MTOW + 200, f'MTOW = {MTOW:,.0f} kg',
+                color=COL_LIMIT, fontsize=9, fontweight='bold')
+
+        # ── Axes ──
         try:
-            ax.set_xlim(fwd_limit_with_margin - 0.05, aft_limit_with_margin + 0.1)
+            ax.set_xlim(fwd_limit_with_margin - 0.06, aft_limit_with_margin + 0.08)
         except ValueError:
             pass
-        ax.set_ylim(OEW - 1000, MTOW + 2000)
+        ax.set_ylim(OEW - 1200, MTOW + 2500)
 
-        # Labels & Grids
-        ax.set_title("Aircraft Static Potato Diagram", fontsize=16, color='black', fontweight='bold', pad=20)
-        ax.set_xlabel("$x_{cg} / MAC$", fontsize=12)
-        ax.set_ylabel("Mass (kg)", fontsize=12)
+        ax.set_title('CRJ-1000 — Loading Envelope (Potato Diagram)',
+                      fontweight='bold', pad=14)
+        ax.set_xlabel(r'$x_{\mathrm{cg}}\;/\;\mathrm{MAC}$')
+        ax.set_ylabel('Aircraft Mass  (kg)')
 
-        # Professional legend with black text
-        ax.legend(loc='upper left', frameon=True, facecolor='white', framealpha=1, edgecolor='dimgrey', fontsize=9,
-                  labelcolor='black')
-        ax.grid(True, linestyle='-', color='lightgrey', alpha=0.7)
+        # ── Legend ──
+        leg = ax.legend(loc='upper left', frameon=True, fancybox=False,
+                        edgecolor='#CCCCCC', framealpha=0.95)
+        leg.get_frame().set_linewidth(0.6)
 
-        # Horizontal limit lines - Bold professional style
-        ax.axhline(y=MTOW, color='red', linestyle='--', linewidth=2, alpha=0.5)
-        ax.text(ax.get_xlim()[1], MTOW, ' MTOW', color='red', va='center', fontweight='bold')
+        # ── Grid ──
+        ax.grid(True, which='major', ls='-', lw=0.4, color='#D0D0D0')
+        ax.minorticks_on()
+        ax.grid(True, which='minor', ls=':', lw=0.25, color='#E8E8E8')
+
+        # ── Spine styling ──
+        for spine in ax.spines.values():
+            spine.set_linewidth(0.6)
+            spine.set_color('#666666')
 
         plt.tight_layout()
         plt.show()

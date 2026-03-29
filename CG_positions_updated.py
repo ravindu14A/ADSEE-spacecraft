@@ -79,7 +79,7 @@ c_local = c_rw * (1 - (1 - TAPER_RATIOw) * 0.35)
 
 # 2. Define the structural wing box boundaries (typical transport fractions)
 front_spar_fraction = it.front_spar_fraction
-rear_spar_fraction = it.rear_spar_fraction
+rear_spar_fraction = base.rear_spar_fraction
 
 x_front_spar = front_spar_fraction * c_local
 x_rear_spar = rear_spar_fraction * c_local

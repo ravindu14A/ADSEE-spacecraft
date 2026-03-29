@@ -23,7 +23,17 @@ def generate_combined_plot(min_lemacw=17.0, max_lemacw=19.0, num_points=50):
     for x_lemac in x_lemac_array:
         cg_results = cg.calculate_aircraft_cgs(x_lemac)
         current_x_oew = cg_results["from_nose"]["aircraft"]
-        _, _, fwd_margin, aft_margin = pb.calculate_cg_limits(current_x_oew, x_lemac, plot=False)
+
+        # Extract Wing CG dynamically in the sweep
+        current_x_wing = cg_results["from_nose"]["components"].get("Wing",
+                                                                   cg_results["from_nose"]["components"].get("wing"))
+
+        _, _, fwd_margin, aft_margin = pb.calculate_cg_limits(
+            X_OEW=current_x_oew,
+            X_LEMAC=x_lemac,
+            X_FUEL=current_x_wing,
+            plot=False
+        )
 
         fwd_cg_limits.append(fwd_margin)
         aft_cg_limits.append(aft_margin)
@@ -32,7 +42,17 @@ def generate_combined_plot(min_lemacw=17.0, max_lemacw=19.0, num_points=50):
     # 2. Get the specific limits for the CURRENT x_LEMACw
     curr_cg_results = cg.calculate_aircraft_cgs(ip.x_LEMACw)
     curr_x_oew = curr_cg_results["from_nose"]["aircraft"]
-    _, _, curr_fwd_margin, curr_aft_margin = pb.calculate_cg_limits(curr_x_oew, ip.x_LEMACw, plot=False)
+
+    # Extract Wing CG for the current static configuration
+    curr_x_wing = curr_cg_results["from_nose"]["components"].get("Wing",
+                                                                 curr_cg_results["from_nose"]["components"].get("wing"))
+
+    _, _, curr_fwd_margin, curr_aft_margin = pb.calculate_cg_limits(
+        X_OEW=curr_x_oew,
+        X_LEMAC=ip.x_LEMACw,
+        X_FUEL=curr_x_wing,
+        plot=False
+    )
     curr_lemac_ratio = ip.x_LEMACw / ip.l_fus
 
     print("Generating Combined Overlay Plot...")
@@ -96,6 +116,7 @@ def generate_combined_plot(min_lemacw=17.0, max_lemacw=19.0, num_points=50):
 
     ax1.legend(ordered_handles, ordered_labels, loc='lower left',
                frameon=True, framealpha=0.95, fontsize=9, edgecolor='#cccccc')
+
     # --- 5. ENVELOPE CLEARANCE CHECK (PASS/FAIL) ---
     print("\n" + "=" * 50)
     print("   AERODYNAMIC ENVELOPE CLEARANCE CHECK")

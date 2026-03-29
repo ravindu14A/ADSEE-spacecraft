@@ -23,10 +23,15 @@ def generate_combined_plot(min_lemacw, max_lemacw, num_points=100):
         cg_results = cg.calculate_aircraft_cgs(x_lemac)
         current_x_oew = cg_results["from_nose"]["aircraft"]
 
-        # Get the CG envelope limits
+        # Extract Wing CG (with a fallback to handle both lowercase and uppercase keys)
+        current_x_wing = cg_results["from_nose"]["components"].get("Wing",
+                                                                   cg_results["from_nose"]["components"].get("wing"))
+
+        # Get the CG envelope limits, now passing X_FUEL
         _, _, fwd_margin, aft_margin = pb.calculate_cg_limits(
             X_OEW=current_x_oew,
             X_LEMAC=x_lemac,
+            X_FUEL=current_x_wing,
             plot=False
         )
 
@@ -37,9 +42,14 @@ def generate_combined_plot(min_lemacw, max_lemacw, num_points=100):
     # 2. Get specific limits for the CURRENT x_LEMACw (For the Red Line)
     curr_cg_results = cg.calculate_aircraft_cgs(ip.x_LEMACw)
     curr_x_oew = curr_cg_results["from_nose"]["aircraft"]
+    curr_x_wing = curr_cg_results["from_nose"]["components"].get("Wing",
+                                                                 curr_cg_results["from_nose"]["components"].get("wing"))
+
+    # Pass X_FUEL for the current configuration calculation as well
     _, _, curr_fwd_margin, curr_aft_margin = pb.calculate_cg_limits(
         X_OEW=curr_x_oew,
         X_LEMAC=ip.x_LEMACw,
+        X_FUEL=curr_x_wing,
         plot=False
     )
     curr_lemac_ratio = ip.x_LEMACw / ip.l_fus
@@ -104,6 +114,7 @@ def generate_combined_plot(min_lemacw, max_lemacw, num_points=100):
     # Plot unified legend inside the plot (lower left is typically open in these graphs)
     ax1.legend(ordered_handles, ordered_labels, loc='lower left',
                frameon=True, framealpha=0.95, fontsize=9, edgecolor='#cccccc')
+
     # --- 5. ENVELOPE CLEARANCE CHECK (PASS/FAIL) ---
     print("\n" + "=" * 50)
     print("   AERODYNAMIC ENVELOPE CLEARANCE CHECK")

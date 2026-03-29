@@ -5,7 +5,7 @@ import Input as ip
 # ------------------------------------
 M = ip.M
 altitude = ip.altitude
-V_landing = ip.V_landing
+CL_max = 2.6
 C_m0 = ip.C_m0
 CL_0 = ip.CL_0
 
@@ -36,9 +36,9 @@ z_cg = ip.z_cg + 0.3
 x_cockpit = ip.x_cockpit
 
 # WHEELS
-x_NW = 3.5
-x_MG = 22
-y_MG = 4.5
+x_NW = ip.x_NW
+x_MG = ip.x_MG
+y_MG = ip.y_MG
 number_MG = ip.number_MG
 theta = ip.theta
 
@@ -49,23 +49,25 @@ b_w = ip.b_w
 S_w = ip.S_w
 TAPER_RATIOw = ip.TAPER_RATIOw
 SWEEP_ANGLEw = ip.SWEEP_ANGLEw
-x_LEMACw = 19.8
+x_LEMACw = ip.x_LEMACw -0.77
 dihedral = ip.dihedral
-front_spar_fraction = 0.2
-rear_spar_fraction = 0.8
+front_spar_fraction = ip.front_spar_fraction
+rear_spar_fraction = ip.rear_spar_fraction
 
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = ip.c_rh
-b_h = ip.b_h
-S_h = ip.S_h
+c_th = ip.c_th
+S_h = ip.S_h-0.3
+b_h = 2 * S_h / (c_rh + c_th)
 TAPER_RATIOh = ip.TAPER_RATIOh
 SWEEP_ANGLEh = ip.SWEEP_ANGLEh
 x_LEMACh = ip.x_LEMACh
 
 # VERTICAL STABILISER DIMENSIONS
 c_rv = ip.c_rv
-b_v = ip.b_v
+c_tv = ip.c_tv
 S_v = ip.S_v
+b_v = 2 * S_v / (c_rv + c_tv)
 TAPER_RATIOv = ip.TAPER_RATIOv
 SWEEP_ANGLEv = ip.SWEEP_ANGLEv
 x_LEMACv = ip.x_LEMACv

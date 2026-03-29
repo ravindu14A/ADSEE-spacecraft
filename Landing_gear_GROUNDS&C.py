@@ -10,9 +10,17 @@ import potato_bandi as pb
 cg_results = CG.calculate_aircraft_cgs(ip.x_LEMACw)
 x_oew = cg_results["from_nose"]["aircraft"]
 
+# Extract Wing CG dynamically to use as Fuel CG
+x_wing = cg_results["from_nose"]["components"].get("Wing", cg_results["from_nose"]["components"].get("wing"))
+
 # 2. Run the payload sweep to get limits in % MAC
 # Returns: most_fwd_cg, most_aft_cg, fwd_limit_with_margin, aft_limit_with_margin
-_, _, fwd_mac_margin, aft_mac_margin = pb.calculate_cg_limits(x_oew, ip.x_LEMACw, plot=False)
+_, _, fwd_mac_margin, aft_mac_margin = pb.calculate_cg_limits(
+    X_OEW=x_oew,
+    X_LEMAC=ip.x_LEMACw,
+    X_FUEL=x_wing,
+    plot=False
+)
 
 # 3. Convert % MAC back into absolute physical X-coordinates (meters from the nose)
 x_cg_fwd = ip.x_LEMACw + (fwd_mac_margin * CG.c_macw)

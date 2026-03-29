@@ -3,7 +3,7 @@
 # ------------------------------------
 M = 0.82
 altitude = 9000
-V_landing = 70
+CL_max = 2.6
 C_m0 = 0.01
 CL_0 = 0.1
 
@@ -35,7 +35,7 @@ x_cockpit = 2.5
 z_cg = 4
 
 # WHEELS
-x_NW = 3.0
+x_NW = 2.28 # 26/446
 x_MG = 22.64 #258/446
 y_MG = 2.0375
 number_MG = 2
@@ -53,10 +53,11 @@ front_spar_fraction = 0.2
 rear_spar_fraction = 0.8
 
 # HORIZONTAL STABALISER DIMENSIONS
-c_rh = 2.8 # 40/566
-c_th = 1.2 # 17/566
-b_h = 9 # 130/55
+c_rh = 2.5 # 40/566
+c_th = 1 # 17/566
 S_h = 15.91
+b_h = 2 * S_h / (c_rh + c_th)  # 130/55
+print(b_h)
 TAPER_RATIOh = c_th / c_rh
 SWEEP_ANGLEh = 33.7
 x_LEMACh = 38.9 #563/566
@@ -64,8 +65,8 @@ x_LEMACh = 38.9 #563/566
 # VERTICAL STABALISER DIMENSIONS
 c_rv = 3.5# 40/446
 c_tv = 2.8# 27/446
-b_v = 4 # remember b for horizontal stabaliser is like wing
 S_v = 11.32
+b_v = 4 #2 * S_v / (c_rv + c_tv)
 TAPER_RATIOv = c_tv / c_rv
 SWEEP_ANGLEv = 42.6
 x_LEMACv = 35

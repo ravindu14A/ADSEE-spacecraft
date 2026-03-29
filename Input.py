@@ -1,7 +1,7 @@
 # ------------------------------------
 # FLIGHT CHARACTERISTICS
 # ------------------------------------
-M = 0.85
+M = 0.82
 altitude = 9000
 V_landing = 70
 C_m0 = 0.01
@@ -9,66 +9,68 @@ CL_0 = 0.1
 
 # Operational limits
 
-X_FUEL = 20.92
 actual_MZFW = 33654
 
 # Payload definitions
 MASS_PAX = 87
 MASS_FRONT_CARGO = 472
-X_FRONT_CARGO = 7.77
+X_FRONT_CARGO = 8.33
 MASS_AFT_CARGO = 1294
-X_AFT_CARGO = 19.71
+X_AFT_CARGO = 26.52
 
 # Cabin rows (25 rows for 100 pax, 2+2 abreast)
 NUM_ROWS = 25
-X_ROW_1 = 6.0
+X_ROW_1 = 7.1
 ROW_PITCH = 0.7874
 # ------------------------------------
 # POSITIONS / DIMENSIONS
 # ------------------------------------
-z_cg = 4
+# Fuselage
+l_fus = 39.13
+d_fus = 4
+x_cgfusratio = 0.45
+
+
 #COCKPIT
 x_cockpit = 2.5
+z_cg = 4
 
 # WHEELS
 x_NW = 3.0
-x_MG = 22
-y_MG = 4
+x_MG = 22.64 #258/446
+y_MG = 2.0375
 number_MG = 2
 theta = 15
 
 # WING DIMENSION
-c_rw = 4.5
-b_w = 26.18
+c_rw = 5.12
+b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
-SWEEP_ANGLEw = 27 # Degrees, leading edge sweep
-x_LEMACw = 20
+SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
+x_LEMACw = 20.5 # 296/566
 dihedral = None
 front_spar_fraction = 0.2
 rear_spar_fraction = 0.8
 
 # HORIZONTAL STABALISER DIMENSIONS
-c_rh = 2.2
-b_h = 8 # remember b for vertical stabaliser is simply its length
+c_rh = 2.8 # 40/566
+c_th = 1.2 # 17/566
+b_h = 9 # 130/55
 S_h = 15.91
-TAPER_RATIOh = 0.35
-SWEEP_ANGLEh = 30
-x_LEMACh = 35
+TAPER_RATIOh = c_th / c_rh
+SWEEP_ANGLEh = 33.7
+x_LEMACh = 38.9 #563/566
 
 # VERTICAL STABALISER DIMENSIONS
-c_rv = 4.2# Fixed duplicate c_rv
+c_rv = 3.5# 40/446
+c_tv = 2.8# 27/446
 b_v = 4 # remember b for horizontal stabaliser is like wing
 S_v = 11.32
-TAPER_RATIOv = 0.7
-SWEEP_ANGLEv = 35
+TAPER_RATIOv = c_tv / c_rv
+SWEEP_ANGLEv = 42.6
 x_LEMACv = 35
 z_startvertical = 1.35
-
-# Fuselage
-l_fus = 39.13
-d_fus = 4
-x_cgfusratio = 0.45
 
 # Engine
 x_startnacelle = 30

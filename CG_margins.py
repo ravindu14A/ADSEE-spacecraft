@@ -30,12 +30,17 @@ def run_lemac_sweep(min_lemacw, max_lemacw, num_points=50):
         cg_results = cg.calculate_aircraft_cgs(x_lemac)
         current_x_oew = cg_results["from_nose"]["aircraft"]
 
+        # Extract Wing CG to use as Fuel CG (handles both uppercase and lowercase keys)
+        current_x_wing = cg_results["from_nose"]["components"].get("Wing",
+                                                                   cg_results["from_nose"]["components"].get("wing"))
+
         # Step B: Get the CG envelope limits for this specific wing/OEW configuration
         # potato_bandi returns: most_fwd_cg, most_aft_cg, fwd_limit_with_margin, aft_limit_with_margin
         # We set plot=False so it doesn't spawn individual potato diagrams
         _, _, fwd_margin, aft_margin = pb.calculate_cg_limits(
             X_OEW=current_x_oew,
             X_LEMAC=x_lemac,
+            X_FUEL=current_x_wing,  # Passed the missing argument here!
             plot=False
         )
 

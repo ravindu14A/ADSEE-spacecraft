@@ -8,7 +8,6 @@ C_m0 = 0.01
 CL_0 = 0.1
 
 # Operational limits
-
 actual_MZFW = 33654
 
 # Payload definitions
@@ -48,7 +47,7 @@ b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 20.5 # 296/566
+x_LEMACw = 20.7 # 296/566
 dihedral = None
 front_spar_fraction = 0.2
 rear_spar_fraction = 0.8

@@ -4,6 +4,7 @@ from matplotlib.ticker import FormatStrFormatter
 import Input_updated as ip
 import CG_positions_updated as cg
 
+
 def add_mass(current_w, current_cg, added_w, added_cg):
     new_w = current_w + added_w
     if new_w == 0:
@@ -11,14 +12,14 @@ def add_mass(current_w, current_cg, added_w, added_cg):
     new_cg = ((current_w * current_cg) + (added_w * added_cg)) / new_w
     return new_w, new_cg
 
-def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
+
+def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
     CG_MARGIN = 0.05
 
     OEW = ip.EOW
     MAC = cg.c_macw
     MTOW = ip.MTOW
     MAX_FUEL = ip.W_fuel
-    X_FUEL = ip.X_FUEL
 
     MASS_PAX = ip.MASS_PAX
     MASS_FRONT_CARGO = ip.MASS_FRONT_CARGO
@@ -113,13 +114,17 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
 
         # Plot Path A
         ax.plot(pa_mac[:n_cargo], pa_W[:n_cargo], color=c_cargo, marker='o', markersize=4, label='Cargo')
-        ax.plot(pa_mac[n_cargo - 1:n_win], pa_W[n_cargo - 1:n_win], color=c_win, marker='o', markersize=3, label='Window Pax')
-        ax.plot(pa_mac[n_win - 1:n_aisle], pa_W[n_win - 1:n_aisle], color=c_ais, marker='o', markersize=3, label='Aisle Pax')
+        ax.plot(pa_mac[n_cargo - 1:n_win], pa_W[n_cargo - 1:n_win], color=c_win, marker='o', markersize=3,
+                label='Window Pax')
+        ax.plot(pa_mac[n_win - 1:n_aisle], pa_W[n_win - 1:n_aisle], color=c_ais, marker='o', markersize=3,
+                label='Aisle Pax')
 
         # Plot Path B
         ax.plot(pb_mac[:n_cargo], pb_W[:n_cargo], color=c_cargo, marker='o', markersize=4, linestyle='--')
-        ax.plot(pb_mac[n_cargo - 1:n_win], pb_W[n_cargo - 1:n_win], color=c_win, marker='o', markersize=3, linestyle='--')
-        ax.plot(pb_mac[n_win - 1:n_aisle], pb_W[n_win - 1:n_aisle], color=c_ais, marker='o', markersize=3, linestyle='--')
+        ax.plot(pb_mac[n_cargo - 1:n_win], pb_W[n_cargo - 1:n_win], color=c_win, marker='o', markersize=3,
+                linestyle='--')
+        ax.plot(pb_mac[n_win - 1:n_aisle], pb_W[n_win - 1:n_aisle], color=c_ais, marker='o', markersize=3,
+                linestyle='--')
 
         ax.plot(f_mac, f_W, color=c_fuel, linewidth=4, label='Fuel Loading')
         ax.scatter([pa_mac[0]], [OEW], color='white', s=100, zorder=5, label='OEW CG')
@@ -144,9 +149,19 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
 
 
 if __name__ == '__main__':
-    X_OEW_CURRENT = cg.calculate_aircraft_cgs(ip.x_LEMACw)["from_nose"]["aircraft"]
+    # Pull the dictionary using your updated module name
+    cg_data_from_nose = cg.calculate_aircraft_cgs(ip.x_LEMACw)["from_nose"]
+
+    # Extract the required values
+    X_OEW_CURRENT = cg_data_from_nose["aircraft"]
+    # Updated to match the capitalized key in your EXX variant dictionary
+    X_WING_CURRENT = cg_data_from_nose["components"]["Wing"]
     X_LEMAC_CURRENT = ip.x_LEMACw
 
+    # Run the function, passing the wing CG as the fuel CG
     fwd, aft, fwd_margin, aft_margin = calculate_cg_limits(
-        X_OEW=X_OEW_CURRENT, X_LEMAC=X_LEMAC_CURRENT, plot=True
+        X_OEW=X_OEW_CURRENT,
+        X_LEMAC=X_LEMAC_CURRENT,
+        X_FUEL=X_WING_CURRENT,
+        plot=True
     )

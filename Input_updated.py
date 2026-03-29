@@ -18,10 +18,10 @@ MASS_PAX = 87
 MASS_FRONT_CARGOold = 472
 MASS_AFT_CARGOold = 1294
 
-X_START_FRONT_CARGOold = 6
+X_START_FRONT_CARGOold = 7.1
 X_END_FRONT_CARGOold = 9.55
-X_START_AFT_CARGOold = 18.90
-X_END_AFT_CARGOold = 21.74
+X_START_AFT_CARGOold = 25.2
+X_END_AFT_CARGOold = 27.84
 
 # Cabin rows (Point VI: 25 - 3 = 22 rows)
 NUM_ROWS = 22
@@ -41,7 +41,7 @@ x_MG = 22
 y_MG = 4.5
 number_MG = ip.number_MG
 theta = ip.theta
-X_FUEL = ip.X_FUEL
+
 
 # WING DIMENSION
 c_rw = ip.c_rw

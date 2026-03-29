@@ -4,6 +4,7 @@ from matplotlib.ticker import FormatStrFormatter
 import Input as ip
 import CG_positions as cg
 
+
 def add_mass(current_w, current_cg, added_w, added_cg):
     """Helper function to calculate new weight and CG."""
     new_w = current_w + added_w
@@ -15,7 +16,8 @@ def add_mass(current_w, current_cg, added_w, added_cg):
     new_cg = ((current_w * current_cg) + (added_w * added_cg)) / new_w
     return new_w, new_cg
 
-def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
+
+def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
     """
     Calculates the most forward and aft CG limits (with and without margins).
     Optionally plots the potato diagram and prints the summary.
@@ -30,7 +32,7 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
     # Operational limits
     MTOW = ip.MTOW
     MAX_FUEL = ip.W_fuel
-    X_FUEL = ip.X_FUEL
+    # X_FUEL is passed directly into the function arguments now
 
     # Payload definitions
     MASS_PAX = ip.MASS_PAX
@@ -118,7 +120,7 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
 
     # --- 4. PRINTING & PLOTTING (Toggled by 'plot' boolean) ---
     if plot:
-        print(f"--- CG LIMITS SUMMARY ---")
+        print(f"--- CG LIMITS SUMMARY (Professional Style) ---")
         print(f"Most Forward CG (Calculated): {most_fwd_cg:.4f} MAC")
         print(f"Most Aft CG (Calculated):     {most_aft_cg:.4f} MAC")
         print(f"Margin Applied:               ±{CG_MARGIN:.4f} MAC")
@@ -126,32 +128,37 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
         print(f"AFT Limit with Margin:        {aft_limit_with_margin:.4f} MAC")
         print(f"-------------------------\n")
 
-        plt.style.use('dark_background')
+        # Set default safe style and force white background
+        plt.style.use('default')
         fig, ax = plt.subplots(figsize=(12, 8))
+        fig.patch.set_facecolor('white')
+        ax.set_facecolor('white')
         ax.xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
 
-        # Neon Color Palette
-        c_cargo, c_win, c_ais, c_fuel = '#9D4EDD', '#4895EF', '#F72585', '#4CC9F0'
+        # Standard Professional Color Palette
+        c_cargo, c_win, c_ais, c_fuel = 'dimgrey', 'royalblue', 'seagreen', 'mediumturquoise'
+        # Marker settings: solid red circles for key envelope points
+        marker_pax = dict(marker='o', markersize=5, markerfacecolor='red', markeredgecolor='none')
 
         # Plot Path A (Front-to-Back Loading)
-        ax.plot(pa_mac[:3], pa_W[:3], color=c_cargo, marker='o', markersize=4, label='Cargo')
-        ax.plot(pa_mac[2:28], pa_W[2:28], color=c_win, marker='o', markersize=3, label='Window Pax')
-        ax.plot(pa_mac[27:], pa_W[27:], color=c_ais, marker='o', markersize=3, label='Aisle Pax')
+        ax.plot(pa_mac[:3], pa_W[:3], color=c_cargo, marker='o', markersize=4, label='Cargo (A)')
+        ax.plot(pa_mac[2:28], pa_W[2:28], color=c_win, label='Window Pax (A)', **marker_pax)
+        ax.plot(pa_mac[27:], pa_W[27:], color=c_ais, label='Aisle Pax (A)', **marker_pax)
 
         # Plot Path B (Back-to-Front Loading)
         ax.plot(pb_mac[:3], pb_W[:3], color=c_cargo, marker='o', markersize=4, linestyle='--')
-        ax.plot(pb_mac[2:28], pb_W[2:28], color=c_win, marker='o', markersize=3, linestyle='--')
-        ax.plot(pb_mac[27:], pb_W[27:], color=c_ais, marker='o', markersize=3, linestyle='--')
+        ax.plot(pb_mac[2:28], pb_W[2:28], color=c_win, linestyle='--', **marker_pax)
+        ax.plot(pb_mac[27:], pb_W[27:], color=c_ais, linestyle='--', **marker_pax)
 
         # Plot Fuel Loading
-        ax.plot(f_mac, f_W, color=c_fuel, linewidth=4, label='Fuel Loading')
+        ax.plot(f_mac, f_W, color=c_fuel, linewidth=3, label='Fuel Loading')
 
-        # Mark the OEW Point
-        ax.scatter([pa_mac[0]], [OEW], color='white', s=100, zorder=5, label='OEW CG')
+        # Mark the OEW Point - Large prominent solid red circle
+        ax.scatter([pa_mac[0]], [OEW], color='red', s=150, zorder=5, label='OEW CG Point')
 
-        # Plot the calculated limits & margins
-        ax.axvline(x=most_fwd_cg, color='yellow', linestyle=':', alpha=0.6, label=f'Most FWD ({most_fwd_cg:.3f})')
-        ax.axvline(x=most_aft_cg, color='orange', linestyle=':', alpha=0.6, label=f'Most AFT ({most_aft_cg:.3f})')
+        # Plot the calculated limits & margins - Using standard line styles
+        ax.axvline(x=most_fwd_cg, color='dimgrey', linestyle='--', alpha=0.6, label=f'Most FWD ({most_fwd_cg:.3f})')
+        ax.axvline(x=most_aft_cg, color='dimgrey', linestyle='--', alpha=0.6, label=f'Most AFT ({most_aft_cg:.3f})')
 
         ax.axvline(x=fwd_limit_with_margin, color='red', linestyle='-', alpha=0.8, label='FWD Limit w/ Margin')
         ax.axvline(x=aft_limit_with_margin, color='red', linestyle='-', alpha=0.8, label='AFT Limit w/ Margin')
@@ -164,14 +171,17 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
         ax.set_ylim(OEW - 1000, MTOW + 2000)
 
         # Labels & Grids
-        ax.set_title("Aircraft Static Potato Diagram", fontsize=16, color='white', fontweight='bold', pad=20)
+        ax.set_title("Aircraft Static Potato Diagram", fontsize=16, color='black', fontweight='bold', pad=20)
         ax.set_xlabel("$x_{cg} / MAC$", fontsize=12)
         ax.set_ylabel("Mass (kg)", fontsize=12)
-        ax.legend(loc='upper left', frameon=True, facecolor='#222', fontsize=9)
-        ax.grid(True, alpha=0.15)
 
-        # Horizontal limit lines
-        ax.axhline(y=MTOW, color='red', linestyle='--', alpha=0.5)
+        # Professional legend with black text
+        ax.legend(loc='upper left', frameon=True, facecolor='white', framealpha=1, edgecolor='dimgrey', fontsize=9,
+                  labelcolor='black')
+        ax.grid(True, linestyle='-', color='lightgrey', alpha=0.7)
+
+        # Horizontal limit lines - Bold professional style
+        ax.axhline(y=MTOW, color='red', linestyle='--', linewidth=2, alpha=0.5)
         ax.text(ax.get_xlim()[1], MTOW, ' MTOW', color='red', va='center', fontweight='bold')
 
         plt.tight_layout()
@@ -183,13 +193,18 @@ def calculate_cg_limits(X_OEW, X_LEMAC, plot=False):
 
 # --- 5. EXECUTION ---
 if __name__ == '__main__':
-    # Dynamically pull the current EOW CG and LEMAC from your scripts
-    X_OEW_CURRENT =  cg.calculate_aircraft_cgs(ip.x_LEMACw)["from_nose"]["aircraft"]   # Assuming this is your calculated total EOW CG from nose
+    # Pull all data from the nose reference point
+    cg_data_from_nose = cg.calculate_aircraft_cgs(ip.x_LEMACw)["from_nose"]
+
+    # Extract the required values using the correct dictionary paths
+    X_OEW_CURRENT = cg_data_from_nose["aircraft"]
+    X_WING_CURRENT = cg_data_from_nose["components"]["wing"]
     X_LEMAC_CURRENT = ip.x_LEMACw
 
     # Run the function, plotting and printing enabled
     fwd, aft, fwd_margin, aft_margin = calculate_cg_limits(
         X_OEW=X_OEW_CURRENT,
         X_LEMAC=X_LEMAC_CURRENT,
+        X_FUEL=X_WING_CURRENT,
         plot=True
     )

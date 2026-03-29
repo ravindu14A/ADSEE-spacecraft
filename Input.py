@@ -73,10 +73,10 @@ x_LEMACv = 35
 z_startvertical = 1.35
 
 # Engine
-x_startnacelle = 30
+x_startnacelle = 30.56 #442/566
 y_centrenacelle = 3
-l_nac = 3.25
-d_nac = 1
+l_nac = 2.35 #34/566
+d_nac = 1.66 #24/566
 n_nacelle = 2
 
 

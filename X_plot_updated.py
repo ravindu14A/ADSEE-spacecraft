@@ -150,7 +150,7 @@ if __name__ == '__main__':
     plt.xlabel('x_cg / c_mac')
     plt.ylabel('S_h / S')
     plt.title('Scissor Plot')
-    plt.xlim(-0.2, 1.0)
+    plt.xlim(-0.4, 0.8)
     plt.ylim(0.0, 0.4)
     plt.grid(True)
     plt.legend()

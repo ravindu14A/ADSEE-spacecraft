@@ -49,7 +49,7 @@ b_w = ip.b_w
 S_w = ip.S_w
 TAPER_RATIOw = ip.TAPER_RATIOw
 SWEEP_ANGLEw = ip.SWEEP_ANGLEw
-x_LEMACw = ip.x_LEMACw -0.77
+x_LEMACw = ip.x_LEMACw -0.82
 dihedral = ip.dihedral
 front_spar_fraction = ip.front_spar_fraction
 rear_spar_fraction = ip.rear_spar_fraction
@@ -57,7 +57,7 @@ rear_spar_fraction = ip.rear_spar_fraction
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = ip.c_rh
 c_th = ip.c_th
-S_h = ip.S_h-0.3
+S_h = ip.S_h -0.53
 b_h = 2 * S_h / (c_rh + c_th)
 TAPER_RATIOh = ip.TAPER_RATIOh
 SWEEP_ANGLEh = ip.SWEEP_ANGLEh

@@ -4,7 +4,7 @@
 M = 0.82
 altitude = 9000
 CL_max = 2.6
-C_m0 = -0.079
+C_m0 = -0.08
 CL_0 = 0.05
 
 # Operational limits
@@ -39,7 +39,7 @@ x_NW = 2.28 # 26/446
 x_MG = 22.64 #258/446
 y_MG = 2.0375
 number_MG = 2
-theta = 15
+theta = 13.8
 
 # WING DIMENSION
 c_rw = 5.12
@@ -47,7 +47,7 @@ b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 20.68 # 296/566
+x_LEMACw = 20.7 # 296/566
 dihedral = None
 front_spar_fraction = 0.2
 rear_spar_fraction = 0.8
@@ -73,9 +73,9 @@ x_LEMACv = 35
 z_startvertical = 1.35
 
 # Engine
-x_startnacelle = 30.56 #442/566
+x_startnacelle = 30 #442/566
 y_centrenacelle = 3
-l_nac = 2.35 #34/566
+l_nac = 3.9 #34/566
 d_nac = 1.66 #24/566
 n_nacelle = 2
 

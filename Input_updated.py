@@ -36,9 +36,9 @@ z_cg = ip.z_cg + 0.3
 x_cockpit = ip.x_cockpit
 
 # WHEELS
-x_NW = ip.x_NW
-x_MG = ip.x_MG
-y_MG = ip.y_MG
+x_NW = ip.x_NW - 0.5
+x_MG = ip.x_MG + 0.16
+y_MG = ip.y_MG +1.2
 number_MG = ip.number_MG
 theta = ip.theta
 
@@ -49,7 +49,7 @@ b_w = ip.b_w
 S_w = ip.S_w
 TAPER_RATIOw = ip.TAPER_RATIOw
 SWEEP_ANGLEw = ip.SWEEP_ANGLEw
-x_LEMACw = ip.x_LEMACw -0.82
+x_LEMACw = ip.x_LEMACw - 0.95
 dihedral = ip.dihedral
 front_spar_fraction = ip.front_spar_fraction
 rear_spar_fraction = ip.rear_spar_fraction
@@ -57,7 +57,7 @@ rear_spar_fraction = ip.rear_spar_fraction
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = ip.c_rh
 c_th = ip.c_th
-S_h = ip.S_h -0.53
+S_h = (ip.S_h -0.7)*1.5
 b_h = 2 * S_h / (c_rh + c_th)
 TAPER_RATIOh = ip.TAPER_RATIOh
 SWEEP_ANGLEh = ip.SWEEP_ANGLEh

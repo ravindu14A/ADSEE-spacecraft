@@ -3,13 +3,15 @@ import CG_positions_updated as CG
 import numpy as np
 import speed_of_sound
 import matplotlib.pyplot as plt
-import X_plot
 
 # -------- INITIALIZATION & AERO CONSTANTS -----
 a = speed_of_sound.get_atmosphere_properties(ip.altitude)[0]
 rho_sealevel = 1.225
 V = ip.M * a
-V_landing = ip.V_landing
+
+# Replaced V_landing with CL_max
+CL_max = ip.CL_max
+
 de_da = 0.3
 Vh_V = 0.95
 x_h_LEMACNORM = ((ip.x_LEMACh + 0.25 * CG.c_mach) - ip.x_LEMACw) / CG.c_macw
@@ -111,19 +113,24 @@ x_aft_limit = x_np - static_margin
 # Control Boundary
 CL_h_fixed = -0.35 * (A_h ** (1 / 3))
 
-# Dynamic Pressures
-q_landing = 0.5 * rho_sealevel * V_landing ** 2
-q_h_landing = 0.5 * rho_sealevel * (Vh_V * V_landing) ** 2
 W_landing = (ip.MTOW - ip.W_fuel) * 9.81
-
-# Array representing the tail area for each point on the y-axis
 S_h_dynamic = Sh_S_array * ip.S_w
 
-# Dynamic array for the wing-body lift required at each tail size
-CL_A_h_array = (W_landing - q_h_landing * S_h_dynamic * CL_h_fixed) / (q_landing * ip.S_w)
+# Calculate Approach Speed dynamically based on fixed CL_max
+V_approach_array = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + S_h_dynamic * (Vh_V ** 2) * CL_h_fixed)))
 
-K_cont = (CL_h_fixed / CL_A_h_array) * (Vh_V ** 2) * Sh_S_array
-C_term = x_ac_LEMACNORM - (C_m_ac / CL_A_h_array)
+# Approach speed for the specifically inputted S_h
+V_approach_curr = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + ip.S_h * (Vh_V ** 2) * CL_h_fixed)))
+
+print(f"--- APPROACH SPEED CALCULATION ---")
+print(f"Wing CL_max used:      {CL_max}")
+print(f"Tail Downforce (CL_h): {CL_h_fixed:.4f}")
+print(f"Resulting V_approach:  {V_approach_curr:.2f} m/s ({V_approach_curr * 1.94384:.1f} knots)")
+print(f"----------------------------------")
+
+# Control limits calculated using the constant CL_max instead of the dynamic array
+K_cont = (CL_h_fixed / CL_max) * (Vh_V ** 2) * Sh_S_array
+C_term = x_ac_LEMACNORM - (C_m_ac / CL_max)
 x_fwd_limit = (C_term + K_cont * x_h_LEMACNORM) / (1 + K_cont)
 
 # Current config points
@@ -131,10 +138,9 @@ current_Sh_S = ip.S_h / ip.S_w
 K_curr_stab = (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * (Vh_V ** 2) * current_Sh_S
 x_np_curr = (x_ac_LEMACNORM + K_curr_stab * x_h_LEMACNORM) / (1 + K_curr_stab)
 
-# Current point scalar calculation using the actual ip.S_h
-CL_A_h_curr = (W_landing - q_h_landing * ip.S_h * CL_h_fixed) / (q_landing * ip.S_w)
-K_curr_cont = (CL_h_fixed / CL_A_h_curr) * (Vh_V ** 2) * current_Sh_S
-x_fwd_curr = (C_term[0] * 0 + x_ac_LEMACNORM - (C_m_ac / CL_A_h_curr) + K_curr_cont * x_h_LEMACNORM) / (1 + K_curr_cont)
+# Current control limit using constant CL_max
+K_curr_cont = (CL_h_fixed / CL_max) * (Vh_V ** 2) * current_Sh_S
+x_fwd_curr = (C_term + K_curr_cont * x_h_LEMACNORM) / (1 + K_curr_cont)
 
 # --- PLOTTING ---
 if __name__ == '__main__':
@@ -148,7 +154,7 @@ if __name__ == '__main__':
              label='Current CG Range')
 
     plt.xlabel('x_cg / c_mac')
-    plt.ylabel('S_h / S')
+    plt.ylabel('S_h / S_w')
     plt.title('Scissor Plot')
     plt.xlim(-0.4, 0.8)
     plt.ylim(0.0, 0.4)

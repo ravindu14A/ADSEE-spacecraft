@@ -62,7 +62,7 @@ term2_A_h = (np.pi / 2) * (b_f ** 2 / ip.S_w)
 Cl_ALPHAa_h = term1_A_h + term2_A_h
 
 # --- x_ac_LEMACNORM (Fuselage & Nacelle Effects) ---
-x_acw_LEMACNORM = 0.25
+x_acw_LEMACNORM = 0.3
 y_root_to_mac = CG.y_macw - (ip.d_fus / 2)
 delta_x_sweep = y_root_to_mac * np.tan(np.radians(ip.SWEEP_ANGLEw))
 l_fn = ip.x_LEMACw - delta_x_sweep
@@ -105,9 +105,9 @@ C_m_ac = C_m_ac_w + Delta_fus_C_m_ac
 # --- SCISSOR PLOT CALCULATIONS ---
 Sh_S_array = np.linspace(0.0, 0.40, 100)
 
-# Stability Boundary
-K_stab = (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * (Vh_V ** 2) * Sh_S_array
-x_np = (x_ac_LEMACNORM + K_stab * x_h_LEMACNORM) / (1 + K_stab)
+# Stability Boundary (Updated with approximated l_h formulation)
+l_h_norm = x_h_LEMACNORM - x_acw_LEMACNORM
+x_np = x_ac_LEMACNORM + (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * Sh_S_array * l_h_norm * (Vh_V ** 2)
 x_aft_limit = x_np - static_margin
 
 # Control Boundary
@@ -134,10 +134,9 @@ K_cont = (CL_h_fixed / CL_max) * (Vh_V ** 2) * Sh_S_array
 C_term = x_ac_LEMACNORM - (C_m_ac / CL_max)
 x_fwd_limit = (C_term + K_cont * x_h_LEMACNORM) / (1 + K_cont)
 
-# Current config points
+# Current config points (Updated with approximated l_h formulation)
 current_Sh_S = ip.S_h / ip.S_w
-K_curr_stab = (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * (Vh_V ** 2) * current_Sh_S
-x_np_curr = (x_ac_LEMACNORM + K_curr_stab * x_h_LEMACNORM) / (1 + K_curr_stab)
+x_np_curr = x_ac_LEMACNORM + (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * current_Sh_S * l_h_norm * (Vh_V ** 2)
 
 # Current control limit using constant CL_max
 K_curr_cont = (CL_h_fixed / CL_max) * (Vh_V ** 2) * current_Sh_S
@@ -162,3 +161,4 @@ if __name__ == '__main__':
     plt.grid(True)
     plt.legend()
     plt.show()
+

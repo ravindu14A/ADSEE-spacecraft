@@ -36,7 +36,7 @@ x_cockpit = 2.5
 z_cg = 4
 
 # WHEELS
-x_NW = 2.126 # 26/446
+x_NW = 2.13 # 26/446
 x_MG = 22.10 #258/446
 y_MG = 3
 number_MG = 2

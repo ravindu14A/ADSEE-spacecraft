@@ -68,20 +68,21 @@ pcts   = [s / mtow * 100 for s in sizes]
 # Premium colour palette
 colors = ['#1D3557', '#457B9D', '#2A9D8F', '#E63946', '#F4A261']
 
-fig, ax = plt.subplots(figsize=(9, 6))
+fig, ax = plt.subplots(figsize=(8, 5))
 fig.patch.set_facecolor('white')
 
 wedges, texts, autotexts = ax.pie(
     sizes,
     colors=colors,
     autopct=lambda p: f'{p:.1f}%' if p > 3 else '',
-    pctdistance=0.78,
+    pctdistance=0.76,
     startangle=140,
-    wedgeprops=dict(width=0.42, edgecolor='white', linewidth=2),
+    radius=1.1,  # Scaled up to fill space
+    wedgeprops=dict(width=0.48, edgecolor='white', linewidth=2.5),
 )
 
 for at in autotexts:
-    at.set_fontsize(10)
+    at.set_fontsize(14)
     at.set_fontweight('bold')
     at.set_color('white')
 
@@ -91,30 +92,31 @@ legend_labels = [
     for lab, s, p in zip(labels, sizes, pcts)
 ]
 
+# Tighter legend with bigger text
 leg = ax.legend(
     wedges, legend_labels,
     title='Weight Components',
-    title_fontproperties={'weight': 'bold', 'size': 12},
+    title_fontproperties={'weight': 'bold', 'size': 15},
     loc='center left',
-    bbox_to_anchor=(1.02, 0.5),
-    fontsize=10,
+    bbox_to_anchor=(1.15, 0.5),
+    fontsize=13,
     frameon=True,
     fancybox=False,
     edgecolor='#CCCCCC',
     framealpha=0.95,
-    borderpad=1.0,
-    labelspacing=1.0,
+    borderpad=1.2,
+    labelspacing=1.3,
 )
-leg.get_frame().set_linewidth(0.6)
+leg.get_frame().set_linewidth(0.8)
 
-# Centre text inside the donut
+# Centre text inside the donut (much larger)
 ax.text(0, 0, f'MTOW\n{mtow:,.0f} kg',
-        ha='center', va='center', fontsize=13, fontweight='bold', color='#333')
+        ha='center', va='center', fontsize=18, fontweight='bold', color='#333')
 
 ax.set_title('CRJ-1000 Baseline — Weight Breakdown',
-             fontweight='bold', fontsize=15, color='#222', pad=18)
+             fontweight='bold', fontsize=18, color='#222', pad=30)
 
-plt.tight_layout()
-plt.savefig('Weight_Breakdown_Pie.png', dpi=300, facecolor='white', bbox_inches='tight')
+plt.subplots_adjust(left=0.01, right=0.6, top=0.85, bottom=0.05)
+plt.savefig('Weight_Breakdown_Pie.png', dpi=300, facecolor='white', bbox_inches='tight', pad_inches=0.1)
 print("Saved: Weight_Breakdown_Pie.png")
 plt.show()

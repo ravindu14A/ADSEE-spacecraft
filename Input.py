@@ -9,23 +9,13 @@ C_m0 = -0.16
 CL_0 = 0.05
 
 # Operational limits
-<<<<<<< HEAD
 actual_MZFW = 35154
-
-# Payload definitions
-MASS_PAX = 87
-MASS_FRONT_CARGO = 3257*0.3
-X_FRONT_CARGO = 8.33
-MASS_AFT_CARGO = 3257*0.7
-=======
-actual_MZFW =  35154
 
 # Payload definitions
 MASS_PAX = 87
 MASS_FRONT_CARGO =  3257*0.267
 X_FRONT_CARGO = 8.33
 MASS_AFT_CARGO = 3257*0.732
->>>>>>> 6c5d861eff9faa00d5158a881e120b812d444322
 X_AFT_CARGO = 26.52
 
 # Cabin rows (25 rows for 100 pax, 2+2 abreast)

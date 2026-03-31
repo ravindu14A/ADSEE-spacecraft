@@ -130,9 +130,6 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
     x_cg_LEMACNORM = x_cg_LEMAC / c_macw
 
-    print(f"Fuselage Group: {x_cgfg_LEMACNORM:.4f} MAC")
-    print(f"Wing Group:     {x_cgwg_LEMACNORM:.4f} MAC")
-
     return {
         "from_nose": {
             "components": {"wing": x_cgw, "horizontal_stab": x_cgh, "vertical_stab": x_cgv, "fuselage": x_cgfus,
@@ -155,10 +152,41 @@ def calculate_aircraft_cgs(x_LEMACw):
     }
 
 
+def print_cg_table(results):
+    print("\n" + "=" * 80)
+    print(" " * 25 + "BASELINE CG REPORT")
+    print("=" * 80)
+    print(f"{'COMPONENT / GROUP':<25} | {'CG from Nose (m)':<15} | {'CG from LEMAC (m)':<15} | {'CG as % MAC':<15}")
+    print("-" * 80)
+
+    print("COMPONENTS:")
+    for comp in results['from_nose']['components']:
+        nose = results['from_nose']['components'][comp]
+        lemac = results['from_lemac']['components'][comp]
+        mac = results['percent_mac']['components'][comp] * 100
+        print(f"  {comp:<23} | {nose:<15.4f} | {lemac:<15.4f} | {mac:<14.2f}%")
+
+    print("-" * 80)
+
+    print("ASSEMBLY GROUPS:")
+    for grp in results['from_nose']['groups']:
+        nose = results['from_nose']['groups'][grp]
+        lemac = results['from_lemac']['groups'][grp]
+        mac = results['percent_mac']['groups'][grp] * 100
+        print(f"  {grp:<23} | {nose:<15.4f} | {lemac:<15.4f} | {mac:<14.2f}%")
+
+    print("=" * 80)
+
+    nose_total = results['from_nose']['aircraft']
+    lemac_total = results['from_lemac']['aircraft']
+    mac_total = results['percent_mac']['aircraft'] * 100
+    print(f"{'TOTAL EOW AIRCRAFT':<25} | {nose_total:<15.4f} | {lemac_total:<15.4f} | {mac_total:<14.2f}%")
+    print("=" * 80)
+
+
 if __name__ == '__main__':
     x_LEMACw_input = it.x_LEMACw
     results = calculate_aircraft_cgs(x_LEMACw_input)
-    print("--- BASELINE CRJ-1000 CG AS % MAC ---")
-
-    ac_mac = results['percent_mac']['aircraft']
-    print(f"Total EOW Aircraft: {ac_mac:.4f} ({ac_mac * 100:.2f}%)")
+    print_cg_table(results)
+    print(c_macw)
+    print(x_LEMACw_input)

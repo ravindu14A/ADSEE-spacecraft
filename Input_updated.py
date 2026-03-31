@@ -57,7 +57,7 @@ rear_spar_fraction = ip.rear_spar_fraction
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = ip.c_rh
 c_th = ip.c_th
-S_h = ip.S_h +0.25
+S_h = (ip.S_h +0.25)*1.5
 b_h = 2 * S_h / (c_rh + c_th)
 TAPER_RATIOh = ip.TAPER_RATIOh
 SWEEP_ANGLEh = ip.SWEEP_ANGLEh

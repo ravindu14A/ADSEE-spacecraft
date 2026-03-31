@@ -1,21 +1,21 @@
 # ------------------------------------
 # FLIGHT CHARACTERISTICS
 # ------------------------------------
-scale = 36.47
+
 M = 0.82
 altitude = 9000
 CL_max = 2.6
-C_m0 = -0.08
+C_m0 = -0.16
 CL_0 = 0.05
 
 # Operational limits
-actual_MZFW = 33654
+actual_MZFW =  35154
 
 # Payload definitions
 MASS_PAX = 87
-MASS_FRONT_CARGO = 472
+MASS_FRONT_CARGO =  3257*0.267
 X_FRONT_CARGO = 8.33
-MASS_AFT_CARGO = 1294
+MASS_AFT_CARGO = 3257*0.732
 X_AFT_CARGO = 26.52
 
 # Cabin rows (25 rows for 100 pax, 2+2 abreast)
@@ -48,20 +48,20 @@ b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 19.75
+x_LEMACw = 19.58
 dihedral = None
 front_spar_fraction = 0.2
 rear_spar_fraction = 0.8
+m = 4.70 / (b_w/2)
 
 # HORIZONTAL STABALISER DIMENSIONS
-c_rh = 2.58 # 40/566
+c_rh = 2.36 # 40/566
 c_th = 1.1 # 17/566
 S_h = 15.91
 b_h = 2 * S_h / (c_rh + c_th)  # 130/55
-print(b_h)
 TAPER_RATIOh = c_th / c_rh
 SWEEP_ANGLEh = 33.7
-x_LEMACh = 36.7 #563/566
+x_LEMACh = 37.5 #563/566
 
 # VERTICAL STABALISER DIMENSIONS
 c_rv = 3.27# 40/446
@@ -88,8 +88,8 @@ n_nacelle = 2
 # Operational Empty Weight (OEW)
 EOW = 23188
 W_pax_luggage = 8700
-W_front_cargo = 472
-W_aft_cargo = 1294
+W_front_cargo = MASS_FRONT_CARGO
+W_aft_cargo = MASS_AFT_CARGO
 W_max_payload = W_pax_luggage + W_front_cargo + W_aft_cargo
 MTOW = 41640
 W_fuel = MTOW - W_max_payload - EOW

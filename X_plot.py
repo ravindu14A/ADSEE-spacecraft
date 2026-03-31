@@ -4,6 +4,35 @@ import numpy as np
 import speed_of_sound
 import matplotlib.pyplot as plt
 
+
+def get_flap_area_proportion(y_start, y_end, b, c_root, taper):
+    """
+    Calculates the proportion of a wing's area taken up by a flap segment.
+    Uses root chord and taper ratio instead of tip chord.
+    """
+    b_half = b / 2.0
+
+    # Calculate tip chord from taper ratio
+    c_tip = c_root * taper
+
+    # Calculate chord length at any given y position (linear taper)
+    def get_chord(y):
+        return c_root + ((c_tip - c_root) / b_half) * y
+
+    # Find the chords at the start and end of the flap
+    c_start = get_chord(y_start)
+    c_end = get_chord(y_end)
+
+    # Area of the flap segment on one side
+    flap_segment_area = 0.5 * (c_start + c_end) * (y_end - y_start)
+
+    # Area of the entire half-wing
+    half_wing_area = 0.5 * (c_root + c_tip) * b_half
+
+    # The proportion of the segment to the half-wing is identical
+    # to the total flap area to the total wing area (Swf / S)
+    return flap_segment_area / half_wing_area
+
 MLW = 36968
 # -------- INITIALIZATION & AERO CONSTANTS -----
 a = speed_of_sound.get_atmosphere_properties(ip.altitude)[0]
@@ -12,8 +41,9 @@ V = ip.M * a
 # V_landing is removed; replaced by pulling CL_max from Input.py
 CL_max = ip.CL_max
 
-de_da = 0.3
-Vh_V = 0.95
+
+
+Vh_V = 1
 x_h_LEMACNORM = ((ip.x_LEMACh + 0.25 * CG.c_mach) - ip.x_LEMACw) / CG.c_macw
 eta_h = 0.95
 eta_w = 0.95
@@ -99,8 +129,62 @@ term2_fus = (np.pi * b_f * h_f * l_f) / (4 * ip.S_w * CG.c_macw)
 term3_fus = CL_0 / Cl_ALPHAa_h
 Delta_fus_C_m_ac = -1.8 * term1_fus * term2_fus * term3_fus
 
-# Total Pitching Moment Coefficient (Neglecting Flaps & Nacelle)
-C_m_ac = C_m_ac_w + Delta_fus_C_m_ac
+# HLD contribtuion (Flaps Only)
+deltac_c_f = 0.4 #for 45 degrees
+c_f = 0.7
+deltac_f = c_f * deltac_c_f
+c_ratio = (deltac_f + CG.c_macw) / CG.c_macw
+delta_cl_max_flaps = c_ratio * 1.6
+
+# --- Pitching moment due to flaps extension (Delta C_m_1/4 & Delta C_m_ac) ---
+# Empirical constants (placeholders to be filled)
+mu_1 = 0.175
+mu_2 = 0.55
+mu_3 = 0.055
+y_start = 1.29
+y_end = 9.79
+y_span = y_end - y_start
+S_wf_S = get_flap_area_proportion(y_start, y_end, ip.b_w, ip.c_rw, ip.TAPER_RATIOw)
+
+# Quarter-chord pitching moment increment from Flaps
+term1_cm = -mu_1 * delta_cl_max_flaps * c_ratio
+term2_cm = -(CL_max + delta_cl_max_flaps * (1 - S_wf_S)) * (1/8) * c_ratio * (c_ratio - 1)
+part1_cm = mu_2 * (term1_cm + term2_cm)
+part2_cm = 0.7 * (A_w / (1 + 2/A_w)) * mu_3 * delta_cl_max_flaps * np.tan(SWEEP_ANGLEw_quarterchord)
+
+Delta_C_m_1_4 = part1_cm + part2_cm
+
+# Convert from 1/4 chord to Aerodynamic Center
+Delta_C_m_ac_HLD = Delta_C_m_1_4 - CL_max * (0.25 - x_ac_LEMACNORM)
+
+# Total Pitching Moment Coefficient (Wing + Fuselage + Flaps)
+C_m_ac = C_m_ac_w + Delta_fus_C_m_ac + Delta_C_m_ac_HLD
+
+# --- de/da (Downwash Derivative) Calculation ---
+# Calculating l_H from MAC quarter chords
+x_qc_w = ip.x_LEMACw + 0.25 * CG.c_macw
+x_qc_h = ip.x_LEMACh + 0.25 * CG.c_mach
+l_H = x_qc_h - x_qc_w
+
+# Parameters based on the updated implementation
+r = l_H / (ip.b_w / 2)
+m_tv = ip.m  # Direct mapping to input parameter
+
+# Sweep angle at 1/4 chord (Lambda) in radians
+Lambda_14 = SWEEP_ANGLEw_quarterchord
+
+# Wing downwash gradient K terms
+K_eps_Lambda = (0.1124 + 0.1265 * Lambda_14 + 0.1766 * Lambda_14**2) / (r**2) + (0.1024 / r) + 2
+K_eps_Lambda_0 = (0.1124 / r**2) + (0.1024 / r) + 2
+
+# Main downwash terms separated for clarity
+term1_de = (r / (r**2 + m_tv**2)) * (0.4876 / np.sqrt(r**2 + 0.6319 + m_tv**2))
+term2_de_part1 = 1 + (r**2 / (r**2 + 0.7915 + 5.0734 * m_tv**2))**0.3113
+term2_de_part2 = 1 - np.sqrt(m_tv**2 / (1 + m_tv**2))
+term2_de = term2_de_part1 * term2_de_part2
+
+# Final Downwash Derivative Calculation
+de_da = (K_eps_Lambda / K_eps_Lambda_0) * (term1_de + term2_de) * (Cl_ALPHAw / (np.pi * A_w))
 
 # --- SCISSOR PLOT CALCULATIONS ---
 Sh_S_array = np.linspace(0.0, 0.40, 100)
@@ -161,4 +245,3 @@ if __name__ == '__main__':
     plt.grid(True)
     plt.legend()
     plt.show()
-

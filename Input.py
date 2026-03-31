@@ -9,23 +9,13 @@ C_m0 = -0.16
 CL_0 = 0.05
 
 # Operational limits
-<<<<<<< HEAD
 actual_MZFW = 35154
-
-# Payload definitions
-MASS_PAX = 87
-MASS_FRONT_CARGO = 3257*0.3
-X_FRONT_CARGO = 8.33
-MASS_AFT_CARGO = 3257*0.7
-=======
-actual_MZFW =  35154
 
 # Payload definitions
 MASS_PAX = 87
 MASS_FRONT_CARGO =  3257*0.267
 X_FRONT_CARGO = 8.33
 MASS_AFT_CARGO = 3257*0.732
->>>>>>> 6c5d861eff9faa00d5158a881e120b812d444322
 X_AFT_CARGO = 26.52
 
 # Cabin rows (25 rows for 100 pax, 2+2 abreast)
@@ -53,13 +43,13 @@ number_MG = 2
 theta = 15
 
 # WING DIMENSION
-c_rw = 5.12
 b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 19.58
+x_LEMACw = 19.65
 dihedral = None
+c_rw = (S_w *2) / (b_w * (1 + TAPER_RATIOw))
 front_spar_fraction = 0.2
 rear_spar_fraction = 0.8
 m = 4.70 / (b_w/2)

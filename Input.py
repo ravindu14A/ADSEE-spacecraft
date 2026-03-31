@@ -9,13 +9,13 @@ C_m0 = -0.08
 CL_0 = 0.05
 
 # Operational limits
-actual_MZFW = 33654
+actual_MZFW = 35154
 
 # Payload definitions
 MASS_PAX = 87
-MASS_FRONT_CARGO = 472
+MASS_FRONT_CARGO = 3257*0.3
 X_FRONT_CARGO = 8.33
-MASS_AFT_CARGO = 1294
+MASS_AFT_CARGO = 3257*0.7
 X_AFT_CARGO = 26.52
 
 # Cabin rows (25 rows for 100 pax, 2+2 abreast)
@@ -88,8 +88,8 @@ n_nacelle = 2
 # Operational Empty Weight (OEW)
 EOW = 23188
 W_pax_luggage = 8700
-W_front_cargo = 472
-W_aft_cargo = 1294
+W_front_cargo = MASS_FRONT_CARGO
+W_aft_cargo = MASS_AFT_CARGO
 W_max_payload = W_pax_luggage + W_front_cargo + W_aft_cargo
 MTOW = 41640
 W_fuel = MTOW - W_max_payload - EOW
@@ -117,3 +117,4 @@ WEIGHT_NOSE_LANDING_GEARp   = 0.8
 WEIGHT_PROPULSION_SYSTEMp   = 13.3   # including nacelles
 WEIGHT_COCKPIT_SYSTEMSp     = 2.3    # avionics, furnishing, etc.
 
+print(W_fuel)

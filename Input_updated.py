@@ -38,7 +38,7 @@ x_cockpit = ip.x_cockpit
 
 # WHEELS
 x_NW = ip.x_NW - 0.65
-x_MG = ip.x_MG + 0.13
+x_MG = ip.x_MG +0.1
 y_MG = ip.y_MG+0.3
 number_MG = ip.number_MG
 theta = ip.theta

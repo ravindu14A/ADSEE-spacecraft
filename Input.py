@@ -43,13 +43,13 @@ number_MG = 2
 theta = 15
 
 # WING DIMENSION
-c_rw = 5.12
 b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 19.58
+x_LEMACw = 19.65
 dihedral = None
+c_rw = (S_w *2) / (b_w * (1 + TAPER_RATIOw))
 front_spar_fraction = 0.2
 rear_spar_fraction = 0.8
 m = 4.70 / (b_w/2)

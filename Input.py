@@ -3,7 +3,7 @@
 # ------------------------------------
 
 M = 0.82
-altitude = 9000
+altitude = 9500
 CL_max = 2.6
 C_m0 = -0.16
 CL_0 = 0.05
@@ -37,17 +37,17 @@ z_cg = 4
 
 # WHEELS
 x_NW = 2.13 # 26/446
-x_MG = 22.10 #258/446
-y_MG = 3
+x_MG = 22.78 #258/446
+y_MG = 3.1
 number_MG = 2
-theta = 15
+theta = 13.8
 
 # WING DIMENSION
 b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 19.65
+x_LEMACw = 19.68
 dihedral = None
 c_rw = (S_w *2) / (b_w * (1 + TAPER_RATIOw))
 front_spar_fraction = 0.2
@@ -55,7 +55,7 @@ rear_spar_fraction = 0.8
 m = 4.70 / (b_w/2)
 
 # HORIZONTAL STABALISER DIMENSIONS
-c_rh = 2.36 # 40/566
+c_rh = 2.3 # 40/566
 c_th = 1.1 # 17/566
 S_h = 15.91
 b_h = 2 * S_h / (c_rh + c_th)  # 130/55

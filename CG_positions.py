@@ -116,6 +116,11 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfus_LEMAC = x_cgfus - x_LEMACw
     x_cgn_LEMAC = x_cgn - x_LEMACw
 
+    # Adding the missing components
+    x_MG_LEMAC = x_MG - x_LEMACw
+    x_NW_LEMAC = x_NW - x_LEMACw
+    x_cockpit_LEMAC = x_cockpit - x_LEMACw
+
     x_cgfg_LEMAC = x_cgfg - x_LEMACw
     x_cgwg_LEMAC = x_cgwg - x_LEMACw
     x_cg_LEMAC = x_cg - x_LEMACw
@@ -126,6 +131,11 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfus_LEMACNORM = x_cgfus_LEMAC / c_macw
     x_cgn_LEMACNORM = x_cgn_LEMAC / c_macw
 
+    # Adding the missing components
+    x_MG_LEMACNORM = x_MG_LEMAC / c_macw
+    x_NW_LEMACNORM = x_NW_LEMAC / c_macw
+    x_cockpit_LEMACNORM = x_cockpit_LEMAC / c_macw
+
     x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
     x_cg_LEMACNORM = x_cg_LEMAC / c_macw
@@ -133,60 +143,90 @@ def calculate_aircraft_cgs(x_LEMACw):
     return {
         "from_nose": {
             "components": {"wing": x_cgw, "horizontal_stab": x_cgh, "vertical_stab": x_cgv, "fuselage": x_cgfus,
-                           "engine": x_cgn},
+                           "engine": x_cgn, "main_landing_gear": x_MG, "nose_landing_gear": x_NW,
+                           "cockpit_systems": x_cockpit},
             "groups": {"wing_group": x_cgwg, "fuselage_group": x_cgfg},
             "aircraft": x_cg
         },
         "from_lemac": {
             "components": {"wing": x_cgw_LEMAC, "horizontal_stab": x_cgh_LEMAC, "vertical_stab": x_cgv_LEMAC,
-                           "fuselage": x_cgfus_LEMAC, "engine": x_cgn_LEMAC},
+                           "fuselage": x_cgfus_LEMAC, "engine": x_cgn_LEMAC, "main_landing_gear": x_MG_LEMAC,
+                           "nose_landing_gear": x_NW_LEMAC, "cockpit_systems": x_cockpit_LEMAC},
             "groups": {"wing_group": x_cgwg_LEMAC, "fuselage_group": x_cgfg_LEMAC},
             "aircraft": x_cg_LEMAC
         },
         "percent_mac": {
             "components": {"wing": x_cgw_LEMACNORM, "horizontal_stab": x_cgh_LEMACNORM,
-                           "vertical_stab": x_cgv_LEMACNORM, "fuselage": x_cgfus_LEMACNORM, "engine": x_cgn_LEMACNORM},
+                           "vertical_stab": x_cgv_LEMACNORM, "fuselage": x_cgfus_LEMACNORM, "engine": x_cgn_LEMACNORM,
+                           "main_landing_gear": x_MG_LEMACNORM, "nose_landing_gear": x_NW_LEMACNORM,
+                           "cockpit_systems": x_cockpit_LEMACNORM},
             "groups": {"wing_group": x_cgwg_LEMACNORM, "fuselage_group": x_cgfg_LEMACNORM},
             "aircraft": x_cg_LEMACNORM
+        },
+        "mass_kg": {
+            "components": {"wing": WEIGHT_WING, "horizontal_stab": WEIGHT_HORIZONTAL_TAIL,
+                           "vertical_stab": WEIGHT_VERTICAL_TAIL, "fuselage": WEIGHT_FUSELAGE,
+                           "engine": WEIGHT_PROPULSION_SYSTEM, "main_landing_gear": WEIGHT_MAIN_LANDING_GEAR,
+                           "nose_landing_gear": WEIGHT_NOSE_LANDING_GEAR, "cockpit_systems": WEIGHT_COCKPIT_SYSTEMS},
+            "groups": {"wing_group": WEIGHT_wg, "fuselage_group": WEIGHT_fg},
+            "aircraft": WEIGHT_wg + WEIGHT_fg
+        },
+        "mass_pct": {
+            "components": {"wing": WEIGHT_WING / EOW * 100, "horizontal_stab": WEIGHT_HORIZONTAL_TAIL / EOW * 100,
+                           "vertical_stab": WEIGHT_VERTICAL_TAIL / EOW * 100, "fuselage": WEIGHT_FUSELAGE / EOW * 100,
+                           "engine": WEIGHT_PROPULSION_SYSTEM / EOW * 100,
+                           "main_landing_gear": WEIGHT_MAIN_LANDING_GEAR / EOW * 100,
+                           "nose_landing_gear": WEIGHT_NOSE_LANDING_GEAR / EOW * 100,
+                           "cockpit_systems": WEIGHT_COCKPIT_SYSTEMS / EOW * 100},
+            "groups": {"wing_group": WEIGHT_wg / EOW * 100, "fuselage_group": WEIGHT_fg / EOW * 100},
+            "aircraft": (WEIGHT_wg + WEIGHT_fg) / EOW * 100
         }
     }
 
 
 def print_cg_table(results):
-    print("\n" + "=" * 80)
-    print(" " * 25 + "BASELINE CG REPORT")
-    print("=" * 80)
-    print(f"{'COMPONENT / GROUP':<25} | {'CG from Nose (m)':<15} | {'CG from LEMAC (m)':<15} | {'CG as % MAC':<15}")
-    print("-" * 80)
+    print("\n" + "=" * 115)
+    print(" " * 45 + "BASELINE CG REPORT")
+    print("=" * 115)
+    print(
+        f"{'COMPONENT / GROUP':<25} | {'Mass (% EOW)':<13} | {'Mass (kg)':<12} | {'CG from Nose (m)':<17} | {'CG from LEMAC (m)':<18} | {'CG as % MAC':<15}")
+    print("-" * 115)
 
     print("COMPONENTS:")
     for comp in results['from_nose']['components']:
+        mass_pct = results['mass_pct']['components'][comp]
+        mass_kg = results['mass_kg']['components'][comp]
         nose = results['from_nose']['components'][comp]
         lemac = results['from_lemac']['components'][comp]
         mac = results['percent_mac']['components'][comp] * 100
-        print(f"  {comp:<23} | {nose:<15.4f} | {lemac:<15.4f} | {mac:<14.2f}%")
+        print(f"  {comp:<23} | {mass_pct:<13.1f} | {mass_kg:<12.2f} | {nose:<17.4f} | {lemac:<18.4f} | {mac:<14.2f}%")
 
-    print("-" * 80)
+    print("-" * 115)
 
     print("ASSEMBLY GROUPS:")
     for grp in results['from_nose']['groups']:
+        mass_pct = results['mass_pct']['groups'][grp]
+        mass_kg = results['mass_kg']['groups'][grp]
         nose = results['from_nose']['groups'][grp]
         lemac = results['from_lemac']['groups'][grp]
         mac = results['percent_mac']['groups'][grp] * 100
-        print(f"  {grp:<23} | {nose:<15.4f} | {lemac:<15.4f} | {mac:<14.2f}%")
+        print(f"  {grp:<23} | {mass_pct:<13.1f} | {mass_kg:<12.2f} | {nose:<17.4f} | {lemac:<18.4f} | {mac:<14.2f}%")
 
-    print("=" * 80)
+    print("=" * 115)
 
+    mass_pct_total = results['mass_pct']['aircraft']
+    mass_kg_total = results['mass_kg']['aircraft']
     nose_total = results['from_nose']['aircraft']
     lemac_total = results['from_lemac']['aircraft']
     mac_total = results['percent_mac']['aircraft'] * 100
-    print(f"{'TOTAL EOW AIRCRAFT':<25} | {nose_total:<15.4f} | {lemac_total:<15.4f} | {mac_total:<14.2f}%")
-    print("=" * 80)
+    print(
+        f"{'TOTAL EOW AIRCRAFT':<25} | {mass_pct_total:<13.1f} | {mass_kg_total:<12.2f} | {nose_total:<17.4f} | {lemac_total:<18.4f} | {mac_total:<14.2f}%")
+    print("=" * 115)
 
 
 if __name__ == '__main__':
     x_LEMACw_input = it.x_LEMACw
     results = calculate_aircraft_cgs(x_LEMACw_input)
     print_cg_table(results)
-    print(c_macw)
-    print(x_LEMACw_input)
+    print("\nCalculated MAC:", c_macw)
+    print("x_LEMACw_input:", x_LEMACw_input)

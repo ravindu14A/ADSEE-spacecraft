@@ -99,7 +99,6 @@ V_total_orig = 19.4
 
 V_front_orig = V_total_orig * (MASS_FRONT_CARGOold / TOTAL_CARGO_MASS)
 V_aft_orig = V_total_orig * (MASS_AFT_CARGOold / TOTAL_CARGO_MASS)
-
 V_batt_front = 1.3
 V_batt_aft = 1.6
 
@@ -131,6 +130,8 @@ MASS_AFT_CARGO_EXX = TOTAL_CARGO_MASS * (V_aft_new / V_total_new)
 # Reassign primary cargo variables so they export correctly
 MASS_FRONT_CARGO = MASS_FRONT_CARGO_EXX
 MASS_AFT_CARGO = MASS_AFT_CARGO_EXX
+print(MASS_FRONT_CARGO/V_front_new)
+print(MASS_AFT_CARGO/V_aft_new)
 
 # Remaining cargo space bounds
 X_front_cargo_start = X_START_FRONT_CARGOold + L_batt_front

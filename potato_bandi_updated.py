@@ -155,9 +155,13 @@ def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
         ax.plot(f_mac, f_W, color=COL_FUEL, lw=3, solid_capstyle='round',
                 label='Fuel loading', zorder=4)
 
-        # ── OEW marker ──
+        # ── OEW marker & label ──
         ax.scatter([pa_mac[0]], [OEW], color='black', s=100, zorder=6,
                    edgecolors='white', linewidths=1.2)
+        ax.text(pa_mac[0] + 0.012, OEW - 600, f'OEW + Batt = {OEW:,.0f} kg',
+                color='black', fontsize=9, fontweight='bold', zorder=7,
+                bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
+                
         ax.axvline(x=fwd_limit_with_margin, color=COL_LIMIT, ls='-', lw=1.5, alpha=0.7,
                    label=f'CG limits ± {CG_MARGIN:.0%} MAC')
         ax.axvline(x=aft_limit_with_margin, color=COL_LIMIT, ls='-', lw=1.5, alpha=0.7)
@@ -166,10 +170,21 @@ def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
         ax.axvline(x=most_fwd_cg, color='grey', ls='--', lw=0.8, alpha=0.5)
         ax.axvline(x=most_aft_cg, color='grey', ls='--', lw=0.8, alpha=0.5)
 
+        # ── MZFW line ──
+        MZFW_CALC = pa_W[-1]  # Weight before fuel is added
+        ax.axhline(y=MZFW_CALC, color='#555555', ls='--', lw=1.5, alpha=0.6)
+        
+        # We need the current xlim to place text, so we force an update
+        plt.draw()
+        x_min = ax.get_xlim()[0]
+        ax.text(x_min + 0.01 if x_min != 0 else most_fwd_cg,
+                MZFW_CALC + 250, f'MZFW = {MZFW_CALC:,.0f} kg',
+                color='#444444', fontsize=9, fontweight='bold')
+
         # ── MTOW line ──
         ax.axhline(y=MTOW, color=COL_LIMIT, ls='--', lw=1.5, alpha=0.6)
-        ax.text(ax.get_xlim()[0] + 0.005 if ax.get_xlim()[0] != 0 else most_fwd_cg,
-                MTOW + 200, f'MTOW = {MTOW:,.0f} kg',
+        ax.text(x_min + 0.01 if x_min != 0 else most_fwd_cg,
+                MTOW + 250, f'MTOW = {MTOW:,.0f} kg',
                 color=COL_LIMIT, fontsize=9, fontweight='bold')
 
         # ── Axes ──
@@ -180,7 +195,8 @@ def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
         ax.set_ylabel('Aircraft Mass  (kg)')
 
         # ── Legend ──
-        leg = ax.legend(loc='upper left', frameon=True, fancybox=False,
+        leg = ax.legend(loc='upper left', bbox_to_anchor=(1.02, 1), 
+                        frameon=True, fancybox=False,
                         edgecolor='#CCCCCC', framealpha=0.95)
         leg.get_frame().set_linewidth(0.6)
 
@@ -194,7 +210,8 @@ def calculate_cg_limits(X_OEW, X_LEMAC, X_FUEL, plot=False):
             spine.set_linewidth(0.6)
             spine.set_color('#666666')
 
-        plt.tight_layout()
+        # Use an explicit tight_layout with a rect to ensure the external legend fits
+        plt.tight_layout(rect=[0, 0, 0.85, 1])
         plt.show()
 
     return most_fwd_cg, most_aft_cg, fwd_limit_with_margin, aft_limit_with_margin

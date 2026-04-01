@@ -1,0 +1,351 @@
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+1 
+Aircraft Tutorial 
+ 
+“The effects of radical propulsive solutions on the 
+characteristics of regional aircraft” 
+_________________________________________________________________________ 
+ 
+ 
+1. Introduction 
+1.1. Instructions 
+This document provides all necessary information you will need to prepare and to execute the 
+Aircraft Tutorial. Read this entire document carefully before beginning to work on it.  
+It is assumed that you have studied the lecture notes of the course with a special attention to 
+the aircraft design specific module dedicated to weight&balance and stability&control. 
+Some of the additional material present on the book suggested in as a study material and related 
+to the aforementioned topics, can be useful to perform this tutorial, hence you are advised to 
+familiarize with it. It is assumed that you are able to use knowledge from the previous course 
+AE2111 (wing design modules). 
+ 
+1.2. Project background and objective 
+The Bombardier CRJ1000 is a regional jet airliner that was designed and manufactured by 
+Canadian transportation conglomerate Bombardier (formerly Canadair) between 1999 and 2020.  
+The CRJ program was acquired by Japanese corporation Mitsubishi Heavy Industries in 2020, 
+which ended production of the aircraft due to the market saturation with similar competitors and 
+more efficient turboprop alternatives.  
+From both operators (airliners, pilots) and passengers, this aircraft is still very appreciated for 
+its flight characteristics and comfort, as well as for its low purchasing costs. 
+ 
+ 
+An IBERIA CRJ-1000 [copyright @ K. von Wedelstaedt] 
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+2 
+ 
+AeroSpark is a recent European engineering company specialized in the modification of out-of-
+production aircraft which have the potential to be transformed into new competitive aircraft, by 
+means of new propulsive solutions and systems and ensuring at the same time limited re-design 
+processes. AeroSpark has just started a joint programme with Mitsubishi to evaluate the potential 
+benefits of re-designing the CRJ-1000 and to eventually propose a new CRJ-EXX version 
+equipped with a radically innovative Hybrid-Electric propulsion system (whose some 
+specifications, that impact your study, are reported in the following paragraphs). 
+ 
+Mission 
+You and your 5 colleagues, are working in the Stability&Control department of AeroSpark and 
+you support the other departments with the aim to finalize the first conceptual assessment of 
+the new CRJ-EXX configuration. Your team has been asked to perform a design investigation 
+and report it.  
+In particular your group has to deliver a report composed by two studies: the general instructions 
+for these activities are provided in the next paragraphs of the present document. 
+ 
+ 
+2. First Part: assessment of the reference aircraft 
+2.1. Deliverables of the first part 
+The characteristics of the reference aircraft need to be determined prior to evaluate possible 
+further modifications. Therefore, your group is asked to determine weights, balance, stability 
+and controllability parameters of the reference CRJ-1000 configuration with with full economy, 
+100 pax @ 31 inch seats, 2+2 abreast. 
+In particular you are asked to: 
+ 
+a) Familiarize with the entire task list and search for relevant data and information 
+on the CRJ-1000 aircraft (e.g., general dimensions; weights and performance data; layout of 
+cabin, wing, tail, high lift devices, landing gear, etc.). For the retrieval of data, you can 
+consult website providing original manufacturer specifications and/or the Jane's All the 
+World's Aircraft catalogue (available on paper at the TUD library or digitally at 
+www.Janes.com, when accessed within the TU network). Other popular websites provide 
+plenty of data especially in the form of “Airport Planning Manual” document. 
+ 
+b) Generate a table and a pie chart containing the values of Maximum Takeoff Weight 
+(MTOW), Operational Empty Weight (OEW), maximum payload weight and fuel weight@max 
+payload. The payload weight will be further split into 1) pax&cabin luggage weight, 2) front 
+cargo hold weight and 3) aft cargo hold weight. The table shall indicate the values of OEW, 
+fuel weight and maximum payload weight both in absolute values and as percentage of 
+MTOW. 
+ 
+ 
+ 
+ 
+ 
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+3 
+c) The weight department has provided the following Table 1, containing the breakdown 
+(expressed in percentage of the EOW) of the main aircraft systems: 
+ 
+Table 1: weight breakdown 
+Component 
+Weight (% EOW) 
+Wing 
+19.7 
+Horizontal Tail 
+2.5 
+Vertical Tail 
+1.8 
+Fuselage (including cabin and furnishing systems) 35.0 
+Main Landing gear 
+5.8 
+Nose Landing gear 
+0.8 
+Propulsion System (including Nacelles) 
+13.3 
+Cockpit Systems (avionics, furnishing…) 
+2.3 
+ 
+Note some of the items composing the Empty Operative configuration might be excluded 
+from the table. In that case, you can assume that the components that are not reported in 
+the table simply don’t affect notably the position of the CG. Generate a table where 
+information of the different centers of gravity are reported according the following guidelines: 
+ 
+I. 
+The components shall be re-arranged into a “fuselage group” and a “wing group” 
+(make sure to include the right components in each group!). The total weigh of both 
+groups shall be provided as well.  
+ 
+II. 
+Calculate the CG of groups and components; you shall make use of two reference 
+systems:  
+• 
+One global system positioned ahead of the aircraft; 
+• 
+One system fixed at LEMAC (i.e., the leading edge of the wing mean aerodynamic 
+chord). 
+ 
+III. 
+In the table you will report the CG positions of the components, of both the wing and 
+fuselage groups and of the empty operative configuration of the aircraft with respect 
+to reference system fixed at LEMAC. Express these CG positions as percentage of the 
+wing mean aerodynamic chord (MAC)  
+ 
+ 
+d) Consequently generate the aircraft loading diagram. Organize the passengers into 
+groups, according to their seating position following the window-aisle rule. Place the 
+remaining payload weight in the front and aft cargo holds, according to their capacity. Make 
+use of drawings and payload arrangement as available on the websites of manufacturer 
+and/or operators. 
+ 
+e) Identify the most aft and forward c.g. positions during operation and report them in 
+a table, indicated as percentage of the aircraft mean aerodynamic chord MAC. Indicate in 
+the same table the specific loading conditions that are responsible for the achievement of 
+the most aft and forward c.g. positions. In the same table, you will report also the position 
+of the aircraft c.g.@OEW (indicated as percentage of MAC), the c.g. position of both the 
+front and the rear cargo, and the c.g. position of the fuel tank(s). 
+ 
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+4 
+f) Determine and report in a table all the geometry and aerodynamics parameters (see 
+point e) in the next Part2) that are necessary to assess both stability and controllability 
+characteristics. 
+ 
+g) Ultimately generate the complete scissor plot of the reference aircraft with the neutral 
+stability line, the stability line and the controllability line. 
+ 
+ 
+3. Second Part: evaluation of design modifications 
+In the second part of your study, you are asked to evaluate possible effects of some design input 
+coming directly from the other company departments. 
+3.1. Customer design modifications 
+AeroSpark has already performed some design work towards the development of the CRJ-EXX. 
+The CRJ-EXX will feature new lightweight interiors, a new glass cockpit and, in particular, a new 
+serial hybrid electric propulsion system; its arrangement consists of two modern high 
+bypass ratio turbofans coupled with electric motors that provide boost power during demanding 
+flight phases. Those systems are arranged together and placed in a nacelle located at the same 
+place of the older ones. In addition, the other departments of AeroSpark have estimated the 
+following other modifications: 
+ 
+I. 
+The nacelles have increased dimension both in length (+20%) and diameter (+20%). 
+II. 
+Despite the increase in size, the propulsion System doesn’t present variation in neither 
+weight or location of its c.g.. 
+III. 
+Due to the utilization of innovative material, the wing weight is reduced by 9% with 
+respect to its initial absolute value, and the fuselage weight is reduced by 7% (again with 
+respect to its initial absolute value). 
+IV. 
+The electric part of the powertrain is powered by two battery packs. The battery total 
+weight is 4000 kg and the first pack (that accounts for a total volume of 1300 liters and 
+a weights of 2025 kg) is located in the most forward part of the forward cargo hold. The 
+second battery pack (2475 kg, and a volume of 1600 liters) is instead located in the aft 
+cargo compartment, in the most aft area.  
+V. 
+The weights (and hence the CG) of the batteries are not considered in the EOW 
+configuration reported in point I. Therefore, a new CG@EOW+Batt shall be calculated 
+since the batteries are not removable. 
+VI. 
+The last three rows of passenger are removed. 
+VII. 
+The cargo weight is remaining equal to the value of the old CRJ-100 but its distribution 
+is proportional to the new volumes of the cargo holds (reduced because of the presence 
+of the batteries). 
+VIII. 
+The MTOW of the CRJ-EXX will be the same of the CRJ-1000; therefore, the 
+modifications of the weights terms (payloads and EOW+Batteries) are compensated by 
+a proper modification of the amount of fuel embarked. 
+IX. 
+The Aerodynamic is improved with new winglet system that increases the wing 
+effective Aspect Ratio by 25% when compared to the initial CRJ-1000. 
+X. 
+The maximum lift coefficient of the Aircraft-less-tail is increased by 20% with respect the 
+CRJ-1000 version, thanks to improvements of the High-Lift Devices. 
+XI. 
+In order to guarantee safe and more effective recharging operations, the height of the 
+landing gears is increased by 30 cm. 
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+5 
+3.2. Customer questions 
+     Phoenix Works is asking your team to address the following question: 
+a) How do the aforementioned design modifications affect both longitudinal stability and 
+controllability? Provide evidence of your answer providing calculation steps where necessary. 
+b) Would it be still possible to fulfill the longitudinal S&C requirements without changing the 
+current horizontal tail size, longitudinal wing position and stability margin?  
+ 
+     If NOT:  
+c) What would be the critical longitudinal requirement? Stability or controllability?  
+d) How larger should be the horizontal tail to fulfil again both the longitudinal S&C constraints, 
+while maintaining the same longitudinal position of the wing?  
+e) What design iterations (if any) would be necessary to confirm your answer?  
+ 
+If YES: 
+c) How smaller could be the horizontal tail size, while still fulfilling both the longitudinal S&C 
+constraints and without modifying the longitudinal position of the wing neither the stability 
+margin?  
+d) In this case what would become the critical longitudinal requirement? Stability or control? 
+e) What design iterations (if any) would be necessary to confirm your answer?  
+ 
+ 
+f) How do the aforementioned design modifications affect the design of the landing gears 
+according to ground operations? Provide evidence of any changes in the ground requirements 
+with respect to the original CRJ-1000. 
+ 
+ 
+ 
+ 
+Recommendations: 
+• 
+Make use of loading diagram and scissor plot to provide clear evidence to your answers.  
+• 
+If you are suggesting the need of iterations, be specific on the parameters to be iterated. 
+• 
+Consider that the horizontal tailplane surface of T-tail aircraft, in order to account for deep 
+stall risk, is generally 15% larger than that required to just satisfy the S&C requirements. 
+ 
+ 
+ 
+3.3. Deliverables of the second part 
+a) Generate a second weight table for the CRJ-EXX aircraft similar to the one indicated in 
+deliverable b) of the part1, in this case report also the weight of the batteries as a 
+standalone weight term. 
+b) Provide an updated c.g. data table breakdown table similar to the one aske at point c) of 
+the part 1. Also include the contribution of the two different battery packs. 
+c) Generate a second loading diagrams for the CRJ-EXX aircraft similar to Task d) of part 1. 
+Clearly report both the CG@EOW and the CG@EOW+Batt. Preferably you will display the two 
+loading diagrams together on the same plot. In case they will be displayed in two separate 
+plots, their scale and size must be adequate to compare easily the difference of the two 
+diagrams. 
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+6 
+d) Generate the complete scissor plot (stability + neutral stability + controllability curves) 
+for the CRJ-EXX reporting also the CG range. The scissor plot must be scaled and sized in 
+such a way it can be easily compared to the one of the reference aircraft. To make this 
+comparison easy, you can report the two scissor plots together in a separate figure. 
+e) Provide a table displaying the data necessary to build the scissor plot(s). You shall indicate 
+at least the following data for both the RJ85 and the RJXX: 
+• Cruise speed 
+• Approach speed 
+• Tail-wing speed ratio (Vh/V) 
+• Lift rate coefficient of the tail at cruise speed 
+• Lift rate coefficient of the aircraft-less-tail at cruise speed, including the separate 
+contributions of: 
+o Wing  
+o Fuselage  
+• Wing downwash gradient 
+• Position of the aerodynamic center of the aircraft-less-tail, evaluated both at cruise 
+and approach speed, and including the following separate contributions:  
+o Wing 
+o Fuselage 
+o Nacelles 
+• Maximum horizontal tail lift coefficient (indicate also the type of tail, e.g. full moving, 
+fixed, etc) 
+• Zero Lift pitching moment coefficient of the aircraft-less-tail, including the separate 
+contributions of all the aircraft parts. 
+ 
+f) Based on calculations and on the qualitative reasoning, provide an answer to each of the 
+customer questions reported in paragraph 3.2 from a) to f) 
+ 
+ 
+ 
+4. Part3: organization of the group 
+The tutorial is a group work where all the group members must contribute equally. Each student 
+must actively perform both the calculation/design tasks and reporting ones.  It is up to the group 
+members to organize the group and to constantly self-monitor progresses and to do possible actions 
+to improve the outcome of the tutorial.  
+Group organization as well as tasks division shall be briefly reported in an appendix (max 3 pages 
+long) of the report. 
+ 
+ 
+ 
+5. Requirements on the report and grading criteria 
+The report must adhere to the following guidelines: 
+• 
+Your group must deliver an electronic version of the report in PDF format not later than the 
+deadline indicated on BrightSpace for the delivery of the tutorial in the regular session. 
+• 
+The report will be uploaded in  the  “Aircraft Tutorial  - Regular Session” assignment folder  
+that will be created on BrightSpace by the teaching staff. 
+Systems Engineering and Aerospace Design (AE3211-I) 2025/2026-Regular session 
+AE3211-I  Aircraft Homework Tutorial - Regular Session.docx 
+7 
+• 
+The report shall be named: “AE3211_Aircraft_Tutorial_Group_#” (where # indicates your 
+group number). 
+• 
+The report shall clearly indicate on the front page, the name and the student number of all 
+the team members, as well as the group number assigned during the tutorial session. 
+• 
+The report has a page limit of 25 pages, all included: it must include all the deliverables 
+described in both Part1, Part 2 as well as the organizational appendix (Part 3). 
+• 
+In addition to the asked deliverables, a limited amount of text will be necessary to answer 
+to the customer questions, describe the main characteristics, justify and state all the design 
+assumptions and decisions. Text to explain theoretical background is not needed.  
+• 
+Shows all the numerical results with proper unit of measures and shows calculation steps 
+when they are needed to answer the deliverables. 
+• 
+Include clear and readable plots: do not forget labels and consider to scale its dimension to 
+favor comparison when requested (e.g. comparison of loading diagrams). 
+• 
+Include a list of references when data and/or equation are used from literature. 
+• 
+Ignoring the aforementioned indications, might affect the final grade for this 
+assignment. 
+ 
+The report will be graded as a whole (no intermediate points for each part will be given) according 
+to the following criteria: 
+• 
+Completeness and correctness: Did you answer all the posed questions? Did you include 
+all the requested deliverables and information? Did you properly compute all the coefficients, 
+at the required conditions? Did you indicate the correct units?  
+• 
+Consistency: Did you use data and assumptions consistently through your report? Do your 
+plots match your assumptions and calculations? Do you explain/justify the source of all your 
+data, plots, charts etc.? 
+• 
+Reporting quality: Is your story clear and concise? Is the report properly structured? Are 
+your paged numbered, as well as your figures, tables and equations? Are all your tables and 
+plots readable and provided with caption, units, labels and legend?  

@@ -157,7 +157,7 @@ COL_FUEL  = '#2171B5'
 COL_LIMIT = '#E41A1C'
 
 
-def _draw_potato(ax, d, title, oew, mtow):
+def _draw_potato(ax, d, title, oew, mtow, draw_legend=True, legend_loc=None):
     """Draw a single potato on an axes with the professional style."""
     n_c, n_w, n_a = d["n_cargo"], d["n_window"], d["n_aisle"]
     ax.xaxis.set_major_formatter(FormatStrFormatter('%.3f'))
@@ -182,24 +182,34 @@ def _draw_potato(ax, d, title, oew, mtow):
     ax.plot(d["f_mac"], d["f_W"], color=COL_FUEL, lw=3,
             solid_capstyle='round', label='Fuel loading', zorder=4)
 
-    # OEW dot
+    # OEW dot and label
     ax.scatter([d["pa_mac"][0]], [oew], color='black', s=80, zorder=6,
                edgecolors='white', linewidths=1)
+    label_oew = f'OEW = {oew:,.0f} kg' if '1000' in title else f'OEW+Batt = {oew:,.0f} kg'
+    ax.text(d["pa_mac"][0] + 0.012, oew - 600, label_oew,
+            color='black', fontsize=9, fontweight='bold', zorder=7,
+            bbox=dict(facecolor='white', edgecolor='none', alpha=0.7, pad=1))
 
     # CG limits
     ax.axvline(x=d["fwd"], color='grey', ls='--', lw=0.8, alpha=0.5)
     ax.axvline(x=d["aft"], color='grey', ls='--', lw=0.8, alpha=0.5)
 
+    # MZFW line
+    mzfw = d["pa_W"][-1]
+    ax.axhline(y=mzfw, color='#555555', ls='--', lw=1.5, alpha=0.6)
+    
+    # Place text directly aligned to the CG limit to prevent bounding box expansion
+    ax.text(d["fwd"], mzfw + 250, f' MZFW = {mzfw:,.0f} kg',
+            color='#444444', fontsize=9, fontweight='bold', ha='left')
+
     # MTOW
-    ax.axhline(y=mtow, color=COL_LIMIT, ls='--', lw=1.3, alpha=0.6)
-    ax.text(d["aft"] + 0.01, mtow + 200, f'MTOW', color=COL_LIMIT,
-            fontsize=8, fontweight='bold')
+    ax.axhline(y=mtow, color=COL_LIMIT, ls='--', lw=1.5, alpha=0.6)
+    ax.text(d["fwd"], mtow + 250, f' MTOW = {mtow:,.0f} kg', color=COL_LIMIT,
+            fontsize=9, fontweight='bold', ha='left')
 
     ax.set_title(title, fontweight='bold', pad=10)
     ax.set_xlabel(r'$x_{\mathrm{cg}}\;/\;\mathrm{MAC}$')
-    leg = ax.legend(loc='upper left', frameon=True, fancybox=False,
-                    edgecolor='#CCC', framealpha=0.95)
-    leg.get_frame().set_linewidth(0.5)
+    
     ax.grid(True, which='major', ls='-', lw=0.4, color='#D0D0D0')
     ax.minorticks_on()
     ax.grid(True, which='minor', ls=':', lw=0.25, color='#E8E8E8')
@@ -268,8 +278,14 @@ def plot_comparison():
     y_lo = min(ip1.EOW, ip2.EOW) - 1500
     y_hi = ip1.MTOW + 2500
 
-    _draw_potato(ax1, data1, 'CRJ-1000  (Baseline — Task 1)', ip1.EOW, ip1.MTOW)
-    _draw_potato(ax2, data2, 'CRJ-EXX  (Modified — Task 2)',  ip2.EOW, ip2.MTOW)
+    _draw_potato(ax1, data1, 'CRJ-1000', ip1.EOW, ip1.MTOW)
+    _draw_potato(ax2, data2, 'CRJ-EXX',  ip2.EOW, ip2.MTOW)
+
+    # ── Only ONE legend on ax2, precisely where requested ──
+    leg = ax2.legend(loc='center left', bbox_to_anchor=(0.10, 0.35),
+                     frameon=True, fancybox=False,
+                     edgecolor='#CCC', framealpha=0.95)
+    leg.get_frame().set_linewidth(0.5)
 
     ax1.set_ylim(y_lo, y_hi)
     ax2.set_ylim(y_lo, y_hi)

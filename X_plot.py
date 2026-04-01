@@ -238,8 +238,8 @@ print(f"Max Tail Lift Coefficient (CL_h_fixed): {CL_h_fixed:.4f} (Assuming Fixed
 W_landing = (MLW) * 9.81
 S_h_dynamic = Sh_S_array * ip.S_w
 
-V_approach_array = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + S_h_dynamic * (Vh_V ** 2) * CL_h_fixed)))
-V_approach_curr = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + ip.S_h * (Vh_V ** 2) * CL_h_fixed)))
+V_approach_array = 1.3 * np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + S_h_dynamic * (Vh_V ** 2) * CL_h_fixed)))
+V_approach_curr = 1.3 * np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + ip.S_h * (Vh_V ** 2) * CL_h_fixed)))
 
 print("\n--- 9. Approach Speed Calculation ---")
 print(f"Resulting V_approach:  {V_approach_curr:.2f} m/s ({V_approach_curr * 1.94384:.1f} knots)")

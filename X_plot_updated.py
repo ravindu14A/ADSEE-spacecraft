@@ -32,7 +32,7 @@ def get_flap_area_proportion(y_start, y_end, b, c_root, taper):
     # to the total flap area to the total wing area (Swf / S)
     return flap_segment_area / half_wing_area
 
-
+MLW = 36968
 print("="*60)
 print("     AERODYNAMIC & SCISSOR PLOT CALCULATIONS LOG")
 print("="*60)
@@ -311,14 +311,14 @@ CL_h_fixed = -0.35 * (A_h ** (1 / 3))
 print("\n--- 9. MAXIMUM TAIL LIFT COEFFICIENT ---")
 print(f"Max Tail Lift Coefficient (CL_h_fixed): {CL_h_fixed:.4f} (Assuming Fixed Stabilizer)")
 
-W_landing = (ip.MTOW - ip.W_fuel) * 9.81
+W_landing =  MLW  * 9.81
 S_h_dynamic = Sh_S_array * ip.S_w
 
 # Calculate Approach Speed dynamically based on fixed CL_max
-V_approach_array = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + S_h_dynamic * (Vh_V ** 2) * CL_h_fixed)))
+V_approach_array = 1.3 * np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + S_h_dynamic * (Vh_V ** 2) * CL_h_fixed)))
 
 # Approach speed for the specifically inputted S_h
-V_approach_curr = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + ip.S_h * (Vh_V ** 2) * CL_h_fixed)))
+V_approach_curr = 1.3 * np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + ip.S_h * (Vh_V ** 2) * CL_h_fixed)))
 
 print("\n--- 10. APPROACH SPEED CALCULATION ---")
 print(f"Landing Weight (W):    {W_landing:.2f} N")

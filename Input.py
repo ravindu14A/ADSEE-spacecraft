@@ -37,17 +37,17 @@ z_cg = 4
 
 # WHEELS
 x_NW = 2.13 # 26/446
-x_MG = 22.10 #258/446
-y_MG = 3
+x_MG = 22.78 #258/446
+y_MG = 3.1
 number_MG = 2
-theta = 15
+theta = 13.8
 
 # WING DIMENSION
 b_w = 26.2
 S_w = 77.4
 TAPER_RATIOw = 0.3
 SWEEP_ANGLEw = 29.5 # Degrees, leading edge sweep
-x_LEMACw = 19.65
+x_LEMACw = 19.68
 dihedral = None
 c_rw = (S_w *2) / (b_w * (1 + TAPER_RATIOw))
 front_spar_fraction = 0.2

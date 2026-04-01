@@ -1,0 +1,1292 @@
+Delft University of Technology
+Systems Engineering and System Design
+AE3211-II
+Aircraft Tutorial
+Group 30
+Ravindu Kalinga Bandara (5958016)
+Alexandru-Theodor Minculescu (5983681)
+Cristian Caba (6022537)
+Selim Kazanci (5912261)
+Daniel Constantinescu (5908345)
+Alin Nagy (6004598)
+February 2026
+Contents
+1
+Introduction
+2
+2
+Analysis of CRJ-1000
+2
+2.1
+General Information about CRJ-1000 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+2
+2.1.1
+Aerodynamic surface size approximation . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+3
+2.2
+Empty operative weight breakdown and CG location . . . . . . . . . . . . . . . . . . . . . . . . . .
+6
+2.3
+Weight chart for CRJ-1000
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+7
+2.4
+Loading Diagram of CRJ-1000
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+7
+2.5
+Stability and Control . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+9
+2.5.1
+Stability . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+9
+2.5.2
+Controllability
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+12
+3
+Analysis of CRJ-1000 with Modifications
+14
+3.1
+General Infromation about CRJ-EXX
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+14
+3.2
+CG analysis and Loading Diagram for CRJ-1000 with Modifications
+. . . . . . . . . . . . . . . . .
+15
+3.3
+Stability and Control analysis for CRJ-1000 with Modifications . . . . . . . . . . . . . . . . . . . .
+15
+4
+Team Organization and Reflection
+15
+5
+Conclusion
+15
+A
+16
+1
+1
+Introduction
+The report investigates the effects of propulsive solutions on the characteristics of a regional aircraft, using the
+Bombardier CRJ-1000 as the reference configuration. The study is carried out in the context of a conceptiual
+redesign in which the aircraft is transformed into a hybrid-electric variant, reffert to as CRJ-EXX. The objective
+of the report is to assess how the proposed modifications influence the aircraft from a weight and balance, stability
+point of view.
+The first part of the report focuses on establishing the main characteristics of the CRJ-1000. This includes the
+determination of the aircraft weight breakdown, the estimation of the OEW center of gravity, the construction of
+the loading diagram and the
+The second part examines the CRJ-EXX configuration, which includes several important modifications, including
+a hybrid-electric propulsion system, battery packs placed in the cargo holds, structural mass reductions, improved
+high lift devices and increased the effective aspect ratio. ( reduced capacity in passengers). These changes affect
+both the mass distribution and the aerodynamic characteristics of the aircraft, therefore ... The modified aircraft
+is examined using the same framework as the baseline aircraft, allowing direct comparison between the two cases.
+2
+Analysis of CRJ-1000
+2.1
+General Information about CRJ-1000
+show the
+calcu-
+lation
+for cg
+of cargo
+holds
+In order to assess the stability and controllability (S&C) of CRJ-1000, certain parameters were required for analysis
+where they were used at different places throughout this report. In this subsection, the relevant parameters are
+introduced, if calculations were done to obtain certain parameters they were presented and the assumptions made
+are explained. The parameters that do not concern the S&C such as engine thrust capabilities etc. were not shown
+due to irrelevancy.
+The Table 1 displays the general parameters of the aircraft whereas the Table 2 shows the aerodynamic parameters.
+Table 1: Aircraft Input Parameters: Performance, Payload, Fuselage, and Landing Gear[1] [2]
+Parameter
+Value
+Unit
+Parameter
+Value
+Unit
+Payload & Cabin
+Fuselage & Cockpit Dimensions
+Passenger Mass (incl. bag)
+87
+kg
+Fuselage Length
+36.47
+m
+Front Cargo Mass
+472
+kg
+Fuselage Max Diameter
+4.0
+m
+Front Cargo CG Position
+8.3
+m
+Fuselage CG Ratio
+0.45
+–
+Aft Cargo Mass
+1,294
+kg
+Cockpit x-Position
+2.5
+m
+Aft Cargo CG Position
+26.5
+m
+Reference z-Position
+4.0
+m
+Number of Seat Rows
+25
+–
+Landing Gear Options (Wheels)
+Row 1 Position
+7.1
+m
+Nose Gear Station
+2.126
+m
+Seat Pitch
+0.79
+m
+Main Gear Station
+22.10
+m
+Flight Characteristics & Limits
+Main Gear Span (Half-Track)
+3.0
+m
+Cruise Mach Number
+0.82
+–
+Number of Main Gears
+2
+–
+Cruise Altitude
+9,000
+m
+Tail Strike Angle
+15
+deg
+2
+Table 2: Aircraft Input Parameters: Aerodynamics, Surfaces, and Engine Nacelles[1] [3]
+Parameter
+Value
+Unit
+Parameter
+Value
+Unit
+Main Wing Dimensions
+Horizontal Stabiliser Dimensions
+Root Chord
+5.12
+m
+Root Chord
+2.58
+m
+Wingspan
+26.2
+m
+Tip Chord
+1.10
+m
+Wing Area
+77.4
+m2
+Planform Area
+15.91
+m2
+Taper Ratio
+0.3
+–
+Span
+8.65
+m
+Leading Edge Sweep Angle
+29.5
+deg
+Taper Ratio
+0.426
+–
+LEMAC Position
+19.75
+m
+Sweep Angle
+33.7
+deg
+Front Spar Fraction
+0.20
+–
+LEMAC Position
+36.7
+m
+Rear Spar Fraction
+0.80
+–
+Flap Start Position
+1.289
+m
+Flap End Position
+9.79
+m
+Engine & Nacelles
+Vertical Stabiliser Dimensions
+Nacelle Start Position
+30.0
+m
+Root Chord
+3.27
+m
+Nacelle Lateral Offset
+3.0
+m
+Tip Chord
+2.21
+m
+Nacelle Length
+3.9
+m
+Planform Area
+11.32
+m2
+Nacelle Max Diameter
+1.66
+m
+Span
+4.0
+m
+Number of Nacelles
+2
+–
+Taper Ratio
+0.676
+–
+Sweep Angle
+42.6
+deg
+Aerodynamic Coefficients
+LEMAC Position
+35.0
+m
+Max Lift Coefficient
+2.6
+–
+Root z-Position
+1.35
+m
+Zero-Lift Pitching Moment
+-0.08
+–
+Zero-Lift Lift Coefficient
+0.05
+–
+cf
+0.7
+–
+cs
+0.58
+–
+The passenger mass[4] was taken from the upper end for sake of conservative assumption, in case of a male-
+passenger dominated flight.
+The locations of the cargo holder cg were calculated as the midpoints of the cargo holder [1], therefore, it was
+assumed a uniform cargo distribution throughout the cargo hold volume.
+For the seat pitch, it was assumed that the seat and passenger distribution is uniform with no differences, hence,
+no emergency exit seat pitch etc. were taken into account. All the seats were placed right after each other.
+2.1.1
+Aerodynamic surface size approximation
+Since the vast majority of the aerodynamic surface sizing are not publicly available, and instead only present in
+specific, classified Aircraft Maintenance Manuals, the size of the aerodynamic surfaces and positions and sizes of
+elements, such as nacelles and landing gear. Two accurate, to-scale CAD drawings of the CRJ-1000 were used
+in this process, as it accurately represents the real dimensions of the airplane (). The first step was measuring
+cite
+the cad
+drawing
+the fuselage, which had a length of 566 pixels in Figure 1 and a length of 446 pixels in Figure 2, while its real
+documented length is 36.47m. Thus, it was determined that Figure 1 had a scale of 0.064435m per pixel, while
+Figure 2 had a scale of 0.08177m per pixel. Angles were also measured using digital protractors. All element
+positions have been measured from the tip of the nose of the aircraft except for the flap start and end positions,
+which were measured from the center of fuselage. In Table 3, all sizes estimated using this method can be found,
+together with their pixel and estimated real size.
+3
+Figure 1: Top-down CAD drawing of CRJ-1000
+Figure 2: Side-view CAD drawing of CRJ-1000
+Table 3: Table of estimated sizes, lengths and angles
+Figure 1
+Figure 2
+Element
+# of pixels
+Size
+Element
+# of pixels
+Size
+Horizontal Tail MAC x-location
+582
+37.5m
+Nose wheel x-location
+26
+2.13m
+Horizontal Tail Root chord
+37
+2.36m
+Main wheel x-location
+270
+22.1m
+Horizontal Tail Tip chord
+17
+1.1m
+Vertical stabilizer root chord
+40
+3.27m
+Horizontal Tail Span
+143
+9.2m
+Vertical stabilizer tip chord
+27
+2.21m
+Wing root chord
+80
+5.12
+Tail-Strike Angle
+N.A.
+15 ◦
+Nacelle start x-location
+466
+30m
+Nacelle Length
+60
+3.9m
+Nacelle Width
+26
+1.66m
+Horizontal tail sweep
+N.A.
+33.7◦
+Wing sweep
+N.A.
+29.5 ◦
+It is important to note that while wing root chord and wing tip chord were not values publicly available online,
+the wing surface area was. However, while considering the wing a trapezoid, the computed wing area from root
+and tip chord and the publicly available wing area value do not match. This is because, in reality, as can be seen
+in Figure 1, Bombardier aircraft designers decided to add an extra spar near the root of the wing to accommodate
+the main landing gear. For this reason, the actual effective wing surface has a higher value.
+The taper ratios were calculated by cr
+ct where cr is the chord length at the root and ct is the chord length at the
+tip of the aerodynamic surface.
+Maximum lift coefficient of the aircraft was calculated from the Figure 3 as shown below
+Figure 3: Maximum CL for given quarter chord sweep angle and high-lift device configuration of the wing
+4
+Where the quarter chord sweep angle was calculated by Λc/4 = arctan
+
+tan(ΛLE) −
+1−λ
+AR(1+λ)
+
+which gave the value
+of 26.9 deg and the type of high lift devices CRJ-1000 uses is categorized as double slotted flap and slat. Thus, for
+these inputs, reading from the graph, maximum CL of 2.6 was obtained.
+Zero-lift pitching moment coefficient of the airfoil was found from a generic analysis of supercritical airfoils[5],
+which CRJ-1000s airfoils also fall under this category.
+Figure 4: CN against Cm curve for supercritical airfoils at M = 0.77
+It was assumed that CN ≈CL and M = 0.77 is close to the cruise Mach number of CRJ-1000 thus, reading from
+the graph, Cm value at zero CN is found to be −1.6 which corresponds to the zero lift moment coefficient.
+The zero lift coefficient CL0 was found by empirical methods[6]. The following parameters were used for the aircraft
+operating at a cruise Mach of 0.82 where the remaining new values were assumed to be the standard values for
+this analysis for aircraft similar to CRJ-1000:
+• Aspect Ratio (A): 8.85
+• Half-chord Sweep (Λ1/2): 22◦
+• Taper Ratio (λ): 0.3
+• Cruise Mach Number (M): 0.82
+• Wing Incidence (iw): 0.0◦
+• Tip Twist/Washout (ϵt): −1.5◦
+• Airfoil Zero-Lift Angle (α0l): −1.2◦
+• Airfoil Efficiency Factor (κ): 0.95
+• Tail Trim Downforce (CLtail): −0.15
+To account for transonic cruise speeds, the compressibility factor (β) is calculated:
+β =
+p
+1 −M 2
+(1)
+The three-dimensional lift curve slope of the wing is calculated using the modified Helmbold equation for swept
+wings in compressible flow:
+CLα =
+2πA
+2 +
+r
+4 + A2β2
+κ2
+
+1 +
+tan2 Λ1/2
+β2
+
+(2)
+5
+The effective zero-lift angle of the 3D wing accounts for the aerodynamic washout (twist) distributed across the
+span. For a straight-tapered wing, this is integrated as:
+α0Lw = α0l + ϵt
+1 + 2λ
+3 + 3λ
+
+(3)
+The lift generated by the wing when the fuselage is at zero degrees angle of attack is a function of its mounting
+incidence and its zero-lift angle:
+CL0wing = CLα(iw −α0Lw)
+(4)
+To maintain level flight, the horizontal tail must generate a downforce to counteract the pitching moment and
+balance the forward center of gravity. The total aircraft CL0 is the sum of the wing’s lift and the tail’s trim
+penalty:
+CL0total = CL0wing + CLtail
+(5)
+Plugging in all the parameters results in
+CL0total = 0.199 + (−0.15) ≈0.05
+(6)
+Thus, at a cruise Mach of 0.82 with the specified trim and incidence parameters, the estimated zero-lift lift
+coefficient for the aircraft is approximately 0.05.
+write the
+calcula-
+tion of c
+and cs
+2.2
+Empty operative weight breakdown and CG location
+Before constructing the loading diagram, the center of gravity (CG) of the aircraft in the Empty Operating Weight
+(EOW) configuration must be determined. The weight distribution of the components contributing to the EOW
+was established in Task 1 and is summarized in Table 4.
+Table 4: Weight Breakdown and CG Locations
+Component
+Mass
+Mass
+CG from
+CG from
+CG as
+(% EOW)
+(kg)
+Nose (m)
+LEMAC (m)
+% MAC
+Wing
+19.7
+4568.04
+21.70
+1.95
+53.43
+Horizontal Tail
+2.5
+579.70
+37.51
+17.76
+486.75
+Vertical Tail
+1.8
+417.38
+36.17
+16.42
+449.77
+Fuselage (incl. cabin and furnishing systems)
+35.0
+8115.80
+16.41
+-3.34
+-91.47
+Main Landing gear
+5.8
+1344.90
+22.10
+2.35
+0.64
+Nose Landing gear
+0.8
+185.50
+2.13
+-17.62
+-482.79
+Propulsion System (including Nacelles)
+13.3
+3084.00
+31.56
+11.81
+323.59
+Cockpit Systems (avionics, furnishing...)
+2.3
+533.32
+2.5
+-17.25
+-472.65
+Total Accounted EOW
+81.2
+18828.66
+21.13
+1.38
+37.95
+The remaining 18.8% of the EOW, not included in Table 4, was assumed to have no influence on the CG, as
+specified in the task. The CG of a group of components, whether the fuselage group, wing group, or the entire
+aircraft, was calculated using:
+xcg =
+P ximi
+P mi
+(7)
+The fuselage group comprises the horizontal and vertical tails, fuselage (including cabin and furnishing systems),
+nose landing gear, propulsion system (including nacelles), and cockpit systems. The propulsion system is included
+in this group because the CRJ-1000 features fuselage-mounted engines.
+The wing group consists of the wing and the main landing gear. The main landing gear is included in this group as
+it influences both the CG location and the allowable CG limits due to ground clearance and stability considerations
+during ground operations. Referring the component masses and CG locations in Table 4, the CG locations of the
+fuselage group, wing group and finally the whole aircraft in EOW configuration can be calculated as show in in
+Table 5.
+6
+Table 5: Assembly Group Weight Breakdown and CG Locations
+Assembly Group
+Mass (kg)
+CG from Nose (m)
+CG from LEMAC (m)
+CG as % MAC
+Fuselage Group
+12915.72
+20.83
+1.08
+29.72
+Wing Group
+5912.94
+21.79
+2.04
+55.92
+Complete Aircraft at EOW
+23188
+21.13
+1.38
+37.95
+2.3
+Weight chart for CRJ-1000
+This subsection introduces the CRJ-1000 weight data and how the weight of the aircraft is split.
+Table 6: CRJ-1000 Weight Breakdown [3]
+Weight Component
+Mass [kg]
+% of MTOW
+Maximum Takeoff Weight (MTOW)
+41,640
+100.0%
+Operational Empty Weight (OEW)
+23,188
+55.7%
+Fuel Weight (@ Max Payload)
+6,495
+15.6%
+Maximum Payload Weight
+11,957
+28.7%
+Payload Weight Split:
+1) Pax & Cabin Luggage
+8,700
+20.9%
+2) Front Cargo Hold
+870
+2.3%
+3) Aft Cargo Hold
+2,384
+5.5%
+The maximum cargo hold weight[3] was 3257 kg which then split into
+5.26
+19.67 = 26.7% and 14.41
+19.67 = 73.2% between
+the forward and aft cargo holds respectively, according to their internal volume capacity [1] where it was assumed
+that the cargo density was same for both cargo holds.
+Thus, maximum zero fuel weight (MZFW) was found to be MZFW = OEW +MPW ⇒23188+11957 = 35145kg.
+Finally, the maximum fuel weight at maximum payload was calculated by MTOW −MZFW ⇒41640 −35145 =
+6495kg.
+Gathering all these, the following pie chart was created as shown below in Figure 5
+Figure 5: Pie chart of the weight distribution of CRJ-1000
+2.4
+Loading Diagram of CRJ-1000
+In this subsection, the generation of the aircraft loading diagram, which is also referred to as potato diagram is
+presented. Potato diagram was a critical tool for determining the operational limits of CRJ-1000 . The physical
+shift in the aircraft’s CG as varying combinations of payload and fuel were added. By plotting aircraft mass
+against the CG position (expressed as a percentage of the MAC), the absolute forward and aft physical limits of
+the aircraft were established, which were then used in .
+refer to
+the scis-
+sor plot
+chapter
+7
+As discrete masses (passengers, cargo, or fuel) were added incrementally where the required weight and CG location
+parameters were calculated in subsection 2.1, subsection 2.3 and ??. The new aircraft mass Wnew and new CG
+location xcg,new were calculated using the standard weighted-average formula for each iteration:
+Wnew = Wold + Wadded
+(8)
+xcg,new = (Wold · xcg,old) + (Wadded · xcg,added)
+Wnew
+(9)
+To determine the absolute boundaries of the envelope, two parallel loading paths were simulated:
+• Path A (Forward-to-Aft Loading): This path simulates the scenario where the aircraft is loaded strictly
+from the front to the back, driving the CG as far forward as possible at intermediate weights. The sequence
+is:
+1. Front cargo hold loaded to maximum capacity.
+2. Aft cargo hold loaded to maximum capacity.
+3. Window seats loaded progressively from Row 1 to the final row.
+4. Aisle seats loaded progressively from Row 1 to the final row.
+• Path B (Aft-to-Forward Loading): This path reverses the loading order to drive the CG as far aft as
+possible. The sequence is:
+1. Aft cargo hold loaded to maximum capacity.
+2. Front cargo hold loaded to maximum capacity.
+3. Window seats loaded progressively from the final row up to Row 1.
+4. Aisle seats loaded progressively from the final row up to Row 1.
+The cargo were assumed to be single uniform boxes and as it was explained, their CG location was assumed to
+be at the midpoint of the cargo hold due to uniform cargo mass distribution. Furthermore, CG location of the
+passengers was assumed to be the position of the seat. Once both payload paths were fully loaded, the aircraft
+reached its MZFW configuration.
+Finally, the fuel was added, where the CG location of the fuel was assumed to be the geometrical CG location of
+the wing. This assumption is fairly valid since the fuel was assumed to be stored only at the wings and it was
+distributed homogeneous along the wing volume. Thus, this location corresponded to the geometrical CG location
+of the wing, which was found in ??. The resulting diagram is shown below in Figure 6.
+Figure 6: CRJ-1000 Loading Diagram
+8
+Lastly, from these combinations, the algorithm extracts the most forward and most aft CG coordinates generated
+at any point during the loading process. Finally, a safety margin of ±5% MAC is applied to both extremes. This
+operational margin is vital, as it accounts for passenger movement, loading inaccuracies, and fuel slosh, ensuring
+the aircraft remains controllable under all circumstances.
+The most forward calculated CG occurred at exactly ≈8.87% MAC, driven by the forward-loading sequence
+(Path A) before the influence of aft payloads. Conversely, the most aft CG was identified at ≈55.91% MAC,
+generated during the aft-loading sequence (Path B). Moreover, after applying the safety margin, the final permitted
+Operational CG Envelope for the CRJ-1000 is defined between a forward limit of 3.87% MAC and an aft limit
+of 60.91% MAC.
+When the shape of the loading diagram is investigated, the result is as expected. Due to aft wing and engine
+configurations, the OEW CG location was also aft. Furthermore, the heavier, aft cargo hold caused the extreme
+aft CG limit as expected, since the majority of the passengers were located in front of the aircraft. Thus, the
+extreme forward CG location was due to the passengers since as discussed, the fuel was stored at the wings which
+were configured aft of the aircraft.
+2.5
+Stability and Control
+2.5.1
+Stability
+To assess an aircraft’s longitudinal characteristics, a scissor plot is constructed to evaluate both static stability
+and controllability. A scissor plot is a graphical tool that combines the stability and controllability constraints by
+plotting both requirements as functions of the CG location. In practice, these constraints are expressed as limiting
+curves and plotted against the tail-to-wing area ratio. For each value of this ratio, the corresponding forward
+and aft CG limits are obtained. This representation illustrates how the allowable CG range varies with tail size
+and enables the selection of a configuration that satisfies both stability and controllability requirements across the
+desired CG range.
+Static longitudinal stability describes how the aircraft responds to a small perturbation in angle of attack. An
+aircraft is statically stable if it generates a restoring pitching moment that returns it to equilibrium. If a distur-
+bance instead causes the pitching moment to diverge further from equilibrium, the aircraft is statically unstable.
+Generally, the stability line of the scissor plot defines the aft limit of the CG position, given by:
+¯xnp = ¯xac +
+CLαh
+CLαA−h
+
+1 −dϵ
+dα
+ Shlh
+S¯c
+Vh
+V
+2
+⇒
+¯xcg = ¯xac +
+CLαh
+CLαA−h
+
+1 −dϵ
+dα
+ Shlh
+S¯c
+Vh
+V
+2
+−S.M.
+(10)
+The overbar notation (e.g., ¯x) indicates that positions are expressed relative to the leading edge of the mean
+aerodynamic chord (MAC) and normalized by the MAC length. In Equation 10, ¯xnp denotes the non-dimensional
+neutral point location, ¯xcg the non-dimensional CG location, and ¯xac the non-dimensional aerodynamic center
+location of the aircraft. The terms CLαh and CLαA−h represent the lift curve slopes of the horizontal tail and
+the aircraft minus the horizontal plane, respectively. The downwash gradient,
+dϵ
+dα, accounts for the reduction in
+effective angle of attack at the tail due to the wing. lh is the tail moment arm (distance between the wing and
+tail aerodynamic centers). The term
+  Vh
+V
+2 represents the ratio of the airflow velocity at the tail relative to that
+at the wing.
+The static margin, denoted by S.M., represents the distance between the CG and the neutral point and serves
+as a safety margin to ensure sufficient longitudinal stability. It is introduced not only as a design buffer but
+also to account for the difference between stick-fixed and stick-free stability conditions. While the neutral point
+derived here corresponds to the stick-fixed case, the stick-free condition is typically more restrictive, often shifting
+the neutral point forward. Therefore, a positive static margin is required to guarantee stable behavior under all
+conditions.
+In order to utilize Equation 10, it is necessary to estimate the parameters CLαh, CLA−h,
+  Vh
+V
+
+, and dϵ
+dα for the most
+critical flight condition. For longitudinal stability considerations, this condition is typically the cruise flight state,
+where the aircraft operates for the majority of its mission and stability requirements are most representative.
+1.
+  Vh
+V
+
+Since the aircraft has a T-tail configuration, there is no loss of velocity at the horizontal stabaliser due to
+the wing, Vh
+V = 1.
+2. CLαh
+9
+Parameter
+Variable
+Value
+Tail Aspect Ratio
+Ah
+5.316
+Tail Half-Chord Sweep
+Λh,c/2
+27.92◦
+Tail Velocity Ratio
+Vh/V
+1.0
+Tail Mach Number
+Mh
+0.82
+Tail Compressibility Factor
+βh
+0.5724
+Table 7: Fundamental parameters used for the Tail Lift Curve Slope (CLαh) calculation.
+CLαh was calculated using Equation 2, but using the horizontal stabilizer parameters listed in Table 7. The
+Mach correction factor is identical to that of the wing since for a T-tail configuration Vh
+V = 1. This results
+in CLαh = 4.9111 rad−1.
+3. CLαA−h
+Parameter
+Variable
+Value
+Fuselage Width / Diameter
+bf (or dfus)
+4 m
+Wing Span
+bw
+26.2 m
+Wing Area
+Sw
+77.4 m2
+Wing Root Chord
+crw
+5.12 m
+Wing Aspect Ratio
+Aw
+8.85
+Wing Half-Chord Sweep
+Λw,c/2
+22◦
+Cruise Mach Number
+M
+0.82
+Wing Compressibility Factor
+βw
+0.5724
+Airfoil Efficiency Factor
+κ
+0.95
+Fuselage Interference Constant
+–
+2.15
+Table 8: Fundamental parameters and empirical constants used for the Aircraft-less-tail lift curve slope (CLαA−h)
+calculation.
+The lift curve slope of the aircraft without the horizontal tail, CLαA−h , is obtained by correcting the isolated
+wing lift curve slope to account for fuselage interference and the reduction in effective lifting area due to the
+wing portion enclosed within the fuselage.
+The lift curve slope of the isolated wing, CLαw , is calculated using the DATCOM method (Equation 2),
+which yields an intermediate value of CLαw = 6.1546 rad−1.
+First, the fuselage interference factor is introduced to account for the aerodynamic interaction between the
+fuselage and the wing root:
+Kint = 1 + 2.15
+ bf
+bw
+
+(11)
+where bf is the fuselage width and bw is the wing span.
+Next, the net wing area exposed to the freestream is computed by subtracting the portion of the wing
+enclosed within the fuselage:
+Snet = Sw −bfcrw
+(12)
+where Sw is the reference wing area.
+The lift curve slope of the wing-body combination is then expressed as:
+CLαA−h = CLαw Kint
+Snet
+Sw
+
++ π
+2
+ 
+b2
+f
+Sw
+!
+(13)
+The first term represents the corrected wing contribution, while the second term accounts for the additional
+lift generated by the fuselage itself.
+Substituting the intermediate wing value and the parameters from Table 8 yields CLαA−h ≈6.5795 rad−1.
+4.
+dϵ
+dα
+10
+Parameter
+Variable
+Value
+Wing Leading Edge Sweep
+ΛLEw
+29.5◦
+Wing Taper Ratio
+λw
+0.3
+Tail Horizontal Position Parameter
+r
+1.335 m
+Tail Vertical Position Parameter
+mtv
+0.359 m
+Table 9: Fundamental parameters used for the downwash derivative ( ∂ϵ
+∂α) calculation.
+The downwash derivative,
+∂ϵ
+∂α, quantifies the rate of change of the airflow deflection angle at the horizontal
+tail caused by the wing’s wake. This is calculated using empirical DATCOM formulations that account for
+the relative distance between the wing and the tail, as well as the wing’s sweep and aspect ratio.
+The calculation relies on the isolated wing lift curve slope, which was previously determined to be CLαw =
+6.1546 rad−1, as well as the wing aspect ratio (Aw) defined in Table 8.
+First, the sweep correction factors (Kϵ,Λ and Kϵ,Λ0) are computed based on the wing’s quarter-chord sweep
+angle (Λw,c/4) and the normalized horizontal distance to the tail (r):
+Kϵ,Λ =
+0.1124 + 0.1265Λw,c/4 + 0.1766Λ2
+w,c/4
+r2
++ 0.1024
+r
++ 2
+(14)
+Kϵ,Λ0 = 0.1124
+r2
++ 0.1024
+r
++ 2
+(15)
+The downwash derivative is then calculated by combining the sweep corrections with the vertical and hori-
+zontal tail positioning parameters (mtv and r), scaled by the wing’s lift curve slope over its aspect ratio:
+∂ϵ
+∂α =
+ Kϵ,Λ
+Kϵ,Λ0
+ "
+r
+r2 + m2
+tv
+0.4876
+p
+r2 + 0.6319 + m2
+tv
++
+ 
+1 +
+
+r2
+r2 + 0.7915 + 5.0734m2
+tv
+0.3113!  
+1 −
+s
+m2
+tv
+1 + m2
+tv
+!#
+CLαw
+πAw
+(16)
+Substituting the geometric parameters from Table 9 and Table 8 yields the final downwash derivative ∂ϵ
+∂α ≈
+0.3232.
+5. xac
+Parameter
+Variable
+Value
+Base Wing Aerodynamic Center
+xac,w
+0.31 MAC
+Fuselage Nose to Wing MAC
+lfn
+Calculated from geometry
+Nacelle Position Factor
+kn
+−2.5
+Number of Nacelles
+nnacelles
+2
+Nacelle Maximum Diameter
+dnac
+1.66 m
+Nacelle to Wing MAC distance
+ln
+Calculated from geometry
+Table 10: Fundamental parameters used for the Cruise Aerodynamic Center shift (xac) calculation.
+The total aircraft aerodynamic center for the cruise configuration, xac, is determined by taking the isolated
+wing’s aerodynamic center and applying the destabilizing forward shifts caused by the fuselage and the
+engine nacelles.
+The calculation relies on the aircraft-less-tail lift curve slope (CLαA−h ), which was determined to be 6.5795 rad−1
+in a previous step, alongside wing and fuselage geometric parameters defined in Table 8.
+First, the fuselage contribution is split into two parts to account for the physical dimensions and the wing
+sweep interference:
+∆xac,f = −1.8bfhflfn
+CLαA−h Sw¯cw
++ 0.273bfcgw(bw −bf) tan Λw,c/4
+(1 + λw)¯c2w(bw + 2.15bf)
+(17)
+Next, the forward shift caused by the engine nacelles is computed:
+∆xac,n = nnacelles
+knd2
+nacln
+Sw¯cwCLαA−h
+(18)
+11
+The total normalized aerodynamic center location in cruise is the sum of these components:
+xac = xac,w + ∆xac,f + ∆xac,n
+(19)
+Substituting the intermediate values and geometric parameters yields a final high-speed aerodynamic center
+of xac ≈0.1462 MAC.
+2.5.2
+Controllability
+Controllability refers to the ability of the aircraft to be trimmed, i.e., to maintain steady flight at a given condition
+using the available control authority. This is represented by the controllability (or trim) line, which defines the
+forward limit of the CG position for which the aircraft can be trimmed, given by:
+¯xcg = ¯xac −Cmac
+CLA−h
++
+CLh
+CLA−h
+Shlh
+S¯c
+Vh
+V
+2
+(20)
+In this expression, Cmac is the pitching moment coefficient about the aerodynamic center of the aircraft. The term
+CLh denotes the lift coefficient of the horizontal tail. The coefficient CLA−h represents the lift curve slope of the
+complete aircraft minus the horizontal tail. All other variables are defined as previously described in Equation 10.
+In order to utilize Equation 20, it is necessary to determine the parameters xac, Cmac, CLmax, and the horizontal
+tail downforce limit CLh for the most critical flight condition. For longitudinal controllability considerations, this
+condition is typically the landing approach state. During this phase, the aircraft operates at low speeds with
+high-lift devices fully deployed, which generates the maximum nose-down pitching moment that the horizontal
+stabilizer must successfully counteract.
+1. CLA−h
+For controllability considerations, the aircraft must be evaluated at its most critical flight condition. This
+occurs during the landing approach, where the aircraft operates at low speeds and the high-lift devices (flaps)
+are fully deployed. This configuration generates the maximum possible nose-down pitching moment that the
+horizontal stabilizer must successfully counteract.
+Because the aircraft is operating at this aerodynamic limit, the lift coefficient of the aircraft without the
+horizontal tail, CLA−h, is simply evaluated as the absolute maximum lift coefficient of the wing:
+CLA−h = CLmax
+Based, this gives a constant maximum value of CLA−h = 2.6.
+explain
+raymar
+usage
+2. xac (Landing)
+The aerodynamic center must be recalculated for the landing phase to account for the absence of high-speed
+compressibility effects. Unlike the cruise condition where high Mach numbers shift the aerodynamic center
+aft, the landing approach occurs at an effectively incompressible speed (M ≈0).
+This removes the Prandtl-Glauert compressibility boost, setting β = 1.0. Consequently, the isolated wing’s
+lift curve slope decreases to CLαw = 4.4904 rad−1, and the theoretical base wing aerodynamic center shifts
+forward to xac,w = 0.2600 MAC.
+Because the wing generates proportionally less lift relative to the invariant physical geometry of the fuselage
+and engine nacelles, these forward components exert a stronger destabilizing influence. Re-evaluating the
+shift equations with the incompressible lift curve slopes yields a significantly more forward total aerodynamic
+center for the landing configuration:
+xac,land = xacw,land + ∆xac,f,land + ∆xac,n,land ≈0.0266 MAC
+(21)
+3. Cmac
+12
+Parameter
+Variable
+Value
+Airfoil Zero-Lift Pitching Moment
+Cm0
+−0.08
+Airfoil Zero-Lift Coefficient
+CL0
+0.05
+Wing Quarter-Chord Sweep
+Λw,c/4
+26.8◦
+Wing Area
+S
+77.4 m2
+Flap Start Position
+ystart
+1.289 m
+Flap End Position
+yend
+9.79 m
+Flap Chord Extension Ratio
+∆cf/cf
+0.4
+Double-Slotted Flap Lift Factor
+–
+1.6
+Empirical Flap Moment Factor 1
+µ1
+0.175
+Empirical Flap Moment Factor 2
+µ2
+0.55
+Empirical Flap Moment Factor 3
+µ3
+0.055
+Table 11: Fundamental parameters and empirical constants used for the Total Pitching Moment (Cmac) calculation.
+The total zero-lift pitching moment dictates the inherent rotational tendency of the aircraft. Because the
+critical condition is the landing approach, the severe nose-down moment generated by the deployed flaps
+must be superimposed onto the inherent wing and fuselage moments.
+The wing’s corrected base pitching moment evaluates to Cmac,w = −0.1061, given by:
+Cmac,w = Cm0
+Aw cos2 Λw,c/4
+Aw + 2 cos Λw,c/4
+(22)
+The fuselage contribution depends on its length and height relative to the wing, evaluating to ∆Cmac,fus =
+−0.0244:
+∆Cmac,fus = −1.8
+
+1 −2.5bf
+lf
+ πbfhflf
+4S¯c
+CL0
+CLαA−h,land
+(23)
+To determine the pitching moment increment from the deployment of flaps, the proportion of the wing area
+affected by the flaps ( Swf
+S ) must first be evaluated. Assuming a linear taper, the local chord at any spanwise
+station y is:
+c(y) = crw −2(crw −ctip)
+bw
+y
+(24)
+The flap area ratio is calculated by dividing the area of the flapped trapezoidal segment by the area of the
+half-wing:
+Swf
+S
+= (cstart + cend)(yend −ystart)
+(crw + ctip) bw
+2
+(25)
+where cstart = c(ystart) and cend = c(yend).
+Next, the extended flap chord ratio, c′
+¯c , is evaluated based on the physical chord extension (∆cf) and the
+mean aerodynamic chord (¯c):
+c′
+¯c = ∆cf + ¯c
+¯c
+(26)
+With the extended chord ratio determined, the maximum section lift coefficient increment (∆clmax) generated
+by the double-slotted flaps can be estimated. For double-slotted configurations, this increment is proportional
+to the extended chord ratio multiplied by an empirical factor of 1.6:
+∆clmax = 1.6
+c′
+¯c
+
+(27)
+This section lift increment, along with the extended chord ratio and the area proportion, is then utilized to
+calculate the quarter-chord pitching moment increment, which must subsequently be shifted to the landing
+configuration’s aerodynamic center (¯xac,land) using CLmax. This results in a massive nose-down increment
+of ∆Cmac,HLD = −0.5382:
+∆Cm,1/4 = µ2
+
+−µ1∆clmax
+c′
+¯c −
+
+CLmax + ∆clmax
+
+1 −Swf
+S
+ 1
+8
+c′
+¯c
+c′
+¯c −1
+
++ 0.7
+Aw
+1 + 2/Aw
+µ3∆clmax tan Λw,c/4
+(28)
+∆Cmac,HLD = ∆Cm,1/4 −CLmax(0.25 −¯xac,land)
+(29)
+13
+Summing these contributions yields the total pitching moment in the landing configuration:
+Cmac = Cmac,w + ∆Cmac,fus + ∆Cmac,HLD
+(30)
+Substituting the values yields the final total pitching moment Cmac ≈−0.6688.
+4. CLh
+To trim the aircraft against the extreme Cmac generated by the flaps, the horizontal stabilizer must exert
+its maximum possible downforce. The maximum horizontal tail downforce coefficient, CLh, represents the
+absolute aerodynamic limit of the tail before stalling.
+In this methodology, it is estimated empirically based on the tail’s aspect ratio:
+CLh = −0.35A1/3
+h
+(31)
+Substituting the updated tail aspect ratio (Ah ≈5.316) yields the fixed downforce limit required to hold the
+nose up CLh ≈−0.6115.
+Parameter
+Sub-Component
+RJ85
+Cruise speed
+–
+247.34 m s−1 (M 0.82)
+Approach speed
+–
+55.60 m s−1 (108.1 kn)
+Tail-wing speed ratio (Vh/V )
+–
+0.95
+Tail Lift Curve Slope (CLαh)
+–
+4.9111 rad−1
+Aircraft-less-tail Lift Curve Slope
+Total (CLαA−h )
+6.5795 rad−1
+Wing (CLαw )
+6.1546 rad−1
+Fuselage Interference
+0.4249 rad−1
+Wing downwash gradient ( dϵ
+dα)
+–
+0.3232
+Aerodynamic Center (Cruise)
+Total (xac)
+0.1462 MAC
+Wing
+0.3100 MAC
+Fuselage Shift
+−0.2710 MAC
+Nacelles Shift
+0.1072 MAC
+Aerodynamic Center (Approach)
+Total (xac,land)
+0.0266 MAC
+Wing
+0.2600 MAC
+Fuselage Shift
+−0.3406 MAC
+Nacelles Shift
+0.1072 MAC
+Max Tail Lift Coefficient (CLh)
+–
+−0.6115 (Fixed Stab.)
+Zero Lift Pitching Moment (Approach)
+Total (Cmac)
+−0.6688
+Wing (Cmac,w)
+−0.1061
+Fuselage (∆Cmac,fus)
+−0.0244
+Flaps (∆Cmac,HLD)
+−0.5382
+Table 12: Summary of stability and controllability parameters for the RJ85 reference aircraft.
+3
+Analysis of CRJ-1000 with Modifications
+3.1
+General Infromation about CRJ-EXX
+The CRJ-EXX is a modern evolution based on the already existing CRJ-1000 described in subsection 2.1, which
+intends to modernise the aircraft by implementing a new hybrid system. Design modifications have been done by
+Aerospark and are summarised in the following list:
+1. Engine nacelle length and diameter have increased by +20, while keeping weight and center of gravity of
+propulsion system consistent with original aircraft
+2. Innovative materials reduce wing weight by 9% and fuselage weight by 7%
+3. Electric part of hybrid system is powered by two battery packs: one located in the forward part of the
+forward cargo hold (2025kg and volume of 1300l) and the second one located in the most aft part of the aft
+cargo hold (2475kg and 1600l)
+14
+4. Last three rows of passenger seats are removed
+5. MTOW remains the same as original CRJ-1000, but fuel quantity is different as a result of modifications
+6. New winglet system improves the effective Aspect Ratio by +25%
+7. New High-Lift Devices implemented, raising the maximum coefficient of lift by +25%
+8. Landing gear raised by +30cm to guarantee safe battery recharging operations
+As can be seen, the modifications are thorough, thus influencing a multitude of plance characterstics, including
+stability and maneuverability. These changes also influence the weight distribution of the aircraft. The updated
+table of aircraft parameters can be seen in Table 13:
+Table 13: Parameters changed in CRJ-EXX configuration vs standard CRJ-1000
+Parameter
+Value
+Unit
+Parameter
+Value
+Unit
+Payload & Cabin
+Fuselage & Cockpit Dimensions
+Front Cargo CG Position
+8.22
+m
+Fuselage CG Ratio
+0.45
+–
+Aft Cargo CG Position
+20.16
+m
+Reference z-Position
+4.0
+m
+Number of Seat Rows
+22
+–
+Landing Gear Options (Wheels)
+Row 1 Position
+7.1
+m
+Nose Gear Station
+2.126
+m
+Seat Pitch
+0.79
+m
+Main Gear Station
+22.10
+m
+Flight Characteristics & Limits
+Main Gear Span (Half-Track)
+3.0
+m
+Cruise Mach Number
+0.82
+–
+Number of Main Gears
+2
+–
+Cruise Altitude
+9,000
+m
+Tail Strike Angle
+15
+deg
+3.2
+CG analysis and Loading Diagram for CRJ-1000 with Modifications
+3.3
+Stability and Control analysis for CRJ-1000 with Modifications
+4
+Team Organization and Reflection
+5
+Conclusion
+References
+[1] Bombardier Aerospace, CRJ Series Regional Jet Airport Planning Manual, Model CL-600-2E25, Series 1000, Bombardier Inc.,
+Toronto, Ontario, Canada, Dec. 2015.
+https://customer.aero.bombardier.com/webd/BAG/CustSite/BRAD/RACSDocument.nsf/51aae8b2b3bfdf6685256c300045ff31/
+ec63f8639ff3ab9d85257c1500635bd8/$FILE/ATT82VLY.pdf/CRJ1000APMR8.pdf, cSP D-020, Revision 8.
+[2] SKYbrary, “BOMBARDIER Regional Jet CRJ-1000,” , .
+https://skybrary.aero/aircraft/crjx, content control by EUROCONTROL.
+[3] Wikipedia contributors, “Bombardier CRJ,” , 2026.
+https://en.wikipedia.org/wiki/Bombardier_CRJ.
+[4] k.szlendak, “How much the passenger weights?” , .
+https://www.evionica.com/blog/blog/how-much-the-passenger-weights.html.
+[5] Harris, C. D., “Aerodynamic Characteristics of a 14-Percent-Thick NASA Supercritical Airfoil Designed for a Normal-Force Coef-
+ficient of 0.7,” Technical Memorandum NASA-TM-X-72712, NASA Langley Research Center, Hampton, VA, United States, Jul.
+1975.
+https://ntrs.nasa.gov/citations/19830002807.
+[6] Raymer, D. P., Aircraft Design: A Conceptual Approach, 6th ed., AIAA Education Series, American Institute of Aeronautics and
+Astronautics, 2018.
+15
+A
+16

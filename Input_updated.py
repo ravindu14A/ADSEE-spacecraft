@@ -6,7 +6,7 @@ import Input as ip
 m = ip.m
 M = ip.M
 altitude = ip.altitude
-CL_max = 2.6
+CL_max = 2.6 *1.2
 C_m0 = ip.C_m0
 CL_0 = ip.CL_0
 
@@ -16,8 +16,8 @@ CL_0 = ip.CL_0
 MASS_PAX = 87
 
 # Old cargo definitions for volume calculation
-MASS_FRONT_CARGOold = 472
-MASS_AFT_CARGOold = 1294
+MASS_FRONT_CARGOold = ip.MASS_FRONT_CARGO
+MASS_AFT_CARGOold = ip.MASS_AFT_CARGO
 
 X_START_FRONT_CARGOold = 7.1
 X_END_FRONT_CARGOold = 9.55
@@ -37,9 +37,9 @@ z_cg = ip.z_cg + 0.3
 x_cockpit = ip.x_cockpit
 
 # WHEELS
-x_NW = ip.x_NW - 0.65
-x_MG = ip.x_MG +0.1
-y_MG = ip.y_MG+0.3
+x_NW = ip.x_NW
+x_MG = ip.x_MG #+0.1
+y_MG = ip.y_MG #+0.3
 number_MG = ip.number_MG
 theta = ip.theta
 
@@ -50,7 +50,7 @@ b_w = ip.b_w
 S_w = ip.S_w
 TAPER_RATIOw = ip.TAPER_RATIOw
 SWEEP_ANGLEw = ip.SWEEP_ANGLEw
-x_LEMACw = ip.x_LEMACw - 0.71
+x_LEMACw = ip.x_LEMACw -0.54
 dihedral = ip.dihedral
 front_spar_fraction = ip.front_spar_fraction
 rear_spar_fraction = ip.rear_spar_fraction
@@ -58,7 +58,8 @@ rear_spar_fraction = ip.rear_spar_fraction
 # HORIZONTAL STABILISER DIMENSIONS
 c_rh = ip.c_rh
 c_th = ip.c_th
-S_h = (ip.S_h-1.05)
+#S_h = (ip.S_h - 1.8)*1.5
+S_h = (ip.S_h +5.33)*1.15
 b_h = 2 * S_h / (c_rh + c_th)
 TAPER_RATIOh = ip.TAPER_RATIOh
 SWEEP_ANGLEh = ip.SWEEP_ANGLEh

@@ -61,7 +61,7 @@ print(f"Tail Compressibility Factor (beta): {beta:.4f}")
 print(f"Tail Half-Chord Sweep (rad): {SWEEP_ANGLEh_halfchord:.4f}")
 print(f"Tail Lift Curve Slope (Cl_ALPHAh): {Cl_ALPHAh:.4f} per rad")
 
-# --- Cl_ALPHAw Calculation ---
+# --- Cl_ALPHAw Calculation (CRUISE) ---
 M_w = ip.M
 beta_w = np.sqrt(1 - M_w ** 2)
 A_w = ip.b_w ** 2 / ip.S_w
@@ -77,13 +77,11 @@ term2_w = 1 + (np.tan(SWEEP_ANGLEw_halfchord) ** 2) / (beta_w ** 2)
 denominator_w = 2 + np.sqrt(4 + term1_w * term2_w)
 Cl_ALPHAw = numerator_w / denominator_w
 
-print("\n--- 2. Wing Lift Curve Slope [Eq. 2] ---")
-print(f"Wing Aspect Ratio (A_w): {A_w:.4f}")
+print("\n--- 2. Wing Lift Curve Slope (Cruise) ---")
 print(f"Wing Compressibility Factor (beta_w): {beta_w:.4f}")
-print(f"Wing Half-Chord Sweep (rad): {SWEEP_ANGLEw_halfchord:.4f}")
 print(f"Wing Lift Curve Slope (Cl_ALPHAw): {Cl_ALPHAw:.4f} per rad")
 
-# --- Cl_ALPHAa_h (Aircraft Less Tail) ---
+# --- Cl_ALPHAa_h (Aircraft Less Tail - CRUISE) ---
 b_f = ip.d_fus
 h_f = ip.d_fus
 l_f = ip.l_fus
@@ -93,12 +91,12 @@ term1_A_h = Cl_ALPHAw * interference_factor * (S_net / ip.S_w)
 term2_A_h = (np.pi / 2) * (b_f ** 2 / ip.S_w)
 Cl_ALPHAa_h = term1_A_h + term2_A_h
 
-print("\n--- 3. Aircraft-Less-Tail Lift Curve Slope [Eq. 3] ---")
-print(f"Fuselage Interference Factor (K_int): {interference_factor:.4f}")
-print(f"Net Wing Area (S_net): {S_net:.2f} m^2")
-print(f"Aircraft-less-tail Lift Curve Slope (Cl_ALPHAa_h): {Cl_ALPHAa_h:.4f} per rad")
+print("\n--- 3. Aircraft-Less-Tail Lift Curve Slope (Cruise) ---")
+print(f"  -> Wing Contribution: {term1_A_h:.4f} per rad")
+print(f"  -> Fuselage Contribution: {term2_A_h:.4f} per rad")
+print(f"Total Aircraft-less-tail Lift Curve Slope (Cl_ALPHAa_h): {Cl_ALPHAa_h:.4f} per rad")
 
-# --- x_ac_LEMACNORM (Fuselage & Nacelle Effects) ---
+# --- x_ac_LEMACNORM (Fuselage & Nacelle Effects - CRUISE) ---
 x_acw_LEMACNORM = 0.3
 y_root_to_mac = CG.y_macw - (ip.d_fus / 2)
 delta_x_sweep = y_root_to_mac * np.tan(np.radians(ip.SWEEP_ANGLEw))
@@ -122,16 +120,42 @@ x_acn_LEMACNORM = n_nacelles * (k_n * (d_nac ** 2) * l_n) / (ip.S_w * CG.c_macw 
 x_acwf_LEMACNORM = x_acw_LEMACNORM - fuse_cont_1 + fuse_cont_2
 x_ac_LEMACNORM = x_acn_LEMACNORM + x_acwf_LEMACNORM
 
-print("\n--- 4. Aerodynamic Center Shift [Eq. 4, 5, 6] ---")
-print(f"Base Wing Aerodynamic Center (x_acw_LEMACNORM): {x_acw_LEMACNORM:.4f}")
-print(f"Fuselage Contribution Part 1: {-fuse_cont_1:.4f}")
-print(f"Fuselage Contribution Part 2: {fuse_cont_2:.4f}")
-print(f"Total Fuselage Delta x_ac (Delta x_ac,f): {-fuse_cont_1 + fuse_cont_2:.4f}")
-print(f"Nacelle k_n factor: {k_n}")
-print(f"Nacelle Delta x_ac (Delta x_ac,n): {x_acn_LEMACNORM:.4f}")
-print(f"Total Aircraft Aerodynamic Center (x_ac_LEMACNORM): {x_ac_LEMACNORM:.4f}")
+print("\n--- 4a. Aerodynamic Center Shift (Cruise for Stability) ---")
+print(f"  -> Base Wing AC (x_acw): {x_acw_LEMACNORM:.4f} MAC")
+print(f"  -> Fuselage Contribution: {-fuse_cont_1 + fuse_cont_2:.4f} MAC")
+print(f"  -> Nacelles Contribution: {x_acn_LEMACNORM:.4f} MAC")
+print(f"Total Aircraft Aerodynamic Center (x_ac_LEMACNORM): {x_ac_LEMACNORM:.4f} MAC")
 
-# --- C_m_ac Calculation ---
+# =====================================================================
+# --- LANDING CONDITIONS (M ≈ 0) FOR CONTROLLABILITY ---
+# =====================================================================
+beta_w_land = 1.0  # M effectively 0
+term1_w_land = (A_w * beta_w_land / eta_w) ** 2
+term2_w_land = 1 + (np.tan(SWEEP_ANGLEw_halfchord) ** 2) / (beta_w_land ** 2)
+denominator_w_land = 2 + np.sqrt(4 + term1_w_land * term2_w_land)
+Cl_ALPHAw_land = numerator_w / denominator_w_land
+
+term1_A_h_land = Cl_ALPHAw_land * interference_factor * (S_net / ip.S_w)
+Cl_ALPHAa_h_land = term1_A_h_land + term2_A_h
+
+x_acw_LEMACNORM_land = 0.32
+fuse_cont_1_land = (1.8 * b_f * h_f * l_fn) / (Cl_ALPHAa_h_land * ip.S_w * CG.c_macw)
+x_acn_LEMACNORM_land = n_nacelles * (k_n * (d_nac ** 2) * l_n) / (ip.S_w * CG.c_macw * Cl_ALPHAa_h_land)
+
+x_acwf_LEMACNORM_land = x_acw_LEMACNORM_land - fuse_cont_1_land + fuse_cont_2
+x_ac_LEMACNORM_land = x_acn_LEMACNORM_land + x_acwf_LEMACNORM_land
+
+print("\n--- 4b. Aerodynamic Center Shift (Landing for Control) ---")
+print(f"Landing Wing Lift Curve Slope (Cl_ALPHAw_land): {Cl_ALPHAw_land:.4f}")
+print(f"  -> Wing Lift Contribution: {term1_A_h_land:.4f} per rad")
+print(f"  -> Fuselage Lift Contribution: {term2_A_h:.4f} per rad")
+print(f"Total Landing Aircraft-Less-Tail Lift Curve Slope (Cl_ALPHAa_h_land): {Cl_ALPHAa_h_land:.4f} per rad")
+print(f"  -> Landing Base Wing AC (x_acw_land): {x_acw_LEMACNORM_land:.4f} MAC")
+print(f"  -> Landing Fuselage Contribution: {-fuse_cont_1_land + fuse_cont_2:.4f} MAC")
+print(f"  -> Landing Nacelles Contribution: {x_acn_LEMACNORM_land:.4f} MAC")
+print(f"Total Landing Aerodynamic Center (x_ac_LEMACNORM_land): {x_ac_LEMACNORM_land:.4f} MAC")
+
+# --- C_m_ac Calculation (Using Landing Values) ---
 C_m0 = ip.C_m0
 CL_0 = ip.CL_0
 
@@ -140,8 +164,8 @@ C_m_ac_w = C_m0 * (A_w * (cos_sweep_qc ** 2)) / (A_w + 2 * cos_sweep_qc)
 
 term1_fus = 1 - ((2.5 * b_f) / l_f)
 term2_fus = (np.pi * b_f * h_f * l_f) / (4 * ip.S_w * CG.c_macw)
-term3_fus = CL_0 / Cl_ALPHAa_h
-Delta_fus_C_m_ac = -1.8 * term1_fus * term2_fus * term3_fus
+term3_fus_land = CL_0 / Cl_ALPHAa_h_land
+Delta_fus_C_m_ac_land = -1.8 * term1_fus * term2_fus * term3_fus_land
 
 deltac_c_f = 0.4
 c_f = 0.7
@@ -163,15 +187,14 @@ part1_cm = mu_2 * (term1_cm + term2_cm)
 part2_cm = 0.7 * (A_w / (1 + 2/A_w)) * mu_3 * delta_cl_max_flaps * np.tan(SWEEP_ANGLEw_quarterchord)
 
 Delta_C_m_1_4 = part1_cm + part2_cm
-Delta_C_m_ac_HLD = Delta_C_m_1_4 - CL_max * (0.25 - x_ac_LEMACNORM)
-C_m_ac = C_m_ac_w + Delta_fus_C_m_ac + Delta_C_m_ac_HLD
+Delta_C_m_ac_HLD_land = Delta_C_m_1_4 - CL_max * (0.25 - x_ac_LEMACNORM_land)
+C_m_ac_land = C_m_ac_w + Delta_fus_C_m_ac_land + Delta_C_m_ac_HLD_land
 
-print("\n--- 5. Pitching Moment Calculation ---")
-print(f"Wing Contribution (C_m_ac_w): {C_m_ac_w:.4f}")
-print(f"Fuselage Contribution (Delta_fus_C_m_ac): {Delta_fus_C_m_ac:.4f}")
-print(f"Flap Delta C_m at 1/4 chord (Delta_C_m_1_4): {Delta_C_m_1_4:.4f}")
-print(f"Flap Delta C_m at AC (Delta_C_m_ac_HLD): {Delta_C_m_ac_HLD:.4f}")
-print(f"Total Pitching Moment (C_m_ac): {C_m_ac:.4f}")
+print("\n--- 5. Pitching Moment Calculation (Landing) ---")
+print(f"  -> Wing Contribution (C_m_ac_w): {C_m_ac_w:.4f}")
+print(f"  -> Fuselage Contribution Landing (Delta_fus_C_m_ac_land): {Delta_fus_C_m_ac_land:.4f}")
+print(f"  -> Flap Delta C_m at AC Landing (Delta_C_m_ac_HLD_land): {Delta_C_m_ac_HLD_land:.4f}")
+print(f"Total Landing Pitching Moment (C_m_ac_land): {C_m_ac_land:.4f}")
 
 # --- de/da (Downwash Derivative) Calculation ---
 x_qc_w = ip.x_LEMACw + 0.25 * CG.c_macw
@@ -192,47 +215,47 @@ term2_de = term2_de_part1 * term2_de_part2
 
 de_da = (K_eps_Lambda / K_eps_Lambda_0) * (term1_de + term2_de) * (Cl_ALPHAw / (np.pi * A_w))
 
-print("\n--- 6. Downwash Derivative [Eq. 7] ---")
-print(f"Normalized tail moment arm (r): {r:.4f}")
-print(f"Tail vertical position parameter (m_tv): {m_tv:.4f}")
-print(f"K_eps_Lambda / K_eps_Lambda_0 Ratio: {(K_eps_Lambda / K_eps_Lambda_0):.4f}")
+print("\n--- 6. Downwash Derivative ---")
 print(f"Downwash Derivative (de_da): {de_da:.4f} rad/rad")
 
 # --- SCISSOR PLOT CALCULATIONS ---
 Sh_S_array = np.linspace(0.0, 0.40, 100)
 
+# Aft Limit (Stability) - Uses Cruise AC
 l_h_norm = x_h_LEMACNORM - x_acw_LEMACNORM
 x_np = x_ac_LEMACNORM + (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * Sh_S_array * l_h_norm * (Vh_V ** 2)
 x_aft_limit = x_np - static_margin
 
-print("\n--- 7. Stability Boundary (Neutral Point) [Eq. 8] ---")
-print(f"Normalized tail moment arm to wing AC (l_h_norm): {l_h_norm:.4f}")
+print("\n--- 7. Stability Boundary (Neutral Point) ---")
 print(f"Static Margin limit: {static_margin}")
-print(f"x_np generated as an array of length {len(x_np)}")
 
+# Max Tail Lift Coefficient
 CL_h_fixed = -0.35 * (A_h ** (1 / 3))
+
+print("\n--- 8. Maximum Tail Lift Coefficient ---")
+print(f"Max Tail Lift Coefficient (CL_h_fixed): {CL_h_fixed:.4f} (Assuming Fixed Stabilizer)")
+
 W_landing = (MLW) * 9.81
 S_h_dynamic = Sh_S_array * ip.S_w
 
 V_approach_array = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + S_h_dynamic * (Vh_V ** 2) * CL_h_fixed)))
 V_approach_curr = np.sqrt(W_landing / (0.5 * rho_sealevel * (ip.S_w * CL_max + ip.S_h * (Vh_V ** 2) * CL_h_fixed)))
 
-print("\n--- 8. Approach Speed Calculation ---")
-print(f"Wing CL_max used:     {CL_max}")
-print(f"Tail Downforce (CL_h_fixed): {CL_h_fixed:.4f}")
+print("\n--- 9. Approach Speed Calculation ---")
 print(f"Resulting V_approach:  {V_approach_curr:.2f} m/s ({V_approach_curr * 1.94384:.1f} knots)")
 
+# Forward Limit (Control) - Uses Landing AC and Landing Cm
 K_cont = (CL_h_fixed / CL_max) * (Vh_V ** 2) * Sh_S_array
-C_term = x_ac_LEMACNORM - (C_m_ac / CL_max)
-x_fwd_limit = (C_term + K_cont * x_h_LEMACNORM) / (1 + K_cont)
+C_term_land = x_ac_LEMACNORM_land - (C_m_ac_land / CL_max)
+x_fwd_limit = (C_term_land + K_cont * x_h_LEMACNORM) / (1 + K_cont)
 
 current_Sh_S = ip.S_h / ip.S_w
 x_np_curr = x_ac_LEMACNORM + (Cl_ALPHAh / Cl_ALPHAa_h) * (1 - de_da) * current_Sh_S * l_h_norm * (Vh_V ** 2)
 
 K_curr_cont = (CL_h_fixed / CL_max) * (Vh_V ** 2) * current_Sh_S
-x_fwd_curr = (C_term + K_curr_cont * x_h_LEMACNORM) / (1 + K_curr_cont)
+x_fwd_curr = (C_term_land + K_curr_cont * x_h_LEMACNORM) / (1 + K_curr_cont)
 
-print("\n--- 9. Current Configuration Results ---")
+print("\n--- 10. Current Configuration Results ---")
 print(f"Current Sh/S ratio: {current_Sh_S:.4f}")
 print(f"Current Neutral Point (x_np_curr): {x_np_curr:.4f}")
 print(f"Current Forward Limit (x_fwd_curr): {x_fwd_curr:.4f}")
@@ -241,9 +264,9 @@ print("="*50 + "\n")
 # --- PLOTTING ---
 if __name__ == '__main__':
     plt.figure(figsize=(8, 6))
-    plt.plot(x_np, Sh_S_array, 'k--', label='Neutral Point')
+    plt.plot(x_np, Sh_S_array, 'k--', label='Neutral Point (Cruise)')
     plt.plot(x_aft_limit, Sh_S_array, 'b-', label='Aft Limit (Stability)')
-    plt.plot(x_fwd_limit, Sh_S_array, 'g-', label='Forward Limit (Control)')
+    plt.plot(x_fwd_limit, Sh_S_array, 'g-', label='Forward Limit (Control Landing)')
 
     plt.plot([x_fwd_curr, x_np_curr - static_margin], [current_Sh_S, current_Sh_S], 'r-o', linewidth=2,
              label='Current CG Range')

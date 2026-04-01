@@ -55,7 +55,7 @@ rear_spar_fraction = 0.8
 m = 4.70 / (b_w/2)
 
 # HORIZONTAL STABALISER DIMENSIONS
-c_rh = 2.36 # 40/566
+c_rh = 2.3 # 40/566
 c_th = 1.1 # 17/566
 S_h = 15.91
 b_h = 2 * S_h / (c_rh + c_th)  # 130/55

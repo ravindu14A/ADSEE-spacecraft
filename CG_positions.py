@@ -47,6 +47,7 @@ WEIGHT_COCKPIT_SYSTEMS = it.WEIGHT_COCKPIT_SYSTEMSp / 100 * EOW
 
 WEIGHT_fg = WEIGHT_FUSELAGE + WEIGHT_COCKPIT_SYSTEMS + WEIGHT_PROPULSION_SYSTEM + WEIGHT_HORIZONTAL_TAIL + WEIGHT_VERTICAL_TAIL + WEIGHT_NOSE_LANDING_GEAR
 WEIGHT_wg = WEIGHT_WING + WEIGHT_MAIN_LANDING_GEAR
+WEIGHT_UNACCOUNTED = EOW - (WEIGHT_fg + WEIGHT_wg)
 
 # ------------------------------------
 # CALCULATED DIMENSIONS
@@ -110,6 +111,9 @@ def calculate_aircraft_cgs(x_LEMACw):
     # This mathematical output is the true baseline CG per the assignment note
     x_cg = (x_cgfg * WEIGHT_fg + x_cgwg * WEIGHT_wg) / (WEIGHT_fg + WEIGHT_wg)
 
+    # Unaccounted mass is typically placed at the aircraft empty weight CG
+    x_cg_unaccounted = x_cg
+
     x_cgw_LEMAC = x_cgw - x_LEMACw
     x_cgh_LEMAC = x_cgh - x_LEMACw
     x_cgv_LEMAC = x_cgv - x_LEMACw
@@ -124,6 +128,7 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfg_LEMAC = x_cgfg - x_LEMACw
     x_cgwg_LEMAC = x_cgwg - x_LEMACw
     x_cg_LEMAC = x_cg - x_LEMACw
+    x_unaccounted_LEMAC = x_cg_unaccounted - x_LEMACw
 
     x_cgw_LEMACNORM = x_cgw_LEMAC / c_macw
     x_cgh_LEMACNORM = x_cgh_LEMAC / c_macw
@@ -139,61 +144,70 @@ def calculate_aircraft_cgs(x_LEMACw):
     x_cgfg_LEMACNORM = x_cgfg_LEMAC / c_macw
     x_cgwg_LEMACNORM = x_cgwg_LEMAC / c_macw
     x_cg_LEMACNORM = x_cg_LEMAC / c_macw
+    x_unaccounted_LEMACNORM = x_unaccounted_LEMAC / c_macw
 
     return {
         "from_nose": {
-            "components": {"wing": x_cgw, "horizontal_stab": x_cgh, "vertical_stab": x_cgv, "fuselage": x_cgfus,
-                           "engine": x_cgn, "main_landing_gear": x_MG, "nose_landing_gear": x_NW,
-                           "cockpit_systems": x_cockpit},
-            "groups": {"wing_group": x_cgwg, "fuselage_group": x_cgfg},
+            "components": {"Wing": x_cgw, "Horizontal Tail": x_cgh, "Vertical Tail": x_cgv, "Fuselage": x_cgfus,
+                           "Propulsion Sys": x_cgn, "Main Landing Gear": x_MG, "Nose Landing Gear": x_NW,
+                           "Cockpit Systems": x_cockpit},
+            "groups": {"Wing Group": x_cgwg, "Fuselage Group": x_cgfg, "Unaccounted Group": x_cg_unaccounted},
             "aircraft": x_cg
         },
         "from_lemac": {
-            "components": {"wing": x_cgw_LEMAC, "horizontal_stab": x_cgh_LEMAC, "vertical_stab": x_cgv_LEMAC,
-                           "fuselage": x_cgfus_LEMAC, "engine": x_cgn_LEMAC, "main_landing_gear": x_MG_LEMAC,
-                           "nose_landing_gear": x_NW_LEMAC, "cockpit_systems": x_cockpit_LEMAC},
-            "groups": {"wing_group": x_cgwg_LEMAC, "fuselage_group": x_cgfg_LEMAC},
+            "components": {"Wing": x_cgw_LEMAC, "Horizontal Tail": x_cgh_LEMAC, "Vertical Tail": x_cgv_LEMAC,
+                           "Fuselage": x_cgfus_LEMAC, "Propulsion Sys": x_cgn_LEMAC, "Main Landing Gear": x_MG_LEMAC,
+                           "Nose Landing Gear": x_NW_LEMAC, "Cockpit Systems": x_cockpit_LEMAC},
+            "groups": {"Wing Group": x_cgwg_LEMAC, "Fuselage Group": x_cgfg_LEMAC,
+                       "Unaccounted Group": x_unaccounted_LEMAC},
             "aircraft": x_cg_LEMAC
         },
         "percent_mac": {
-            "components": {"wing": x_cgw_LEMACNORM, "horizontal_stab": x_cgh_LEMACNORM,
-                           "vertical_stab": x_cgv_LEMACNORM, "fuselage": x_cgfus_LEMACNORM, "engine": x_cgn_LEMACNORM,
-                           "main_landing_gear": x_MG_LEMACNORM, "nose_landing_gear": x_NW_LEMACNORM,
-                           "cockpit_systems": x_cockpit_LEMACNORM},
-            "groups": {"wing_group": x_cgwg_LEMACNORM, "fuselage_group": x_cgfg_LEMACNORM},
+            "components": {"Wing": x_cgw_LEMACNORM, "Horizontal Tail": x_cgh_LEMACNORM,
+                           "Vertical Tail": x_cgv_LEMACNORM, "Fuselage": x_cgfus_LEMACNORM,
+                           "Propulsion Sys": x_cgn_LEMACNORM,
+                           "Main Landing Gear": x_MG_LEMACNORM, "Nose Landing Gear": x_NW_LEMACNORM,
+                           "Cockpit Systems": x_cockpit_LEMACNORM},
+            "groups": {"Wing Group": x_cgwg_LEMACNORM, "Fuselage Group": x_cgfg_LEMACNORM,
+                       "Unaccounted Group": x_unaccounted_LEMACNORM},
             "aircraft": x_cg_LEMACNORM
         },
         "mass_kg": {
-            "components": {"wing": WEIGHT_WING, "horizontal_stab": WEIGHT_HORIZONTAL_TAIL,
-                           "vertical_stab": WEIGHT_VERTICAL_TAIL, "fuselage": WEIGHT_FUSELAGE,
-                           "engine": WEIGHT_PROPULSION_SYSTEM, "main_landing_gear": WEIGHT_MAIN_LANDING_GEAR,
-                           "nose_landing_gear": WEIGHT_NOSE_LANDING_GEAR, "cockpit_systems": WEIGHT_COCKPIT_SYSTEMS},
-            "groups": {"wing_group": WEIGHT_wg, "fuselage_group": WEIGHT_fg},
-            "aircraft": WEIGHT_wg + WEIGHT_fg
+            "components": {"Wing": WEIGHT_WING, "Horizontal Tail": WEIGHT_HORIZONTAL_TAIL,
+                           "Vertical Tail": WEIGHT_VERTICAL_TAIL, "Fuselage": WEIGHT_FUSELAGE,
+                           "Propulsion Sys": WEIGHT_PROPULSION_SYSTEM, "Main Landing Gear": WEIGHT_MAIN_LANDING_GEAR,
+                           "Nose Landing Gear": WEIGHT_NOSE_LANDING_GEAR, "Cockpit Systems": WEIGHT_COCKPIT_SYSTEMS},
+            "groups": {"Wing Group": WEIGHT_wg, "Fuselage Group": WEIGHT_fg, "Unaccounted Group": WEIGHT_UNACCOUNTED},
+            "aircraft": EOW
         },
         "mass_pct": {
-            "components": {"wing": WEIGHT_WING / EOW * 100, "horizontal_stab": WEIGHT_HORIZONTAL_TAIL / EOW * 100,
-                           "vertical_stab": WEIGHT_VERTICAL_TAIL / EOW * 100, "fuselage": WEIGHT_FUSELAGE / EOW * 100,
-                           "engine": WEIGHT_PROPULSION_SYSTEM / EOW * 100,
-                           "main_landing_gear": WEIGHT_MAIN_LANDING_GEAR / EOW * 100,
-                           "nose_landing_gear": WEIGHT_NOSE_LANDING_GEAR / EOW * 100,
-                           "cockpit_systems": WEIGHT_COCKPIT_SYSTEMS / EOW * 100},
-            "groups": {"wing_group": WEIGHT_wg / EOW * 100, "fuselage_group": WEIGHT_fg / EOW * 100},
-            "aircraft": (WEIGHT_wg + WEIGHT_fg) / EOW * 100
+            "components": {"Wing": WEIGHT_WING / EOW * 100, "Horizontal Tail": WEIGHT_HORIZONTAL_TAIL / EOW * 100,
+                           "Vertical Tail": WEIGHT_VERTICAL_TAIL / EOW * 100, "Fuselage": WEIGHT_FUSELAGE / EOW * 100,
+                           "Propulsion Sys": WEIGHT_PROPULSION_SYSTEM / EOW * 100,
+                           "Main Landing Gear": WEIGHT_MAIN_LANDING_GEAR / EOW * 100,
+                           "Nose Landing Gear": WEIGHT_NOSE_LANDING_GEAR / EOW * 100,
+                           "Cockpit Systems": WEIGHT_COCKPIT_SYSTEMS / EOW * 100},
+            "groups": {"Wing Group": WEIGHT_wg / EOW * 100, "Fuselage Group": WEIGHT_fg / EOW * 100,
+                       "Unaccounted Group": WEIGHT_UNACCOUNTED / EOW * 100},
+            "aircraft": 100.0
         }
     }
 
 
 def print_cg_table(results):
     print("\n" + "=" * 115)
-    print(" " * 45 + "BASELINE CG REPORT")
+    print(" " * 45 + "BASELINE CG REPORT (FULL DATA)")
     print("=" * 115)
     print(
         f"{'COMPONENT / GROUP':<25} | {'Mass (% EOW)':<13} | {'Mass (kg)':<12} | {'CG from Nose (m)':<17} | {'CG from LEMAC (m)':<18} | {'CG as % MAC':<15}")
     print("-" * 115)
 
     print("COMPONENTS:")
-    for comp in results['from_nose']['components']:
+    # Print the specific components needed for the table, in the order of the target table style
+    target_components = ["Wing", "Horizontal Tail", "Vertical Tail", "Fuselage",
+                         "Main Landing Gear", "Nose Landing Gear", "Propulsion Sys", "Cockpit Systems"]
+
+    for comp in target_components:
         mass_pct = results['mass_pct']['components'][comp]
         mass_kg = results['mass_kg']['components'][comp]
         nose = results['from_nose']['components'][comp]
@@ -204,7 +218,8 @@ def print_cg_table(results):
     print("-" * 115)
 
     print("ASSEMBLY GROUPS:")
-    for grp in results['from_nose']['groups']:
+    target_groups = ["Fuselage Group", "Wing Group", "Unaccounted Group"]
+    for grp in target_groups:
         mass_pct = results['mass_pct']['groups'][grp]
         mass_kg = results['mass_kg']['groups'][grp]
         nose = results['from_nose']['groups'][grp]
